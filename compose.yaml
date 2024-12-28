@@ -1,23 +1,35 @@
 services:
   # Frontend frameworks
   react:
-    build:
-      context: ./frontend
-      dockerfile: ./react/Dockerfile
+    image: node:lts-alpine
+    working_dir: /home/node/app
+    command: sh -c "npm i && npm run dev"
     container_name: react
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./frontend/react:/home/node/app"
 
   # Backend frameworks
   express:
-    build:
-      context: ./backend
-      dockerfile: ./infrastructure/frameworks/express/Dockerfile
+    image: node:lts-alpine
+    working_dir: /home/node/app
+    command: sh -c "npm i && npm run dev"
     container_name: express
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./backend/infrastructure/frameworks/express:/home/node/app"
 
   nest:
-    build:
-      context: ./backend
-      dockerfile: ./infrastructure/frameworks/nest/Dockerfile
+    image: node:lts-alpine
+    working_dir: /home/node/app
+    command: sh -c "npm i && npm run start:dev"
     container_name: nest
+    ports:
+      - "3001:3000"
+    volumes:
+      - "./backend/infrastructure/frameworks/nest:/home/node/app"
 
   # Databases
   postgres:
