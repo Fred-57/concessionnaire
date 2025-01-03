@@ -1,5 +1,11 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@domain/*": ["../../../domain/*"],
+      "@application/*": ["../../../application/*"],
+      "@infrastructure/repositories/*": ["../../../infrastructure/repositories/*"],
+      "@infrastructure/services": ["../../../infrastructure/services/"],
+    },
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -10,17 +16,12 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "paths": {
-      "@application/*": ["application/*"],
-      "@domain/*": ["domain/*"],
-      "@infrastructure/*": ["infrastructure/*"]
-    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
+    "noFallthroughCasesInSwitch": false
   }
 }

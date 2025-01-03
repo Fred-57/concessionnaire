@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { UserRepository as PostgresUserRepository } from "@infrastructure/repositories/postgres";
+import { UserRepository as MongoUserRepository } from "@infrastructure/repositories/mongodb";
+import { Module } from "@nestjs/common";
 
 @Module({
   imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [MongoUserRepository, PostgresUserRepository],
 })
 export class AppModule {}

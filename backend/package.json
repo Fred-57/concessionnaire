@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "scripts": {
+    "express:dev": "cd infrastructure/frameworks/express && npm run dev",
+    "nest:dev": "cd infrastructure/frameworks/nest && npm run start:dev",
+    "postgres:migrate": "cd infrastructure/repositories/postgres && npx prisma migrate dev"
+  },
+  "workspaces": [
+    "application",
+    "infrastructure/frameworks/*",
+    "infrastructure/repositories/*",
+    "infrastructure/services"
+  ]
+}

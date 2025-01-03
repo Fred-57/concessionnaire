@@ -1,24 +1,28 @@
 {
-  "name": "express",
+  "name": "@triumph/express",
   "version": "1.0.0",
-  "description": "",
   "main": "dist/index.js",
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon -r tsconfig-paths/register src/index.ts"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "@triumph/application": "1.0.0",
+    "@triumph/postgres": "1.0.0",
+    "@triumph/services": "1.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "http-status-codes": "^2.3.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.2"
   }
 }
