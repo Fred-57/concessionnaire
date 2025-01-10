@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@domain/*": ["../../../domain/*"],
+      "@application/*": ["../../../application/*"],
+      "@infrastructure/repositories/*": ["../../../infrastructure/repositories/*"],
+      "@infrastructure/services": ["../../../infrastructure/services/"],
+    },
+    "target": "es2016",
+    "module": "commonjs",
+    "baseUrl": "./",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+}

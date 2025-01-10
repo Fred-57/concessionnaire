@@ -1,6 +1,7 @@
 {
   "name": "@triumph/express",
   "version": "1.0.0",
+  "private": true,
   "main": "dist/index.js",
   "scripts": {
     "build": "npx tsc",
@@ -8,9 +9,6 @@
     "dev": "nodemon -r tsconfig-paths/register src/index.ts"
   },
   "dependencies": {
-    "@triumph/application": "1.0.0",
-    "@triumph/postgres": "1.0.0",
-    "@triumph/services": "1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

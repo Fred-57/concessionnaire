@@ -1,1 +1,1 @@
-export { UserRepository } from "./src/UserRepository";
+export { PostgresDriverRepository } from "./src/PostgresDriverRepository";
