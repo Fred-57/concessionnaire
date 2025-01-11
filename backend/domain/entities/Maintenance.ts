@@ -1,13 +1,13 @@
 import { Entity } from "./Entity";
 import { Motorcycle } from "./Motorcycle";
-// import { ReplacedParts } from "./ReplacedParts";
+import { Part } from "./Part";
 
 export class Maintenance implements Entity {
   private constructor(
     public readonly identifier: string,
     public readonly date: Date,
     public readonly motorcycle: Motorcycle,
-    // public readonly replacedParts: ReplacedParts,
+    public readonly replacedParts: Part[],
     public readonly cost: number,
     public readonly recommendation: string
   ) {}
@@ -16,7 +16,7 @@ export class Maintenance implements Entity {
     identifier: string,
     date: Date,
     Motorcycle: Motorcycle,
-    // replacedParts: ReplacedParts,
+    replacedParts: Part[],
     cost: number,
     recommendation: string
   ): Maintenance {
@@ -24,7 +24,7 @@ export class Maintenance implements Entity {
       identifier,
       date,
       Motorcycle,
-      // replacedParts,
+      replacedParts,
       cost,
       recommendation
     );

@@ -14,9 +14,9 @@ export class CreateMaintenanceUsecase implements Usecase {
       throw new MaintenanceCostLessThanZero();
     }
 
-    // if (maintenance.replacedParts.length === 0) {
-    //   throw new MaintenanceReplacedPartsNotFound();
-    // }
+    if (maintenance.replacedParts.length === 0) {
+      throw new MaintenanceReplacedPartsNotFound();
+    }
 
     await this.maintenanceRepository.save(maintenance);
   }
