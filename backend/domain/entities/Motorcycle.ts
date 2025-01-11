@@ -1,39 +1,46 @@
 import { Entity } from "./Entity";
 
 export class Motorcycle implements Entity {
-    private constructor(
-        /**
-         * @description Immatriculation
-         */
-        public readonly identifier: number,
-        
-        /**
-         * @description Kilométrage
-         */
-        public readonly mileage: number,
+  private constructor(
+    /**
+     * @description Immatriculation
+     */
+    public readonly identifier: string,
 
-        /**
-         * @description Date de mise en service
-         */
-        public readonly dateOfCommissioning: Date,
-        
-        /**
-         * @description Statut
-         */
-        public readonly status: string,
-    ) {}
+    /**
+     * @description Kilométrage
+     */
+    public readonly mileage: number,
 
-    public static from(
-        identifier: number,
-        mileage: number,
-        dateOfCommissioning: Date,
-        status: string,
-    ): Motorcycle {
-        return new Motorcycle(
-            identifier,
-            mileage,
-            dateOfCommissioning,
-            status,
-        );
-    }
+    /**
+     * @description Date de mise en service
+     */
+    public readonly dateOfCommissioning: Date,
+
+    /**
+     * @description Statut
+     */
+    public readonly status: string,
+
+    public readonly createdAt: Date,
+    public readonly updatedAt: Date
+  ) {}
+
+  public static from(
+    identifier: string,
+    mileage: number,
+    dateOfCommissioning: Date,
+    status: string,
+    createdAt: Date,
+    updatedAt: Date
+  ): Motorcycle {
+    return new Motorcycle(
+      identifier,
+      mileage,
+      dateOfCommissioning,
+      status,
+      createdAt,
+      updatedAt
+    );
+  }
 }
