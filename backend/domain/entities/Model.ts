@@ -63,7 +63,7 @@ export class Model implements Entity {
   public static create(
     name: string,
     repairMileage: number,
-    repairDeadline: Date
+    repairDeadline: number
   ) {
     const identifier = randomUUID();
     const createdAt = new Date();
