@@ -7,7 +7,7 @@ export class Model implements Entity {
     public readonly identifier: string,
     public readonly name: ModelName,
     public readonly repairMileage: number,
-    public readonly repairDeadline: Date,
+    public readonly repairDeadline: number,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -16,7 +16,7 @@ export class Model implements Entity {
     identifier: string,
     nameValue: string,
     repairMileage: number,
-    repairDeadline: Date,
+    repairDeadline: number,
     createdAt: Date,
     updatedAt: Date
   ) {
@@ -39,7 +39,7 @@ export class Model implements Entity {
   public static create(
     name: string,
     repairMileage: number,
-    repairDeadline: Date
+    repairDeadline: number
   ) {
     const identifier = randomUUID();
     const createdAt = new Date();
