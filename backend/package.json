@@ -1,5 +1,4 @@
 {
-  "private": true,
   "scripts": {
     "express:dev": "cd infrastructure/frameworks/express && npm run dev",
     "nest:dev": "cd infrastructure/frameworks/nest && npm run start:dev",
@@ -7,8 +6,8 @@
   },
   "workspaces": [
     "application",
+    "domain",
     "infrastructure/frameworks/*",
-    "infrastructure/repositories/*",
-    "infrastructure/services"
+    "infrastructure/repositories/*"
   ]
 }

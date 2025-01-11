@@ -20,6 +20,30 @@ model Driver {
   numberOfYearsOfExperience Int
   createdAt                 DateTime @default(now())
   updatedAt                 DateTime @updatedAt
+  Rental                    Rental[]
+}
+
+model Motorcycle {
+  id                  String   @id
+  mileage             Int
+  dateOfCommissioning DateTime
+  // TODO: Change to enum
+  status              String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  Rental              Rental[]
+}
+
+model Rental {
+  id               String     @id
+  startDate        DateTime
+  durationInMonths Int
+  driver           Driver     @relation(fields: [driverId], references: [id])
+  motorcycle       Motorcycle @relation(fields: [motorcycleId], references: [id])
+  driverId         String
+  motorcycleId     String
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 }
 
 enum License {
