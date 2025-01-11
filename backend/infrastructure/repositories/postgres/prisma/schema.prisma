@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Driver {
-  id                        String   @id @default(cuid())
+  id                        String   @id @db.Uuid
   name                      String
   license                   License
   numberOfYearsOfExperience Int
@@ -24,6 +24,7 @@ model Driver {
 }
 
 model Motorcycle {
+  // Registration number
   id                  String   @id
   mileage             Int
   dateOfCommissioning DateTime
@@ -35,15 +36,26 @@ model Motorcycle {
 }
 
 model Rental {
-  id               String     @id
+  id               String      @id @db.Uuid
   startDate        DateTime
   durationInMonths Int
-  driver           Driver     @relation(fields: [driverId], references: [id])
-  motorcycle       Motorcycle @relation(fields: [motorcycleId], references: [id])
+  driver           Driver      @relation(fields: [driverId], references: [id])
+  motorcycle       Motorcycle  @relation(fields: [motorcycleId], references: [id])
   driverId         String
   motorcycleId     String
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  Breakdown        Breakdown[]
+}
+
+model Breakdown {
+  id          String   @id @db.Uuid
+  date        DateTime
+  description String
+  rental      Rental   @relation(fields: [rentalId], references: [id])
+  rentalId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum License {
