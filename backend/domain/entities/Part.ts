@@ -19,7 +19,7 @@ export class Part implements Entity {
     /**
      * @description Prix
      */
-    public readonly coast: number,
+    public readonly cost: number,
 
     /**
      * @description Stock
@@ -34,14 +34,14 @@ export class Part implements Entity {
     identifier: string,
     reference: string,
     name: string,
-    coast: number,
+    cost: number,
     stock: number
   ): Part {
     return new Part(
       identifier,
       reference,
       name,
-      coast,
+      cost,
       stock,
       new Date(),
       new Date()

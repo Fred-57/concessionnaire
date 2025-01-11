@@ -2,7 +2,7 @@ import { Part } from "../../../domain/entities/Part";
 import { PartRepository } from "../../repositories/PartRepository";
 import { PartReferenceAlreadyExistsError } from "@domain/errors/part/PartReferenceAlreadyExistsError";
 import { PartQuantityLessThanZeroError } from "@domain/errors/part/PartQuantityLessThanZeroError";
-import { PartCoastLessThanZeroError } from "@domain/errors/part/PartCoastLessThanZeroError";
+import { PartCostLessThanZeroError } from "@domain/errors/part/PartCostLessThanZeroError";
 import { Usecase } from "../Usecase";
 
 export class CreatePartUsecase implements Usecase {
@@ -17,8 +17,8 @@ export class CreatePartUsecase implements Usecase {
       throw new PartQuantityLessThanZeroError();
     }
 
-    if (part.coast < 0) {
-      throw new PartCoastLessThanZeroError();
+    if (part.cost < 0) {
+      throw new PartCostLessThanZeroError();
     }
 
     if (partExists) {
