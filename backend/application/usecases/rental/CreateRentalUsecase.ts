@@ -15,10 +15,10 @@ export class CreateRentalUsecase implements Usecase {
 
     const hasSimilarRental = rentals.some(
       (r) =>
-        r.driverIdentifier === rental.driverIdentifier &&
-        r.motorcycleIdentifier === rental.motorcycleIdentifier &&
         r.startDate.getTime() === rental.startDate.getTime() &&
-        r.durationInMonths.value === rental.durationInMonths.value
+        r.durationInMonths.value === rental.durationInMonths.value &&
+        r.driverIdentifier === rental.driverIdentifier &&
+        r.motorcycleIdentifier === rental.motorcycleIdentifier
     );
 
     if (hasRental || hasSimilarRental) {

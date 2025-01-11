@@ -12,16 +12,14 @@ export class CreateBreakdownUsecase implements Usecase {
     const breakdowns = await this.breakdownRepository.findAll();
 
     const hasBreakdown = breakdowns.some(
-      (b) =>
-        b.rentalIdentifier === breakdown.rentalIdentifier &&
-        b.date.getTime() === breakdown.date.getTime()
+      (b) => b.rentalIdentifier === breakdown.rentalIdentifier
     );
 
     const hasSimilarBreakdown = breakdowns.some(
       (b) =>
-        b.rentalIdentifier === breakdown.rentalIdentifier &&
         b.date.getTime() === breakdown.date.getTime() &&
-        b.description === breakdown.description
+        b.description === breakdown.description &&
+        breakdown.rentalIdentifier === breakdown.rentalIdentifier
     );
 
     if (hasBreakdown || hasSimilarBreakdown) {
