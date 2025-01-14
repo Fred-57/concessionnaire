@@ -59,23 +59,4 @@ export class Model implements Entity {
       updatedAt
     );
   }
-
-  public static create(
-    name: string,
-    repairMileage: number,
-    repairDeadline: number
-  ) {
-    const identifier = randomUUID();
-    const createdAt = new Date();
-    const updatedAt = new Date();
-
-    return Model.from(
-      identifier,
-      name,
-      repairMileage,
-      repairDeadline,
-      createdAt,
-      updatedAt
-    );
-  }
 }
