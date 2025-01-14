@@ -1,10 +1,12 @@
 import { model, Schema } from "mongoose";
+import { BrandSchema, IBrand } from "./BrandModel";
 
 export interface IModel {
   identifier: string;
   name: string;
   repairMileage: number;
   repairDeadline: number;
+  brand: IBrand;
 }
 
 export const ModelSchema = new Schema<IModel>(
@@ -13,6 +15,7 @@ export const ModelSchema = new Schema<IModel>(
     name: { type: String, required: true },
     repairMileage: { type: Number, required: true },
     repairDeadline: { type: Number, required: true },
+    brand: BrandSchema,
   },
   { timestamps: true }
 );
