@@ -8,6 +8,7 @@ export class Model implements Entity {
     public readonly name: ModelName,
     public readonly repairMileage: number,
     public readonly repairDeadline: number,
+    public readonly brandIdentifier: string,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -17,6 +18,7 @@ export class Model implements Entity {
     nameValue: string,
     repairMileage: number,
     repairDeadline: number,
+    brandIdentifier: string,
     createdAt: Date,
     updatedAt: Date
   ) {
@@ -31,6 +33,7 @@ export class Model implements Entity {
       name,
       repairMileage,
       repairDeadline,
+      brandIdentifier,
       createdAt,
       updatedAt
     );
@@ -39,7 +42,8 @@ export class Model implements Entity {
   public static create(
     name: string,
     repairMileage: number,
-    repairDeadline: number
+    repairDeadline: number,
+    brandIdentifier: string
   ) {
     const identifier = randomUUID();
     const createdAt = new Date();
@@ -50,6 +54,7 @@ export class Model implements Entity {
       name,
       repairMileage,
       repairDeadline,
+      brandIdentifier,
       createdAt,
       updatedAt
     );
