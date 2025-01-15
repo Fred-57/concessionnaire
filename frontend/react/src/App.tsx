@@ -1,7 +1,7 @@
+import { Button } from "@/components/ui/button";
+
 function App() {
-  return (
-    <div />
-  )
+  return <Button>Hello, world!</Button>;
 }
 
-export default App
+export default App;
