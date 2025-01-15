@@ -1,4 +1,5 @@
 import { Entity } from "./Entity";
+import { randomUUID } from "crypto";
 
 export class Part implements Entity {
   private constructor(
@@ -35,7 +36,9 @@ export class Part implements Entity {
     reference: string,
     name: string,
     cost: number,
-    stock: number
+    stock: number,
+    createdAt: Date,
+    updatedAt: Date
   ): Part {
     return new Part(
       identifier,
@@ -43,8 +46,29 @@ export class Part implements Entity {
       name,
       cost,
       stock,
-      new Date(),
-      new Date()
+      createdAt,
+      updatedAt
+    );
+  }
+
+  public static create(
+    reference: string,
+    name: string,
+    cost: number,
+    stock: number
+  ): Part {
+    const identifier = randomUUID();
+    const createdAt = new Date();
+    const updatedAt = new Date();
+
+    return Part.from(
+      identifier,
+      reference,
+      name,
+      cost,
+      stock,
+      createdAt,
+      updatedAt
     );
   }
 }
