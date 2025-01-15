@@ -1,7 +1,7 @@
 import { Maintenance } from "@domain/entities/Maintenance";
 import { MaintenanceRepository } from "@application/repositories/MaintenanceRepository";
-import { MaintenanceCostLessThanZero } from "@domain/errors/maintenance/MaintenanceCostLessThanZero";
-import { MaintenanceReplacedPartsNotFound } from "@domain/errors/maintenance/MaintenanceReplacedPartsNotFound";
+import { DateBehindNowError } from "@domain/errors/DateBehindNowError";
+import { MotorcycleNotFoundError } from "@domain/errors/MotorcycleNotFoundError";
 import { Usecase } from "../Usecase";
 
 export class CreateMaintenanceUsecase implements Usecase {
@@ -10,12 +10,12 @@ export class CreateMaintenanceUsecase implements Usecase {
   ) {}
 
   public async execute(maintenance: Maintenance) {
-    if (maintenance.cost < 0) {
-      throw new MaintenanceCostLessThanZero();
+    if (maintenance.date < new Date()) {
+      throw new DateBehindNowError();
     }
 
-    if (maintenance.replacedParts.length === 0) {
-      throw new MaintenanceReplacedPartsNotFound();
+    if (maintenance.motorcycleIdentifier === null) {
+      throw new MotorcycleNotFoundError();
     }
 
     await this.maintenanceRepository.save(maintenance);
