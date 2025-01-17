@@ -1,7 +1,6 @@
 import { Part } from "../../../domain/entities/Part";
 import { PartRepository } from "../../repositories/PartRepository";
 import { PartReferenceAlreadyExistsError } from "@domain/errors/part/PartReferenceAlreadyExistsError";
-import { PartQuantityLessThanZeroError } from "@domain/errors/part/PartQuantityLessThanZeroError";
 import { Usecase } from "../Usecase";
 
 export class UpdatePartUsecase implements Usecase {
@@ -12,9 +11,6 @@ export class UpdatePartUsecase implements Usecase {
       part.reference
     );
 
-    if (part.stock < 0) {
-      throw new PartQuantityLessThanZeroError();
-    }
     if (partExists.identifier !== part.identifier) {
       throw new PartReferenceAlreadyExistsError();
     }
