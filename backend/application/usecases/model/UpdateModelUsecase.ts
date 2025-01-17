@@ -18,6 +18,7 @@ export class UpdateModelUsecase implements Usecase {
 
     const nameExists = await this.modelRepository.findByName(model.name.value);
 
+    // if the name exists and the identifier is different, then the name is already taken
     if (nameExists && nameExists.identifier !== model.identifier) {
       throw new ModelNameAlreadyTakenError();
     }
