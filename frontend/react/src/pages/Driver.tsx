@@ -1,8 +1,8 @@
 import { Layout } from "@/components/Layout";
 
-export function Home() {
+export function Driver() {
   return (
-    <Layout title="Accueil">
+    <Layout title="Conducteurs">
       <div />
     </Layout>
   );

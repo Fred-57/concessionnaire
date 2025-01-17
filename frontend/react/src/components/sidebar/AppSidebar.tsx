@@ -1,7 +1,6 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -10,81 +9,27 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  Bike,
-  Bolt,
-  Home,
-  Key,
-  Package,
-  TriangleAlert,
-  User,
-  Wrench,
-} from "lucide-react";
 import { Link } from "react-router";
-import { NavApp } from "./NavApp";
-import { NavUser } from "./NavUser";
+import { SidebarApplicationInformation } from "./SidebarApplicationInformation";
+import { routes } from "@/routes";
 
-// Menu items.
-const items = [
-  {
-    title: "Accueil",
-    url: "/home",
-    icon: Home,
-  },
-  {
-    title: "Modèles",
-    url: "/models",
-    icon: Package,
-  },
-  {
-    title: "Motos",
-    url: "/bikes",
-    icon: Bike,
-  },
-  {
-    title: "Conducteurs",
-    url: "/drivers",
-    icon: User,
-  },
-  {
-    title: "Locations",
-    url: "/rentals",
-    icon: Key,
-  },
-  {
-    title: "Pannes",
-    url: "/breakdowns",
-    icon: TriangleAlert,
-  },
-  {
-    title: "Entretiens",
-    url: "/maintenance",
-    icon: Wrench,
-  },
-  {
-    title: "Pièces",
-    url: "/parts",
-    icon: Bolt,
-  },
-];
-
-export function AppSidebar() {
+export function AppSidebar({ title }: { title: string }) {
   return (
-    <Sidebar collapsible="none">
+    <Sidebar collapsible="icon">
       <SidebarHeader>
-        <NavApp />
+        <SidebarApplicationInformation />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Triumph Motorcycles</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
+              {routes.map((route) => (
+                <SidebarMenuItem key={route.title}>
+                  <SidebarMenuButton asChild isActive={route.title == title}>
+                    <Link to={route.path}>
+                      <route.icon />
+                      <span>{route.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -93,9 +38,6 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser />
-      </SidebarFooter>
     </Sidebar>
   );
 }

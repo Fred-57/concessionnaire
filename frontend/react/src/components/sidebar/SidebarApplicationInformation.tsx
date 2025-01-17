@@ -1,7 +1,7 @@
 import { Bike } from "lucide-react";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 
-export function NavApp() {
+export function SidebarApplicationInformation() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>

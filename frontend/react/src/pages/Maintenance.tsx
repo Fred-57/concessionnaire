@@ -1,8 +1,8 @@
 import { Layout } from "@/components/Layout";
 
-export function Home() {
+export function Maintenance() {
   return (
-    <Layout title="Accueil">
+    <Layout title="Entretiens">
       <div />
     </Layout>
   );

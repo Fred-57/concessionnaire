@@ -1,8 +1,8 @@
 import { Layout } from "@/components/Layout";
 
-export function Home() {
+export function Model() {
   return (
-    <Layout title="Accueil">
+    <Layout title="Modèles">
       <div />
     </Layout>
   );
