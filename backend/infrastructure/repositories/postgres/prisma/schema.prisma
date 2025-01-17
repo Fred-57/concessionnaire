@@ -40,6 +40,7 @@ model Model {
   brandId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Motorcycle Motorcycle[]
 }
 
 model Motorcycle {
@@ -47,8 +48,9 @@ model Motorcycle {
   id                  String   @id
   mileage             Int
   dateOfCommissioning DateTime
-  // TODO: Change to enum
-  status              String
+  status              Status
+  model               Model    @relation(fields: [modelId], references: [id])
+  modelId             String
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
   Rental              Rental[]
@@ -80,4 +82,11 @@ model Breakdown {
 enum License {
   A
   A2
+}
+
+enum Status {
+  RENTED
+  AVAILABLE
+  IN_REPAIR
+  IN_MAINTENANCE
 }
