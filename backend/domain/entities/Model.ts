@@ -1,13 +1,14 @@
 import { randomUUID } from "crypto";
 import { ModelName } from "@domain/values/model/ModelName";
 import { Entity } from "./Entity";
+import { IntervalInMonths } from "@domain/values/IntervalInMonths";
 
 export class Model implements Entity {
   private constructor(
     public readonly identifier: string,
     public readonly name: ModelName,
     public readonly repairMileage: number,
-    public readonly repairDeadline: number,
+    public readonly repairDeadline: IntervalInMonths,
     public readonly brandIdentifier: string,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
@@ -28,11 +29,17 @@ export class Model implements Entity {
       return name;
     }
 
+    const deadlineInMonths = IntervalInMonths.from(repairDeadline);
+
+    if (deadlineInMonths instanceof Error) {
+      return deadlineInMonths;
+    }
+
     return new Model(
       identifier,
       name,
       repairMileage,
-      repairDeadline,
+      deadlineInMonths,
       brandIdentifier,
       createdAt,
       updatedAt
