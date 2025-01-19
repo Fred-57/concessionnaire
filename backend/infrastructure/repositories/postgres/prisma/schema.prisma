@@ -51,6 +51,8 @@ model Motorcycle {
   status              Status
   model               Model    @relation(fields: [modelId], references: [id])
   modelId             String
+  guarantee           Guarantee @relation(fields: [guaranteeId], references: [id])
+  guaranteeId         String
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
   Rental              Rental[]
@@ -84,6 +86,7 @@ model Guarantee {
   name        String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  Motorcycle  Motorcycle[]
   // Part        Part[]
 }
 
