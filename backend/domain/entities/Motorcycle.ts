@@ -21,6 +21,7 @@ export class Motorcycle implements Entity {
 
     public readonly status: MotorcycleStatus,
     public readonly modelIdentifier: string,
+    public readonly guaranteeIdentifier: string | null,
 
     public readonly createdAt: Date,
     public readonly updatedAt: Date
@@ -32,6 +33,7 @@ export class Motorcycle implements Entity {
     dateOfCommissioning: Date,
     statusValue: string,
     modelIdentifier: string,
+    guaranteeIdentifier: string | null,
     createdAt: Date,
     updatedAt: Date
   ): Motorcycle {
@@ -53,6 +55,7 @@ export class Motorcycle implements Entity {
       dateOfCommissioning,
       status,
       modelIdentifier,
+      guaranteeIdentifier,
       createdAt,
       updatedAt
     );
@@ -63,7 +66,8 @@ export class Motorcycle implements Entity {
     mileage: number,
     dateOfCommissioning: Date,
     status: string,
-    modelIdentifier: string
+    modelIdentifier: string,
+    guaranteeIdentifier: string | null
   ): Motorcycle {
     const createdAt = new Date();
     const updatedAt = new Date();
@@ -74,6 +78,7 @@ export class Motorcycle implements Entity {
       dateOfCommissioning,
       status,
       modelIdentifier,
+      guaranteeIdentifier,
       createdAt,
       updatedAt
     );

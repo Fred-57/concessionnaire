@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 import { IModel, ModelSchema } from "./ModelModel";
 import { MotorcycleStatusEnum } from "@domain/types/MotorcycleStatusEnum";
+import { GuaranteeSchema, IGuarantee } from "./GuaranteeModel";
 
 // export enum MotorcycleStatus {
 //   Rented = "Rented",
@@ -13,9 +14,9 @@ export interface IMotorcycle {
   identifier: string;
   mileage: number;
   dateOfCommissioning: Date;
-  // TODO: Change to enum
   status: MotorcycleStatusEnum;
   model: IModel;
+  guarantee?: IGuarantee;
 }
 
 export const MotorcycleSchema = new Schema<IMotorcycle>(
@@ -25,6 +26,7 @@ export const MotorcycleSchema = new Schema<IMotorcycle>(
     dateOfCommissioning: { type: Date, required: true },
     status: { type: String, enum: MotorcycleStatusEnum, required: true },
     model: ModelSchema,
+    guarantee: GuaranteeSchema,
   },
   { timestamps: true }
 );
