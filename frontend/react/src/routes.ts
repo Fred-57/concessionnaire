@@ -18,6 +18,7 @@ import { Model } from "./pages/Model";
 import { Motorcycle } from "./pages/Motorcycle";
 import { Part } from "./pages/Part";
 import { Rental } from "./pages/Rental";
+import { BrandUpdate } from "./pages/update/Brand";
 
 export const routes = [
   {
@@ -73,5 +74,12 @@ export const routes = [
     path: "/parts",
     icon: BoltIcon,
     element: Part,
+  },
+];
+
+export const hiddenRoutes = [
+  {
+    path: "/brands/:identifier",
+    element: BrandUpdate,
   },
 ];

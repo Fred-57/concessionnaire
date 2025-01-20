@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router";
 import { Home } from "./pages/Home";
-import { routes } from "./routes";
+import { hiddenRoutes, routes } from "./routes";
 
 function App() {
   return (
@@ -10,6 +10,13 @@ function App() {
         {routes.map((route) => (
           <Route
             key={route.title}
+            path={route.path}
+            element={<route.element />}
+          />
+        ))}
+        {hiddenRoutes.map((route) => (
+          <Route
+            key={route.path}
             path={route.path}
             element={<route.element />}
           />

@@ -1,5 +1,6 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar/AppSidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 import { AppHeader } from "./header/AppHeader";
 
 export function Layout({
@@ -10,15 +11,18 @@ export function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <SidebarProvider className="h-screen">
-      <AppSidebar title={title} />
-      <main className="flex flex-col w-screen">
-        <AppHeader />
-        <section className="p-4 flex flex-col gap-5">
-          <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
-          {children}
-        </section>
-      </main>
-    </SidebarProvider>
+    <>
+      <SidebarProvider className="h-screen">
+        <AppSidebar title={title} />
+        <main className="flex flex-col w-screen">
+          <AppHeader />
+          <section className="p-4 flex flex-col gap-5">
+            <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+            {children}
+          </section>
+        </main>
+      </SidebarProvider>
+      <Toaster />
+    </>
   );
 }
