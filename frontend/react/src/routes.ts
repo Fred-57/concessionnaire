@@ -18,7 +18,7 @@ import { Model } from "./pages/Model";
 import { Motorcycle } from "./pages/Motorcycle";
 import { Part } from "./pages/Part";
 import { Rental } from "./pages/Rental";
-import { BrandUpdate } from "./pages/update/Brand";
+import { BrandCreate, BrandUpdate } from "./pages/forms/Brand";
 
 export const routes = [
   {
@@ -78,6 +78,12 @@ export const routes = [
 ];
 
 export const hiddenRoutes = [
+  // Route create en premier, sinon "create" est considéré comme :identifier
+  // par la route d'update
+  {
+    path: "/brands/create",
+    element: BrandCreate,
+  },
   {
     path: "/brands/:identifier",
     element: BrandUpdate,

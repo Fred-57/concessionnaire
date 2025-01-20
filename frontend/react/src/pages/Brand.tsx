@@ -42,7 +42,13 @@ export function Brand() {
   };
 
   return (
-    <Layout title="Marques">
+    <Layout
+      title="Marques"
+      button={{
+        label: "Ajouter",
+        path: "/brands/create",
+      }}
+    >
       <DataTable
         columns={columns({ goToUpdate, handleDelete })}
         data={brands}
