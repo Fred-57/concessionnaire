@@ -1,16 +1,17 @@
 import { model, Schema } from "mongoose";
+import { IPart, PartSchema } from "./PartModel";
 
 export interface IGuarantee {
   identifier: string;
   name: string;
-  // TODO: parts: IPart[];
+  parts: IPart[];
 }
 
 export const GuaranteeSchema = new Schema<IGuarantee>(
   {
     identifier: { type: String, required: true },
     name: { type: String, required: true },
-    // TODO: parts: [PartSchema],
+    parts: { type: [PartSchema], required: true },
   },
   { timestamps: true }
 );
