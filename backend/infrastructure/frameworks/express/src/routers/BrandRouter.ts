@@ -9,9 +9,9 @@ import { StatusCodes } from "http-status-codes";
 export const BrandRouter = Router();
 
 BrandRouter.post("/", async (req, res) => {
-  const { name, logo } = req.body;
+  const { name } = req.body;
 
-  const brand = Brand.create(name, logo);
+  const brand = Brand.create(name);
 
   if (brand instanceof BrandNameTooShortError) {
     res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY);
