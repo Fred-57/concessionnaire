@@ -3,6 +3,8 @@ import { model, Schema } from "mongoose";
 export interface IBrand {
   identifier: string;
   name: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const BrandSchema = new Schema<IBrand>(
