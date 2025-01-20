@@ -1,3 +1,4 @@
+import { ListBrandsUsecase } from "@application/usecases/brand/ListBrandsUsecase";
 import { CreateBrandUsecase } from "@application/usecases/brand/CreateBrandUsecase";
 import { Brand } from "@domain/entities/Brand";
 import { BrandNameAlreadyTakenError } from "@domain/errors/brand/BrandNameAlreadyTakenError";
@@ -7,6 +8,13 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export const BrandRouter = Router();
+
+BrandRouter.get("/", async (_, res) => {
+  const brands = await new ListBrandsUsecase(
+    new PostgresBrandRepository(),
+  ).execute();
+  res.status(StatusCodes.OK).json(brands);
+});
 
 BrandRouter.post("/", async (req, res) => {
   const { name } = req.body;

@@ -4,12 +4,12 @@ import { BrandRepository } from "@application/repositories/BrandRepository";
 import { BrandNotFoundError } from "@domain/errors/brand/BrandNotFoundError";
 import { BrandNameAlreadyTakenError } from "@domain/errors/brand/BrandNameAlreadyTakenError";
 
-export class UpdateBrandUsecase implements Usecase {
+export class UpdateBrandUsecase implements Usecase<Brand> {
   public constructor(private readonly brandRepository: BrandRepository) {}
 
   public async execute(brand: Brand) {
     const brandExists = await this.brandRepository.findByIdentifier(
-      brand.identifier
+      brand.identifier,
     );
 
     if (!brandExists) {
