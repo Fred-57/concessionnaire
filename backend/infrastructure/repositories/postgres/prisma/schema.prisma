@@ -56,6 +56,7 @@ model Motorcycle {
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
   Rental              Rental[]
+  Maintenance         Maintenance[]
 }
 
 model Rental {
@@ -79,6 +80,8 @@ model Breakdown {
   rentalId    String   @db.Uuid
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  repair              Repair?     @relation(fields: [repairId], references: [id])
+  repairId            String?     @db.Uuid
 }
 
 model Guarantee {
@@ -88,6 +91,43 @@ model Guarantee {
   updatedAt  DateTime     @updatedAt
   Motorcycle Motorcycle[]
   // Part        Part[]
+}
+
+model Part {
+  id        String   @id @db.Uuid
+  reference String
+  name      String
+  cost      Float
+  stock     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Repair    Repair[]
+}
+
+model Maintenance {
+  id                  String      @id @db.Uuid
+  date                DateTime
+  motorcycle          Motorcycle  @relation(fields: [motorcycleId], references: [id])
+  motorcycleId        String
+  repair              Repair?     @relation(fields: [repairId], references: [id])
+  repairId            String?     @db.Uuid
+  recommendation      String
+  status              StatusMaintenance
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+}
+
+model Repair {
+  id            String   @id @db.Uuid
+  identifier    String
+  date          DateTime
+  replacedParts Part[]
+  cost          Float
+  status        StatusRepair
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  Maintenance   Maintenance[]
+  Breakdown     Breakdown[]
 }
 
 enum License {
@@ -100,4 +140,16 @@ enum Status {
   AVAILABLE
   IN_REPAIR
   IN_MAINTENANCE
+}
+
+enum StatusMaintenance {
+  PENDING
+  DONE
+  CANCELED
+}
+
+enum StatusRepair {
+  PENDING
+  DONE
+  CANCELED
 }
