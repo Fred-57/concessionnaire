@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express, { Express } from "express";
 import { errorHandler } from "./middlewares/errorHandler";
 import { BrandRouter } from "./routers/BrandRouter";
+import { connect } from "@infrastructure/repositories/mongodb";
 
 dotenv.config({ path: "../.env" });
 
@@ -18,6 +19,9 @@ app.use("/brands", BrandRouter);
 
 // Error handling
 app.use(errorHandler);
+
+// MongoDB
+connect(process.env.MONGODB_URI!);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
