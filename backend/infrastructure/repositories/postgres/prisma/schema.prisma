@@ -32,29 +32,29 @@ model Brand {
 }
 
 model Model {
-  id        String   @id @db.Uuid
-  name      String
-  repairMileage Int
+  id             String       @id @db.Uuid
+  name           String
+  repairMileage  Int
   repairDeadline Int
-  brand     Brand    @relation(fields: [brandId], references: [id])
-  brandId   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Motorcycle Motorcycle[]
+  brand          Brand        @relation(fields: [brandId], references: [id])
+  brandId        String       @db.Uuid
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  Motorcycle     Motorcycle[]
 }
 
 model Motorcycle {
   // Registration number
-  id                  String   @id
+  id                  String    @id
   mileage             Int
   dateOfCommissioning DateTime
   status              Status
-  model               Model    @relation(fields: [modelId], references: [id])
-  modelId             String
+  model               Model     @relation(fields: [modelId], references: [id])
+  modelId             String    @db.Uuid
   guarantee           Guarantee @relation(fields: [guaranteeId], references: [id])
-  guaranteeId         String
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  guaranteeId         String    @db.Uuid
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
   Rental              Rental[]
 }
 
@@ -64,7 +64,7 @@ model Rental {
   durationInMonths Int
   driver           Driver      @relation(fields: [driverId], references: [id])
   motorcycle       Motorcycle  @relation(fields: [motorcycleId], references: [id])
-  driverId         String
+  driverId         String      @db.Uuid
   motorcycleId     String
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
@@ -76,17 +76,17 @@ model Breakdown {
   date        DateTime
   description String
   rental      Rental   @relation(fields: [rentalId], references: [id])
-  rentalId    String
+  rentalId    String   @db.Uuid
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Guarantee {
-  id          String   @id @db.Uuid
-  name        String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  Motorcycle  Motorcycle[]
+  id         String       @id @db.Uuid
+  name       String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Motorcycle Motorcycle[]
   // Part        Part[]
 }
 
