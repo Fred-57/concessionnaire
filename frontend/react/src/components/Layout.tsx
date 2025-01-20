@@ -14,7 +14,7 @@ export function Layout({
       <AppSidebar title={title} />
       <main className="flex flex-col w-screen">
         <AppHeader />
-        <section className="p-4 flex flex-col gap-2.5">
+        <section className="p-4 flex flex-col gap-5">
           <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
           {children}
         </section>

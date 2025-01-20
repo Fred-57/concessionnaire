@@ -59,7 +59,7 @@ export function HeaderCommand() {
         </Description>
         <CommandInput placeholder="Rechercher..." />
         <CommandList>
-          <CommandEmpty>Aucun résultat trouvé.</CommandEmpty>
+          <CommandEmpty>Aucun résultat.</CommandEmpty>
           <CommandGroup heading="Triumph Motorcycles">
             {routes.map((route) => (
               <CommandItem
