@@ -4,10 +4,12 @@ import {
   HomeIcon,
   KeyIcon,
   PackageIcon,
+  TargetIcon,
   TriangleAlertIcon,
   UserIcon,
   WrenchIcon,
 } from "lucide-react";
+import { Brand } from "./pages/Brand";
 import { Breakdown } from "./pages/Breakdown";
 import { Driver } from "./pages/Driver";
 import { Home } from "./pages/Home";
@@ -23,6 +25,12 @@ export const routes = [
     path: "/home",
     icon: HomeIcon,
     element: Home,
+  },
+  {
+    title: "Marques",
+    path: "/brands",
+    icon: TargetIcon,
+    element: Brand,
   },
   {
     title: "Modèles",

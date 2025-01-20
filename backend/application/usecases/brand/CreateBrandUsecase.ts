@@ -3,7 +3,7 @@ import { Usecase } from "../Usecase";
 import { BrandRepository } from "@application/repositories/BrandRepository";
 import { BrandNameAlreadyTakenError } from "@domain/errors/brand/BrandNameAlreadyTakenError";
 
-export class CreateBrandUsecase implements Usecase {
+export class CreateBrandUsecase implements Usecase<Brand> {
   public constructor(private readonly brandRepository: BrandRepository) {}
 
   public async execute(brand: Brand) {

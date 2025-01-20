@@ -8,6 +8,16 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 8080,
+    proxy: {
+      "/express": {
+        target: "http://localhost:3000",
+        rewrite: (path) => path.replace(/^\/express/, ""),
+      },
+      "/nest": {
+        target: "http://localhost:3001",
+        rewrite: (path) => path.replace(/^\/nest/, ""),
+      },
+    },
   },
   resolve: {
     alias: {
