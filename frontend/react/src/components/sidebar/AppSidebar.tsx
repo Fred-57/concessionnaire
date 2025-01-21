@@ -21,7 +21,7 @@ export function AppSidebar({ title }: { title: string }) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Triumph Motorcycles</SidebarGroupLabel>
+          <SidebarGroupLabel>Back-office</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {routes.map((route) => (
