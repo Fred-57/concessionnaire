@@ -34,7 +34,7 @@ export const columns = ({
     },
     {
       accessorKey: "license",
-      header: "Permis",
+      header: "Permis de conduire",
     },
     {
       accessorKey: "numberOfYearsOfExperience",
