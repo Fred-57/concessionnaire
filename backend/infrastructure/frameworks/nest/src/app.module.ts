@@ -1,10 +1,9 @@
-import { UserRepository as PostgresUserRepository } from "@infrastructure/repositories/postgres";
-import { UserRepository as MongoUserRepository } from "@infrastructure/repositories/mongodb";
 import { Module } from "@nestjs/common";
+import { DriversModule } from "./drivers/drivers.module";
 
 @Module({
-  imports: [],
+  imports: [DriversModule],
   controllers: [],
-  providers: [MongoUserRepository, PostgresUserRepository],
+  providers: [],
 })
 export class AppModule {}
