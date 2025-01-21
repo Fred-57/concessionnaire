@@ -26,7 +26,7 @@ export function Layout({
         <main className="flex flex-col w-screen">
           <AppHeader />
           <section className="p-4 flex flex-col gap-5">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center h-10">
               <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
               {button && (
                 <Button
