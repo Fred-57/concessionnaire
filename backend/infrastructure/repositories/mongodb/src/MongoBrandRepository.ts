@@ -73,11 +73,11 @@ export class MongoBrandRepository implements BrandRepository {
   }
 
   async findAll(): Promise<Brand[]> {
-    const brandDatabases = await BrandModel.find();
+    const brandsDatabase = await BrandModel.find();
 
     const brands: Brand[] = [];
 
-    for (const brandDatabase of brandDatabases) {
+    for (const brandDatabase of brandsDatabase) {
       const brand = Brand.from(
         brandDatabase.identifier,
         brandDatabase.name,
