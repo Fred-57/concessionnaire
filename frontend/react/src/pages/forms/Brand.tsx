@@ -57,6 +57,7 @@ export function BrandForm({ mode }: { mode: "create" | "update" }) {
           mode === "create"
             ? "Erreur lors de la création"
             : "Erreur lors de la mise à jour",
+        variant: "destructive",
       });
     }
   };
