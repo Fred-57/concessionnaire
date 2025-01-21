@@ -4,7 +4,7 @@ import { ModelRepository } from "@application/repositories/ModelRepository";
 import { ModelNotFoundError } from "@domain/errors/model/ModelNotFoundError";
 import { ModelNameAlreadyTakenError } from "@domain/errors/model/ModelNameAlreadyTakenError";
 
-export class UpdateModelUsecase implements Usecase {
+export class UpdateModelUsecase implements Usecase<Model> {
   public constructor(private readonly modelRepository: ModelRepository) {}
 
   public async execute(model: Model) {
