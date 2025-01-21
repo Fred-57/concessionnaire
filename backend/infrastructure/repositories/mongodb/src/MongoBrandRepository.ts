@@ -7,7 +7,7 @@ export class MongoBrandRepository implements BrandRepository {
   async save(brand: Brand): Promise<void> {
     const brandDatabase = new BrandModel({
       identifier: brand.identifier,
-      name: brand.name,
+      name: brand.name.value,
     });
     await brandDatabase.save();
   }

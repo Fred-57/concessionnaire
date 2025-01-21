@@ -18,6 +18,7 @@ import { Model } from "./pages/Model";
 import { Motorcycle } from "./pages/Motorcycle";
 import { Part } from "./pages/Part";
 import { Rental } from "./pages/Rental";
+import { BrandCreate, BrandUpdate } from "./pages/forms/Brand";
 
 export const routes = [
   {
@@ -73,5 +74,18 @@ export const routes = [
     path: "/parts",
     icon: BoltIcon,
     element: Part,
+  },
+];
+
+export const hiddenRoutes = [
+  // Route create en premier, sinon "create" est considéré comme :identifier
+  // par la route d'update
+  {
+    path: "/brands/create",
+    element: BrandCreate,
+  },
+  {
+    path: "/brands/:identifier",
+    element: BrandUpdate,
   },
 ];
