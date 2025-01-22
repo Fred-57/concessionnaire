@@ -1,30 +1,31 @@
 import { Model } from "@domain/entities/Model";
 import { ModelRepository } from "@application/repositories/ModelRepository";
 import { PrismaClient } from "@prisma/client";
+import { Brand } from "@domain/entities/Brand";
 
 const prisma = new PrismaClient();
 
 export class PostgresModelRepository implements ModelRepository {
-  public async save(model: Model): Promise<void> {
+  public async save(model: Model, brand: Model): Promise<void> {
     await prisma.model.create({
       data: {
         id: model.identifier,
         name: model.name.value,
         repairMileage: model.repairMileage,
         repairDeadline: model.repairDeadline.value,
-        brandId: model.brandIdentifier,
+        brandId: brand.identifier,
       },
     });
   }
 
-  public async update(model: Model): Promise<void> {
+  public async update(model: Model, brand: Brand): Promise<void> {
     await prisma.model.update({
       where: { id: model.identifier },
       data: {
         name: model.name.value,
         repairMileage: model.repairMileage,
         repairDeadline: model.repairDeadline.value,
-        brandId: model.brandIdentifier,
+        brandId: brand.identifier,
       },
     });
   }

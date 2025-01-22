@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { ListModelsUsecase } from "@application/usecases/model/ListModelUsecase";
-import { PostgresModelRepository } from "@infrastructure/repositories/postgres/";
+import {
+  PostgresBrandRepository,
+  PostgresModelRepository,
+} from "@infrastructure/repositories/postgres/";
 import { StatusCodes } from "http-status-codes";
 import { Model } from "@domain/entities/Model";
 import { CreateModelUsecase } from "@application/usecases/model/CreateModelUsecase";
@@ -33,7 +36,10 @@ ModelRouter.post("/", async (req, res) => {
   }
 
   try {
-    await new CreateModelUsecase(new PostgresModelRepository()).execute(model);
+    await new CreateModelUsecase(
+      new PostgresModelRepository(),
+      new PostgresBrandRepository()
+    ).execute(model);
   } catch (error) {
     if (error instanceof Error) {
       res.status(StatusCodes.CONFLICT).send(error.name);
@@ -85,9 +91,10 @@ ModelRouter.put("/:id", async (req, res) => {
       return;
     }
 
-    await new UpdateModelUsecase(new PostgresModelRepository()).execute(
-      updatedModel
-    );
+    await new UpdateModelUsecase(
+      new PostgresModelRepository(),
+      new PostgresBrandRepository()
+    ).execute(updatedModel);
 
     res.sendStatus(StatusCodes.OK);
   } catch (error) {
