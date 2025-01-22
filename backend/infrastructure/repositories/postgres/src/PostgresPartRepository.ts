@@ -2,6 +2,11 @@ import { PartRepository } from "@application/repositories/PartRepository";
 import { PrismaClient } from "@prisma/client";
 import { Part } from "@domain/entities/Part";
 
+import { PartReferenceTooShortError } from "@domain/errors/part/PartReferenceTooShortError";
+import { PartNameTooShortError } from "@domain/errors/part/PartNameTooShortError";
+import { InvalidQuantityError } from "@domain/errors/InvalidQuantityError";
+import { CostLessThanZeroError } from "@domain/errors/CostLessThanZeroError";
+
 const prisma = new PrismaClient();
 
 export class PostgresPartRepository implements PartRepository {
@@ -9,10 +14,10 @@ export class PostgresPartRepository implements PartRepository {
     await prisma.part.create({
       data: {
         id: part.identifier,
-        reference: part.reference,
-        name: part.name,
-        cost: part.cost,
-        stock: part.stock,
+        reference: part.reference.value,
+        name: part.name.value,
+        cost: part.cost.value,
+        stock: part.stock.value,
       },
     });
   }
@@ -21,10 +26,10 @@ export class PostgresPartRepository implements PartRepository {
     await prisma.part.update({
       where: { id: part.identifier },
       data: {
-        reference: part.reference,
-        name: part.name,
-        cost: part.cost,
-        stock: part.stock,
+        reference: part.reference.value,
+        name: part.name.value,
+        cost: part.cost.value,
+        stock: part.stock.value,
       },
     });
   }
@@ -49,7 +54,14 @@ export class PostgresPartRepository implements PartRepository {
       partDatabase.createdAt,
       partDatabase.updatedAt
     );
-
+    if (
+      part instanceof PartReferenceTooShortError ||
+      part instanceof PartNameTooShortError ||
+      part instanceof CostLessThanZeroError ||
+      part instanceof InvalidQuantityError
+    ) {
+      throw part;
+    }
     return part;
   }
 
@@ -73,6 +85,14 @@ export class PostgresPartRepository implements PartRepository {
       partDatabase.createdAt,
       partDatabase.updatedAt
     );
+    if (
+      part instanceof PartReferenceTooShortError ||
+      part instanceof PartNameTooShortError ||
+      part instanceof CostLessThanZeroError ||
+      part instanceof InvalidQuantityError
+    ) {
+      throw part;
+    }
 
     return part;
   }
@@ -90,6 +110,14 @@ export class PostgresPartRepository implements PartRepository {
         partDatabase.createdAt,
         partDatabase.updatedAt
       );
+      if (
+        part instanceof PartReferenceTooShortError ||
+        part instanceof PartNameTooShortError ||
+        part instanceof CostLessThanZeroError ||
+        part instanceof InvalidQuantityError
+      ) {
+        throw part;
+      }
       parts.push(part);
     }
 

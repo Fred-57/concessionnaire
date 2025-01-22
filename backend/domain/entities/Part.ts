@@ -1,5 +1,9 @@
 import { Entity } from "./Entity";
 import { randomUUID } from "crypto";
+import { PartReference } from "@domain/values/part/PartReference";
+import { PartName } from "@domain/values/part/PartName";
+import { PartCost } from "@domain/values/part/PartCost";
+import { PartStock } from "@domain/values/part/PartStock";
 
 export class Part implements Entity {
   private constructor(
@@ -11,21 +15,21 @@ export class Part implements Entity {
     /**
      * @description reference
      */
-    public readonly reference: string,
+    public readonly reference: PartReference,
 
     /**
      * @description Désignation
      */
-    public readonly name: string,
+    public readonly name: PartName,
     /**
      * @description Prix
      */
-    public readonly cost: number,
+    public readonly cost: PartCost,
 
     /**
      * @description Stock
      */
-    public readonly stock: number,
+    public readonly stock: PartStock,
 
     public readonly createdAt: Date,
     public readonly updatedAt: Date
@@ -33,13 +37,33 @@ export class Part implements Entity {
 
   public static from(
     identifier: string,
-    reference: string,
-    name: string,
-    cost: number,
-    stock: number,
+    referenceValue: string,
+    nameValue: string,
+    costValue: number,
+    stockValue: number,
     createdAt: Date,
     updatedAt: Date
-  ): Part {
+  ) {
+    const reference = PartReference.from(referenceValue);
+    if (reference instanceof Error) {
+      return reference;
+    }
+
+    const name = PartName.from(nameValue);
+    if (name instanceof Error) {
+      return name;
+    }
+
+    const cost = PartCost.from(costValue.toString());
+    if (cost instanceof Error) {
+      return cost;
+    }
+
+    const stock = PartStock.from(stockValue.toString());
+    if (stock instanceof Error) {
+      return stock;
+    }
+
     return new Part(
       identifier,
       reference,
@@ -56,7 +80,7 @@ export class Part implements Entity {
     name: string,
     cost: number,
     stock: number
-  ): Part {
+  ) {
     const identifier = randomUUID();
     const createdAt = new Date();
     const updatedAt = new Date();

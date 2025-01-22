@@ -8,7 +8,7 @@ export class CreatePartUsecase implements Usecase<Part> {
 
   public async execute(part: Part) {
     const partExists = await this.partRepository.findByReference(
-      part.reference
+      part.reference.value
     );
 
     if (!partExists) {
