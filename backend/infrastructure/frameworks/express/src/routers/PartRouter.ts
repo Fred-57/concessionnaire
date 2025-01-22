@@ -2,6 +2,7 @@ import { CreatePartUsecase } from "@application/usecases/part/CreatePartUsecase"
 import { GetPartUsecase } from "@application/usecases/part/GetPartUsecase";
 import { ListPartsUsecase } from "@application/usecases/part/ListPartsUsecase";
 import { UpdatePartUsecase } from "@application/usecases/part/UpdatePartUsecase";
+import { DeletePartUsecase } from "@application/usecases/part/DeletePartUsecase";
 import { Part } from "@domain/entities/Part";
 import { PostgresPartRepository } from "@infrastructure/repositories/postgres/src/PostgresPartRepository";
 import { PartReferenceAlreadyExistsError } from "@domain/errors/part/PartReferenceAlreadyExistsError";
@@ -138,19 +139,19 @@ PartRouter.put("/:id", async (req, res) => {
   res.sendStatus(StatusCodes.OK);
 });
 
-// PartRouter.delete("/:id", async (req, res) => {
-//   const { id } = req.params;
+PartRouter.delete("/:id", async (req, res) => {
+  const { id } = req.params;
 
-//   const brand = await new GetPartUsecase(new PostgresPartRepository()).execute(
-//     id
-//   );
+  const part = await new GetPartUsecase(new PostgresPartRepository()).execute(
+    id
+  );
 
-//   if (!brand) {
-//     res.sendStatus(StatusCodes.NOT_FOUND);
-//     return;
-//   }
+  if (!part) {
+    res.sendStatus(StatusCodes.NOT_FOUND);
+    return;
+  }
 
-//   await new DeletePartUsecase(new PostgresPartRepository()).execute(id);
+  await new DeletePartUsecase(new PostgresPartRepository()).execute(id);
 
-//   res.sendStatus(StatusCodes.NO_CONTENT);
-// });
+  res.sendStatus(StatusCodes.NO_CONTENT);
+});
