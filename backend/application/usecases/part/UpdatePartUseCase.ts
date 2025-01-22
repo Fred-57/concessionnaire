@@ -8,12 +8,13 @@ export class UpdatePartUsecase implements Usecase<Part> {
   public constructor(private readonly partRepository: PartRepository) {}
 
   public async execute(part: Part) {
-    const partExists = await this.partRepository.findByReference(
-      part.reference.value
+    const partExists = await this.partRepository.findByIdentifier(
+      part.identifier
     );
     if (!partExists) {
       throw new PartNotFoundError();
     }
+
     if (partExists.identifier !== part.identifier) {
       throw new PartReferenceAlreadyExistsError();
     }

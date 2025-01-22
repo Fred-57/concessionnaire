@@ -1,10 +1,6 @@
 import { Part } from "../../../domain/entities/Part";
 import { PartRepository } from "../../repositories/PartRepository";
 import { PartReferenceAlreadyExistsError } from "@domain/errors/part/PartReferenceAlreadyExistsError";
-import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
-import { PartNameTooShortError } from "@domain/errors/part/PartNameTooShortError";
-import { PartReferenceTooShortError } from "@domain/errors/part/PartReferenceTooShortError";
-
 import { Usecase } from "../Usecase";
 
 export class CreatePartUsecase implements Usecase<Part> {
