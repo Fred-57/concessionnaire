@@ -37,6 +37,7 @@ export function Brand() {
     } else {
       toast({
         title: "Erreur lors de la suppression",
+        variant: "destructive",
       });
     }
   };

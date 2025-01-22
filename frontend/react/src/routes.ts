@@ -19,6 +19,7 @@ import { Motorcycle } from "./pages/Motorcycle";
 import { Part } from "./pages/Part";
 import { Rental } from "./pages/Rental";
 import { BrandCreate, BrandUpdate } from "./pages/forms/Brand";
+import { DriverCreate, DriverUpdate } from "./pages/forms/Driver";
 import { PartCreate, PartUpdate } from "./pages/forms/Part";
 
 export const routes = [
@@ -88,6 +89,14 @@ export const hiddenRoutes = [
   {
     path: "/brands/:identifier",
     element: BrandUpdate,
+  },
+  {
+    path: "/drivers/create",
+    element: DriverCreate,
+  },
+  {
+    path: "/drivers/:identifier",
+    element: DriverUpdate,
   },
   {
     path: "/parts/create",

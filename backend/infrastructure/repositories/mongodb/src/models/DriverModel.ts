@@ -5,6 +5,8 @@ export interface IDriver {
   name: string;
   license: string;
   numberOfYearsOfExperience: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const DriverSchema = new Schema<IDriver>(
@@ -14,7 +16,7 @@ export const DriverSchema = new Schema<IDriver>(
     license: { type: String, required: true },
     numberOfYearsOfExperience: { type: Number, required: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const DriverModel = model<IDriver>("Driver", DriverSchema);
