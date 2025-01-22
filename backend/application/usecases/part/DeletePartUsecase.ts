@@ -1,6 +1,6 @@
 import { Part } from "../../../domain/entities/Part";
 import { PartRepository } from "../../repositories/PartRepository";
-import { PartReferenceAlreadyExistsError } from "@domain/errors/part/PartReferenceAlreadyExistsError";
+import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
 import { Usecase } from "../Usecase";
 
 export class CreatePartUsecase implements Usecase<Part> {
@@ -11,9 +11,9 @@ export class CreatePartUsecase implements Usecase<Part> {
       part.reference
     );
 
-    if (partExists) {
-      throw new PartReferenceAlreadyExistsError();
+    if (!partExists) {
+      throw new PartNotFoundError();
     }
-    await this.partRepository.save(part);
+    await this.partRepository.delete(part);
   }
 }

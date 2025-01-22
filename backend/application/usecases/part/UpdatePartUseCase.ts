@@ -3,7 +3,7 @@ import { PartRepository } from "../../repositories/PartRepository";
 import { PartReferenceAlreadyExistsError } from "@domain/errors/part/PartReferenceAlreadyExistsError";
 import { Usecase } from "../Usecase";
 
-export class UpdatePartUsecase implements Usecase {
+export class UpdatePartUsecase implements Usecase<Part> {
   public constructor(private readonly partRepository: PartRepository) {}
 
   public async execute(part: Part) {
