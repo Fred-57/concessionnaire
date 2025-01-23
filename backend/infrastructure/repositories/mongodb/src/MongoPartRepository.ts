@@ -1,16 +1,21 @@
 import { PartRepository } from "./../../../../application/repositories/PartRepository";
 import { Part } from "@domain/entities/Part";
 import { PartModel } from "./models/PartModel";
+import { PartReferenceTooShortError } from "@domain/errors/part/PartReferenceTooShortError";
+import { InvalidQuantityError } from "@domain/errors/InvalidQuantityError";
+import { PartNameTooShortError } from "@domain/errors/part/PartNameTooShortError";
+import { CostLessThanZeroError } from "@domain/errors/CostLessThanZeroError";
 
 export class MongoPartRepository implements PartRepository {
   async save(part: Part): Promise<void> {
     const partDatabase = new PartModel({
       identifier: part.identifier,
-      reference: part.reference,
-      name: part.name,
-      cost: part.cost,
-      stock: part.stock,
+      reference: part.reference.value,
+      name: part.name.value,
+      cost: part.cost.value,
+      stock: part.stock.value,
     });
+    console.log(partDatabase);
     await partDatabase.save();
   }
 
@@ -26,17 +31,17 @@ export class MongoPartRepository implements PartRepository {
     }
 
     if (
-      partDatabase.reference === part.reference &&
+      partDatabase.reference === part.reference.value &&
       partDatabase.identifier != part.identifier
     ) {
       // TODO: je sais pas si j'ai le droit de faire ça ou si je dois lever une exception
       return;
     }
 
-    partDatabase.reference = part.reference;
-    partDatabase.name = part.name;
-    partDatabase.cost = part.cost;
-    partDatabase.stock = part.stock;
+    partDatabase.reference = part.reference.value;
+    partDatabase.name = part.name.value;
+    partDatabase.cost = part.cost.value;
+    partDatabase.stock = part.stock.value;
 
     await partDatabase.save();
   }
@@ -58,7 +63,14 @@ export class MongoPartRepository implements PartRepository {
       partDatabase.createdAt,
       partDatabase.updatedAt
     );
-
+    if (
+      part instanceof PartReferenceTooShortError ||
+      part instanceof PartNameTooShortError ||
+      part instanceof CostLessThanZeroError ||
+      part instanceof InvalidQuantityError
+    ) {
+      throw part;
+    }
     return part;
   }
 
@@ -80,7 +92,14 @@ export class MongoPartRepository implements PartRepository {
       partDatabase.createdAt,
       partDatabase.updatedAt
     );
-
+    if (
+      part instanceof PartReferenceTooShortError ||
+      part instanceof PartNameTooShortError ||
+      part instanceof CostLessThanZeroError ||
+      part instanceof InvalidQuantityError
+    ) {
+      throw part;
+    }
     return part;
   }
   async findAll(): Promise<Part[]> {
@@ -98,7 +117,14 @@ export class MongoPartRepository implements PartRepository {
         partDatabase.createdAt,
         partDatabase.updatedAt
       );
-
+      if (
+        part instanceof PartReferenceTooShortError ||
+        part instanceof PartNameTooShortError ||
+        part instanceof CostLessThanZeroError ||
+        part instanceof InvalidQuantityError
+      ) {
+        throw part;
+      }
       parts.push(part);
     }
 
