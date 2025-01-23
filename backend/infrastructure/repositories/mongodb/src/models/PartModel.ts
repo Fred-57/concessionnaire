@@ -6,6 +6,8 @@ export interface IPart {
   name: string;
   cost: number;
   stock: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const PartSchema = new Schema<IPart>(

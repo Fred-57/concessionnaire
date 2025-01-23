@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express, { Express } from "express";
 import { errorHandler } from "./middlewares/errorHandler";
 import { BrandRouter } from "./routers/BrandRouter";
+import { PartRouter } from "./routers/PartRouter";
 import { connect } from "@infrastructure/repositories/mongodb";
 
 dotenv.config({ path: "../.env" });
@@ -16,6 +17,7 @@ app.use(express.json());
 
 // Routers
 app.use("/brands", BrandRouter);
+app.use("/parts", PartRouter);
 
 // Error handling
 app.use(errorHandler);
