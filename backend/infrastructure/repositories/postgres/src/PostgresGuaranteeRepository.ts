@@ -136,7 +136,17 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
     });
 
     const guarantees = guaranteesDatabase.map((guaranteeDatabase) => {
-      const parts = guaranteeDatabase.Part.map((part) => Part.from(part.id));
+      const parts = guaranteeDatabase.Part.map((part) =>
+        Part.from(
+          part.id,
+          part.reference,
+          part.name,
+          part.cost,
+          part.stock,
+          part.createdAt,
+          part.updatedAt
+        )
+      );
 
       const partsValue = parts.filter(
         (part): part is Part => part instanceof Part
