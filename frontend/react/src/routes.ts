@@ -21,6 +21,7 @@ import { Rental } from "./pages/Rental";
 import { BrandCreate, BrandUpdate } from "./pages/forms/Brand";
 import { DriverCreate, DriverUpdate } from "./pages/forms/Driver";
 import { PartCreate, PartUpdate } from "./pages/forms/Part";
+import { ModelCreate, ModelUpdate } from "./pages/forms/Model";
 
 export const routes = [
   {
@@ -89,6 +90,14 @@ export const hiddenRoutes = [
   {
     path: "/brands/:identifier",
     element: BrandUpdate,
+  },
+  {
+    path: "/models/create",
+    element: ModelCreate,
+  },
+  {
+    path: "/models/:identifier",
+    element: ModelUpdate,
   },
   {
     path: "/drivers/create",
