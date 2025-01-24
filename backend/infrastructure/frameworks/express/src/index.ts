@@ -4,6 +4,7 @@ import express, { Express } from "express";
 import { errorHandler } from "./middlewares/errorHandler";
 import { BrandRouter } from "./routers/BrandRouter";
 import { PartRouter } from "./routers/PartRouter";
+import { ModelRouter } from "./routers/ModelRouter";
 import { connect } from "@infrastructure/repositories/mongodb";
 
 dotenv.config({ path: "../.env" });
@@ -18,6 +19,7 @@ app.use(express.json());
 // Routers
 app.use("/brands", BrandRouter);
 app.use("/parts", PartRouter);
+app.use("/models", ModelRouter);
 
 // Error handling
 app.use(errorHandler);

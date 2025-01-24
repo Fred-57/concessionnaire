@@ -7,6 +7,8 @@ export interface IModel {
   repairMileage: number;
   repairDeadline: number;
   brand: IBrand;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const ModelSchema = new Schema<IModel>(
