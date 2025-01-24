@@ -1,10 +1,10 @@
 import { GuaranteeRepository } from "@application/repositories/GuaranteeRepository";
-import { Part } from "@domain/entities/Part";
 import { Guarantee } from "@domain/entities/Guarantee";
 import { GuaranteeNotFoundError } from "@domain/errors/guarantee/GuaranteeNotFoundError";
 import { GuaranteeNameAlreadyTakenError } from "@domain/errors/guarantee/GuaranteeNameAlreadyTakenError";
+import { Usecase } from "../Usecase";
 
-export class UpdateGuaranteeUsecase {
+export class UpdateGuaranteeUsecase implements Usecase<Guarantee> {
   public constructor(
     private readonly guaranteeRepository: GuaranteeRepository
   ) {}

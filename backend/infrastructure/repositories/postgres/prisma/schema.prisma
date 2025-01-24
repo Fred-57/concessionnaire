@@ -90,7 +90,7 @@ model Guarantee {
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   Motorcycle Motorcycle[]
-  // Part        Part[]
+  Part       PartsOnGuarantees[]
 }
 
 model Part {
@@ -102,6 +102,17 @@ model Part {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Repair    Repair[]
+  Guarantee PartsOnGuarantees[]
+}
+
+model PartsOnGuarantees {
+  id        String   @id @db.Uuid
+  guarantee Guarantee @relation(fields: [guaranteeId], references: [id])
+  guaranteeId String @db.Uuid
+  part      Part      @relation(fields: [partId], references: [id])
+  partId    String   @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Maintenance {
