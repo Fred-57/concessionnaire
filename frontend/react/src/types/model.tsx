@@ -18,7 +18,6 @@ export type ModelType = {
   repairDeadline: {
     value: number;
   };
-  brandIdentifier: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -42,10 +41,6 @@ export const columns = ({
     {
       accessorKey: "repairDeadline.value",
       header: "Délai de réparation",
-    },
-    {
-      accessorKey: "brandIdentifier",
-      header: "Identifiant de la marque",
     },
     {
       accessorKey: "createdAt",

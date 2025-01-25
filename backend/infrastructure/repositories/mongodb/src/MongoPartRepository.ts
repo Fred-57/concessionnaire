@@ -103,11 +103,11 @@ export class MongoPartRepository implements PartRepository {
     return part;
   }
   async findAll(): Promise<Part[]> {
-    const brandDatabases = await PartModel.find();
+    const partDatabases = await PartModel.find();
 
     const parts: Part[] = [];
 
-    for (const partDatabase of brandDatabases) {
+    for (const partDatabase of partDatabases) {
       const part = Part.from(
         partDatabase.identifier,
         partDatabase.reference,
