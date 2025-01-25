@@ -2,25 +2,23 @@ import { GuaranteeRepository } from "@application/repositories/GuaranteeReposito
 import { PrismaClient } from "@prisma/client";
 import { Guarantee } from "@domain/entities/Guarantee";
 import { Part } from "@domain/entities/Part";
+import { randomUUID } from "crypto";
 
 const prisma = new PrismaClient();
 
 export class PostgresGuaranteeRepository implements GuaranteeRepository {
   async save(guarantee: Guarantee): Promise<void> {
+    console.log(guarantee);
     await prisma.guarantee.create({
       data: {
         id: guarantee.identifier,
         name: guarantee.name.value,
-        durationInMonths: guarantee.durationInMonths,
+        durationInMonths: guarantee.durationInMonths.value,
         coveredAmount: guarantee.coveredAmount.value,
-        createdAt: guarantee.createdAt,
-        updatedAt: guarantee.updatedAt,
         parts: {
-          createMany: {
-            data: guarantee.parts.map((part) => ({
-              partId: part.identifier,
-            })),
-          },
+          create: guarantee.parts.map((part) => ({
+            partId: part.identifier,
+          })),
         },
       },
     });
@@ -30,6 +28,8 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
       where: { id: guarantee.identifier },
       data: {
         name: guarantee.name.value,
+        durationInMonths: guarantee.durationInMonths.value,
+        coveredAmount: guarantee.coveredAmount.value,
         updatedAt: guarantee.updatedAt,
         parts: {
           set: guarantee.parts.map((part) => ({
@@ -198,6 +198,12 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
   }
 
   async delete(guarantee: Guarantee): Promise<void> {
+    await prisma.guaranteePart.deleteMany({
+      where: {
+        guaranteeId: guarantee.identifier,
+      },
+    });
+
     await prisma.guarantee.delete({
       where: {
         id: guarantee.identifier,

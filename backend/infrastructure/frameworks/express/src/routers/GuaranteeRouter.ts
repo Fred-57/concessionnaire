@@ -6,46 +6,125 @@ import { DeleteGuaranteeUsecase } from "@application/usecases/guarantee/DeleteGu
 import { PostgresGuaranteeRepository } from "@infrastructure/repositories/postgres";
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
+import { GuaranteeNameAlreadyTakenError } from "@domain/errors/guarantee/GuaranteeNameAlreadyTakenError";
+import { Guarantee } from "@domain/entities/Guarantee";
+import { GuaranteeNotFoundError } from "@domain/errors/guarantee/GuaranteeNotFoundError";
 
 export const GuaranteeRouter = Router();
 
 GuaranteeRouter.get("/", async (_, res) => {
-  const guarantees = await new ListGuaranteesUsecase(
-    new PostgresGuaranteeRepository()
-  ).execute();
-  res.status(StatusCodes.OK).json(guarantees);
+  try {
+    const guarantees = await new ListGuaranteesUsecase(
+      new PostgresGuaranteeRepository()
+    ).execute();
+    res.status(StatusCodes.OK).json(guarantees);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(StatusCodes.CONFLICT).send(error.name);
+      return;
+    }
+  }
 });
 
 GuaranteeRouter.post("/", async (req, res) => {
-  const guarantee = await new CreateGuaranteeUsecase(
-    new PostgresGuaranteeRepository()
-  ).execute(req.body);
-  res.status(StatusCodes.CREATED).json(guarantee);
+  const { name, durationInMonths, coveredAmount, parts } = req.body;
+
+  const guarantee = Guarantee.create(
+    name,
+    durationInMonths,
+    coveredAmount,
+    parts
+  );
+
+  if (guarantee instanceof Error) {
+    res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY);
+    return;
+  }
+
+  try {
+    await new CreateGuaranteeUsecase(new PostgresGuaranteeRepository()).execute(
+      guarantee
+    );
+  } catch (error) {
+    if (error instanceof GuaranteeNameAlreadyTakenError) {
+      res.sendStatus(StatusCodes.CONFLICT);
+      return;
+    }
+  }
+
+  res.sendStatus(StatusCodes.CREATED);
 });
 
 GuaranteeRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const guarantee = await new GetGuaranteeUsecase(
-    new PostgresGuaranteeRepository()
-  ).execute(id);
-  res.status(StatusCodes.OK).json(guarantee);
+  try {
+    const guarantee = await new GetGuaranteeUsecase(
+      new PostgresGuaranteeRepository()
+    ).execute(id);
+
+    if (guarantee instanceof GuaranteeNotFoundError) {
+      res.sendStatus(StatusCodes.NOT_FOUND);
+      return;
+    }
+
+    res.status(StatusCodes.OK).json(guarantee);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(StatusCodes.CONFLICT).send(error.name);
+      return;
+    }
+  }
 });
 
 GuaranteeRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const guarantee = await new UpdateGuaranteeUsecase(
-    new PostgresGuaranteeRepository()
-  ).execute({
-    ...req.body,
-    id,
-  });
-  res.status(StatusCodes.OK).json(guarantee);
+  const { name, durationInMonths, coveredAmount, parts } = req.body;
+
+  try {
+    const guarantee = await new GetGuaranteeUsecase(
+      new PostgresGuaranteeRepository()
+    ).execute(id);
+
+    const updatedGuarantee = Guarantee.from(
+      id,
+      name,
+      durationInMonths,
+      coveredAmount,
+      parts,
+      guarantee.createdAt,
+      new Date()
+    );
+
+    if (updatedGuarantee instanceof Error) {
+      res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY);
+      return;
+    }
+
+    await new UpdateGuaranteeUsecase(new PostgresGuaranteeRepository()).execute(
+      updatedGuarantee
+    );
+
+    res.sendStatus(StatusCodes.OK);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(StatusCodes.CONFLICT).send(error.name);
+      return;
+    }
+  }
 });
 
 GuaranteeRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  await new DeleteGuaranteeUsecase(new PostgresGuaranteeRepository()).execute(
-    id
-  );
+
+  try {
+    await new DeleteGuaranteeUsecase(new PostgresGuaranteeRepository()).execute(
+      id
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(StatusCodes.CONFLICT).send(error.name);
+      return;
+    }
+  }
   res.status(StatusCodes.NO_CONTENT).send();
 });
