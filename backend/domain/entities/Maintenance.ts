@@ -1,5 +1,5 @@
 import { Entity } from "./Entity";
-import { StatusMaintenance } from "../types/StatusMaintenance";
+import { StatusMaintenanceBreakdownEnum } from "../types/StatusMaintenanceBreakdownEnum";
 import { randomUUID } from "crypto";
 
 export class Maintenance implements Entity {
@@ -8,7 +8,7 @@ export class Maintenance implements Entity {
     public readonly date: Date,
     public readonly motorcycleIdentifier: string,
     public readonly recommendation: string,
-    public readonly status: StatusMaintenance = "PENDING",
+    public readonly status: StatusMaintenanceBreakdownEnum = StatusMaintenanceBreakdownEnum.PENDING,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -18,7 +18,7 @@ export class Maintenance implements Entity {
     date: Date,
     motorcycleIdentifier: string,
     recommendation: string,
-    status: StatusMaintenance,
+    status: StatusMaintenanceBreakdownEnum,
     createdAt: Date,
     updatedAt: Date
   ): Maintenance {
@@ -47,7 +47,7 @@ export class Maintenance implements Entity {
       date,
       motorcycleIdentifier,
       recommendation,
-      "PENDING",
+      StatusMaintenanceBreakdownEnum.PENDING,
       createdAt,
       updatedAt
     );
