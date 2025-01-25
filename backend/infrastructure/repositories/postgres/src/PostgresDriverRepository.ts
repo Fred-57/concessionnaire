@@ -47,7 +47,7 @@ export class PostgresDriverRepository implements DriverRepository {
       driverDatabase.license,
       driverDatabase.numberOfYearsOfExperience,
       driverDatabase.createdAt,
-      driverDatabase.updatedAt,
+      driverDatabase.updatedAt
     );
 
     if (driver instanceof DriverNameTooShortError) {
@@ -69,7 +69,7 @@ export class PostgresDriverRepository implements DriverRepository {
         driverDatabase.license,
         driverDatabase.numberOfYearsOfExperience,
         driverDatabase.createdAt,
-        driverDatabase.updatedAt,
+        driverDatabase.updatedAt
       );
 
       if (driver instanceof DriverNameTooShortError) {

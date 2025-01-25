@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { License } from "../types/License";
 import { DriverName } from "../values/driver/DriverName";
 import { Entity } from "./Entity";
+import { Company } from "./Company";
 
 export class Driver implements Entity {
   private constructor(
@@ -9,6 +10,7 @@ export class Driver implements Entity {
     public readonly name: DriverName,
     public readonly license: License,
     public readonly numberOfYearsOfExperience: number,
+    public readonly company: Company,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -18,6 +20,7 @@ export class Driver implements Entity {
     name: string,
     license: License,
     numberOfYearsOfExperience: number,
+    company: Company,
     createdAt: Date,
     updatedAt: Date
   ): Driver {

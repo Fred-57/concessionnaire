@@ -11,10 +11,16 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
       data: {
         id: guarantee.identifier,
         name: guarantee.name.value,
+        durationInMonths: guarantee.durationInMonths,
+        coveredAmount: guarantee.coveredAmount.value,
         createdAt: guarantee.createdAt,
         updatedAt: guarantee.updatedAt,
-        Part: {
-          connect: guarantee.parts.map((part) => ({ id: part.identifier })),
+        parts: {
+          createMany: {
+            data: guarantee.parts.map((part) => ({
+              partId: part.identifier,
+            })),
+          },
         },
       },
     });
@@ -25,8 +31,13 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
       data: {
         name: guarantee.name.value,
         updatedAt: guarantee.updatedAt,
-        Part: {
-          set: guarantee.parts.map((part) => ({ id: part.identifier })),
+        parts: {
+          set: guarantee.parts.map((part) => ({
+            guaranteeId_partId: {
+              guaranteeId: guarantee.identifier,
+              partId: part.identifier,
+            },
+          })),
         },
       },
     });
@@ -38,7 +49,7 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
         id: identifier,
       },
       include: {
-        Part: true,
+        parts: true,
       },
     });
 
@@ -69,6 +80,8 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
     const guarantee = Guarantee.from(
       guaranteeDatabase.id,
       guaranteeDatabase.name,
+      guaranteeDatabase.durationInMonths,
+      guaranteeDatabase.coveredAmount,
       partsValue,
       guaranteeDatabase.createdAt,
       guaranteeDatabase.updatedAt
@@ -86,7 +99,7 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
         name,
       },
       include: {
-        Part: true,
+        parts: true,
       },
     });
 
@@ -117,6 +130,8 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
     const guarantee = Guarantee.from(
       guaranteeDatabase.id,
       guaranteeDatabase.name,
+      guaranteeDatabase.durationInMonths,
+      guaranteeDatabase.coveredAmount,
       partsValue,
       guaranteeDatabase.createdAt,
       guaranteeDatabase.updatedAt
@@ -131,41 +146,53 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
   async findAll(): Promise<Guarantee[]> {
     const guaranteesDatabase = await prisma.guarantee.findMany({
       include: {
-        Part: true,
+        parts: true,
       },
     });
 
-    const guarantees = guaranteesDatabase.map((guaranteeDatabase) => {
-      const parts = guaranteeDatabase.Part.map((part) =>
-        Part.from(
-          part.id,
-          part.reference,
-          part.name,
-          part.cost,
-          part.stock,
-          part.createdAt,
-          part.updatedAt
+    if (!guaranteesDatabase) {
+      return [];
+    }
+
+    const guarantees: Guarantee[] = [];
+
+    for (const guarantee of guaranteesDatabase) {
+      const parts = await prisma.part.findMany({
+        where: {
+          id: guarantee.id,
+        },
+      });
+
+      const partsValue = parts
+        .map((part) =>
+          Part.from(
+            part.id,
+            part.reference,
+            part.name,
+            part.cost,
+            part.stock,
+            part.createdAt,
+            part.updatedAt
+          )
         )
-      );
+        .filter((part): part is Part => part instanceof Part);
 
-      const partsValue = parts.filter(
-        (part): part is Part => part instanceof Part
-      );
-
-      const guarantee = Guarantee.from(
-        guaranteeDatabase.id,
-        guaranteeDatabase.name,
+      const guaranteeData = Guarantee.from(
+        guarantee.id,
+        guarantee.name,
+        guarantee.durationInMonths,
+        guarantee.coveredAmount,
         partsValue,
-        guaranteeDatabase.createdAt,
-        guaranteeDatabase.updatedAt
+        guarantee.createdAt,
+        guarantee.updatedAt
       );
 
-      if (guarantee instanceof Error) {
-        throw guarantee;
+      if (guaranteeData instanceof Error) {
+        throw guaranteeData;
       }
 
-      return guarantee;
-    });
+      guarantees.push(guaranteeData);
+    }
 
     return guarantees;
   }
