@@ -13,6 +13,7 @@ import {
 import { Breakdown } from "./pages/Breakdown";
 import { Company } from "./pages/Company";
 import { Driver } from "./pages/Driver";
+import { Guarantee } from "./pages/Guarantee";
 import { Home } from "./pages/Home";
 import { Maintenance } from "./pages/Maintenance";
 import { Model } from "./pages/Model";
@@ -79,7 +80,7 @@ export const routes = [
     title: "Garanties",
     path: "/guarantees",
     icon: ShieldIcon,
-    element: Home,
+    element: Guarantee,
     adminOnly: true,
   },
   {
