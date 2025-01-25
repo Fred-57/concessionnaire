@@ -4,6 +4,7 @@ import { Part } from "./Part";
 import { GuaranteeName } from "@domain/values/guarantee/GuaranteeName";
 import { GuaranteeDurationInMonths } from "@domain/values/guarantee/GuaranteeDurationInMonths";
 import { GuaranteeCoveredAmount } from "@domain/values/guarantee/GuaranteeCoveredAmount";
+import { Motorcycle } from "./Motorcycle";
 
 export class Guarantee implements Entity {
   private constructor(
@@ -12,6 +13,7 @@ export class Guarantee implements Entity {
     public readonly durationInMonths: GuaranteeDurationInMonths,
     public readonly coveredAmount: GuaranteeCoveredAmount,
     public readonly parts: Part[],
+    public readonly motorcycles: Motorcycle[],
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -22,6 +24,7 @@ export class Guarantee implements Entity {
     durationInMonthsValue: number,
     coveredAmountValue: number,
     parts: Part[],
+    motorcycles: Motorcycle[],
     createdAt: Date,
     updatedAt: Date
   ) {
@@ -51,6 +54,7 @@ export class Guarantee implements Entity {
       durationInMonths,
       coveredAmount,
       parts,
+      motorcycles,
       createdAt,
       updatedAt
     );
@@ -60,7 +64,8 @@ export class Guarantee implements Entity {
     name: string,
     durationInMonths: number,
     coveredAmount: number,
-    parts: Part[]
+    parts: Part[],
+    motorcycles: Motorcycle[]
   ) {
     const identifier = randomUUID();
     const createdAt = new Date();
@@ -72,6 +77,7 @@ export class Guarantee implements Entity {
       durationInMonths,
       coveredAmount,
       parts,
+      motorcycles,
       createdAt,
       updatedAt
     );

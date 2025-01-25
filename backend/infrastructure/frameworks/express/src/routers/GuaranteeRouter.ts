@@ -3,19 +3,19 @@ import { ListGuaranteesUsecase } from "@application/usecases/guarantee/ListGuara
 import { GetGuaranteeUsecase } from "@application/usecases/guarantee/GetGuaranteeUsecase";
 import { UpdateGuaranteeUsecase } from "@application/usecases/guarantee/UpdateGuaranteeUsecase";
 import { DeleteGuaranteeUsecase } from "@application/usecases/guarantee/DeleteGuaranteeUsecase";
-import { PostgresGuaranteeRepository } from "@infrastructure/repositories/postgres";
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
-import { GuaranteeNameAlreadyTakenError } from "@domain/errors/guarantee/GuaranteeNameAlreadyTakenError";
 import { Guarantee } from "@domain/entities/Guarantee";
 import { GuaranteeNotFoundError } from "@domain/errors/guarantee/GuaranteeNotFoundError";
+import { MongoGuaranteeRepository } from "@infrastructure/repositories/mongodb";
+import { MongoPartRepository } from "@infrastructure/repositories/mongodb";
 
 export const GuaranteeRouter = Router();
 
 GuaranteeRouter.get("/", async (_, res) => {
   try {
     const guarantees = await new ListGuaranteesUsecase(
-      new PostgresGuaranteeRepository()
+      new MongoGuaranteeRepository()
     ).execute();
     res.status(StatusCodes.OK).json(guarantees);
   } catch (error) {
@@ -27,13 +27,15 @@ GuaranteeRouter.get("/", async (_, res) => {
 });
 
 GuaranteeRouter.post("/", async (req, res) => {
-  const { name, durationInMonths, coveredAmount, parts } = req.body;
+  const { name, durationInMonths, coveredAmount, parts, motorcycles } =
+    req.body;
 
   const guarantee = Guarantee.create(
     name,
     durationInMonths,
     coveredAmount,
-    parts
+    parts,
+    motorcycles
   );
 
   if (guarantee instanceof Error) {
@@ -42,12 +44,13 @@ GuaranteeRouter.post("/", async (req, res) => {
   }
 
   try {
-    await new CreateGuaranteeUsecase(new PostgresGuaranteeRepository()).execute(
-      guarantee
-    );
+    await new CreateGuaranteeUsecase(
+      new MongoGuaranteeRepository(),
+      new MongoPartRepository()
+    ).execute(guarantee);
   } catch (error) {
-    if (error instanceof GuaranteeNameAlreadyTakenError) {
-      res.sendStatus(StatusCodes.CONFLICT);
+    if (error instanceof Error) {
+      res.status(StatusCodes.CONFLICT).send(error.name);
       return;
     }
   }
@@ -59,7 +62,7 @@ GuaranteeRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const guarantee = await new GetGuaranteeUsecase(
-      new PostgresGuaranteeRepository()
+      new MongoGuaranteeRepository()
     ).execute(id);
 
     if (guarantee instanceof GuaranteeNotFoundError) {
@@ -78,11 +81,12 @@ GuaranteeRouter.get("/:id", async (req, res) => {
 
 GuaranteeRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { name, durationInMonths, coveredAmount, parts } = req.body;
+  const { name, durationInMonths, coveredAmount, parts, motorcycles } =
+    req.body;
 
   try {
     const guarantee = await new GetGuaranteeUsecase(
-      new PostgresGuaranteeRepository()
+      new MongoGuaranteeRepository()
     ).execute(id);
 
     const updatedGuarantee = Guarantee.from(
@@ -91,6 +95,7 @@ GuaranteeRouter.put("/:id", async (req, res) => {
       durationInMonths,
       coveredAmount,
       parts,
+      motorcycles,
       guarantee.createdAt,
       new Date()
     );
@@ -100,9 +105,10 @@ GuaranteeRouter.put("/:id", async (req, res) => {
       return;
     }
 
-    await new UpdateGuaranteeUsecase(new PostgresGuaranteeRepository()).execute(
-      updatedGuarantee
-    );
+    await new UpdateGuaranteeUsecase(
+      new MongoGuaranteeRepository(),
+      new MongoPartRepository()
+    ).execute(updatedGuarantee);
 
     res.sendStatus(StatusCodes.OK);
   } catch (error) {
@@ -117,7 +123,7 @@ GuaranteeRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    await new DeleteGuaranteeUsecase(new PostgresGuaranteeRepository()).execute(
+    await new DeleteGuaranteeUsecase(new MongoGuaranteeRepository()).execute(
       id
     );
   } catch (error) {
