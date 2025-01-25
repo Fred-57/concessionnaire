@@ -1,9 +1,6 @@
 import { Router } from "express";
 import { ListModelsUsecase } from "@application/usecases/model/ListModelUsecase";
-import {
-  PostgresBrandRepository,
-  PostgresModelRepository,
-} from "@infrastructure/repositories/postgres/";
+import { PostgresModelRepository } from "@infrastructure/repositories/postgres/";
 import { StatusCodes } from "http-status-codes";
 import { Model } from "@domain/entities/Model";
 import { CreateModelUsecase } from "@application/usecases/model/CreateModelUsecase";
@@ -21,14 +18,9 @@ ModelRouter.get("/", async (_, res) => {
 });
 
 ModelRouter.post("/", async (req, res) => {
-  const { name, repairMileage, repairDeadline, brandIdentifier } = req.body;
+  const { name, repairMileage, repairDeadline } = req.body;
 
-  const model = Model.create(
-    name,
-    repairMileage,
-    repairDeadline,
-    brandIdentifier
-  );
+  const model = Model.create(name, repairMileage, repairDeadline);
 
   if (model instanceof Error) {
     res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY);
@@ -36,10 +28,7 @@ ModelRouter.post("/", async (req, res) => {
   }
 
   try {
-    await new CreateModelUsecase(
-      new PostgresModelRepository(),
-      new PostgresBrandRepository()
-    ).execute(model);
+    await new CreateModelUsecase(new PostgresModelRepository()).execute(model);
   } catch (error) {
     if (error instanceof Error) {
       res.status(StatusCodes.CONFLICT).send(error.name);
@@ -69,7 +58,7 @@ ModelRouter.get("/:id", async (req, res) => {
 
 ModelRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { name, repairMileage, repairDeadline, brandIdentifier } = req.body;
+  const { name, repairMileage, repairDeadline } = req.body;
 
   try {
     const model = await new GetModelUsecase(
@@ -81,7 +70,6 @@ ModelRouter.put("/:id", async (req, res) => {
       name,
       repairMileage,
       repairDeadline,
-      brandIdentifier,
       model.createdAt,
       new Date()
     );
@@ -91,10 +79,9 @@ ModelRouter.put("/:id", async (req, res) => {
       return;
     }
 
-    await new UpdateModelUsecase(
-      new PostgresModelRepository(),
-      new PostgresBrandRepository()
-    ).execute(updatedModel);
+    await new UpdateModelUsecase(new PostgresModelRepository()).execute(
+      updatedModel
+    );
 
     res.sendStatus(StatusCodes.OK);
   } catch (error) {
