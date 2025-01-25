@@ -6,7 +6,7 @@ import { Brand } from "@domain/entities/Brand";
 const prisma = new PrismaClient();
 
 export class PostgresModelRepository implements ModelRepository {
-  public async save(model: Model, brand: Model): Promise<void> {
+  public async save(model: Model, brand: Brand): Promise<void> {
     await prisma.model.create({
       data: {
         id: model.identifier,

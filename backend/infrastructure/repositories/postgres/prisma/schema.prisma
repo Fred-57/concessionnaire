@@ -18,6 +18,17 @@ model Company {
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Brand     Brand[]
+}
+
+model Brand {
+  id        String   @id @db.Uuid
+  name      String
+  company   Company  @relation(fields: [companyId], references: [id])
+  companyId String   @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Model     Model[]
 }
 
 model Driver {
@@ -28,14 +39,6 @@ model Driver {
   createdAt                 DateTime @default(now())
   updatedAt                 DateTime @updatedAt
   Rental                    Rental[]
-}
-
-model Brand {
-  id        String   @id @db.Uuid
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Model     Model[]
 }
 
 model Model {

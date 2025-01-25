@@ -7,23 +7,41 @@ import { Brand } from "@domain/entities/Brand";
 import { BrandNameAlreadyTakenError } from "@domain/errors/brand/BrandNameAlreadyTakenError";
 import { BrandNameTooShortError } from "@domain/errors/brand/BrandNameTooShortError";
 import { PostgresBrandRepository } from "@infrastructure/repositories/postgres/";
+import { PostgresCompanyRepository } from "@infrastructure/repositories/postgres/";
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export const BrandRouter = Router();
 
-BrandRouter.get("/", async (_, res) => {
+BrandRouter.get("/", async (req, res) => {
+  const companyIdentifier = req.get("company-id");
+
+  if (!companyIdentifier) {
+    res.sendStatus(StatusCodes.BAD_REQUEST);
+    return;
+  }
+
   const brands = await new ListBrandsUsecase(
     new PostgresBrandRepository(),
-  ).execute();
+    new PostgresCompanyRepository()
+  ).execute(companyIdentifier);
   res.status(StatusCodes.OK).json(brands);
 });
 
 BrandRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
+
+  const companyIdentifier = req.get("company-id");
+
+  if (!companyIdentifier) {
+    res.sendStatus(StatusCodes.BAD_REQUEST);
+    return;
+  }
+
   const brands = await new ListBrandsUsecase(
     new PostgresBrandRepository(),
-  ).execute();
+    new PostgresCompanyRepository()
+  ).execute(companyIdentifier);
 
   if (!brands) {
     res.sendStatus(StatusCodes.NOT_FOUND);
@@ -43,7 +61,14 @@ BrandRouter.get("/:id", async (req, res) => {
 BrandRouter.post("/", async (req, res) => {
   const { name } = req.body;
 
-  const brand = Brand.create(name);
+  const companyIdentifier = req.get("company-id");
+
+  if (!companyIdentifier) {
+    res.sendStatus(StatusCodes.BAD_REQUEST);
+    return;
+  }
+
+  const brand = Brand.create(name, companyIdentifier);
 
   if (brand instanceof BrandNameTooShortError) {
     res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY);
@@ -51,7 +76,10 @@ BrandRouter.post("/", async (req, res) => {
   }
 
   try {
-    await new CreateBrandUsecase(new PostgresBrandRepository()).execute(brand);
+    await new CreateBrandUsecase(
+      new PostgresBrandRepository(),
+      new PostgresCompanyRepository()
+    ).execute(brand, companyIdentifier);
   } catch (error) {
     if (error instanceof BrandNameAlreadyTakenError) {
       res.sendStatus(StatusCodes.CONFLICT);
@@ -63,12 +91,20 @@ BrandRouter.post("/", async (req, res) => {
 });
 
 BrandRouter.put("/:id", async (req, res) => {
+  const companyIdentifier = req.get("company-id");
+
+  if (!companyIdentifier) {
+    res.sendStatus(StatusCodes.BAD_REQUEST);
+    return;
+  }
+
   const { id } = req.params;
   const { name } = req.body;
 
   const brand = await new GetBrandUsecase(
     new PostgresBrandRepository(),
-  ).execute(id);
+    new PostgresCompanyRepository()
+  ).execute(id, companyIdentifier);
 
   if (!brand) {
     res.sendStatus(StatusCodes.NOT_FOUND);
@@ -78,8 +114,9 @@ BrandRouter.put("/:id", async (req, res) => {
   const updatedBrand = Brand.from(
     brand.identifier,
     name,
+    brand.companyIdentifier,
     brand.createdAt,
-    brand.updatedAt,
+    brand.updatedAt
   );
 
   if (updatedBrand instanceof BrandNameTooShortError) {
@@ -88,9 +125,10 @@ BrandRouter.put("/:id", async (req, res) => {
   }
 
   try {
-    await new UpdateBrandUsecase(new PostgresBrandRepository()).execute(
-      updatedBrand,
-    );
+    await new UpdateBrandUsecase(
+      new PostgresBrandRepository(),
+      new PostgresCompanyRepository()
+    ).execute(updatedBrand, companyIdentifier);
   } catch (error) {
     if (error instanceof BrandNameAlreadyTakenError) {
       res.sendStatus(StatusCodes.CONFLICT);
@@ -102,18 +140,29 @@ BrandRouter.put("/:id", async (req, res) => {
 });
 
 BrandRouter.delete("/:id", async (req, res) => {
+  const companyIdentifier = req.get("company-id");
+
+  if (!companyIdentifier) {
+    res.sendStatus(StatusCodes.BAD_REQUEST);
+    return;
+  }
+
   const { id } = req.params;
 
   const brand = await new GetBrandUsecase(
     new PostgresBrandRepository(),
-  ).execute(id);
+    new PostgresCompanyRepository()
+  ).execute(id, companyIdentifier);
 
   if (!brand) {
     res.sendStatus(StatusCodes.NOT_FOUND);
     return;
   }
 
-  await new DeleteBrandUsecase(new PostgresBrandRepository()).execute(id);
+  await new DeleteBrandUsecase(
+    new PostgresBrandRepository(),
+    new PostgresCompanyRepository()
+  ).execute(id, companyIdentifier);
 
   res.sendStatus(StatusCodes.NO_CONTENT);
 });

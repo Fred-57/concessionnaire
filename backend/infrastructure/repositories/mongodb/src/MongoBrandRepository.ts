@@ -1,17 +1,25 @@
 import { BrandModel } from "./models/BrandModel";
 import { BrandRepository } from "@application/repositories/BrandRepository";
 import { Brand } from "@domain/entities/Brand";
+import { Company } from "@domain/entities/Company";
 import { BrandNameTooShortError } from "@domain/errors/brand/BrandNameTooShortError";
 
 export class MongoBrandRepository implements BrandRepository {
-  async save(brand: Brand): Promise<void> {
+  async save(brand: Brand, company: Company): Promise<void> {
     const brandDatabase = new BrandModel({
       identifier: brand.identifier,
       name: brand.name.value,
+      company: {
+        identifier: company.identifier,
+        name: company.name.value,
+        createdAt: company.createdAt,
+        updatedAt: company.updatedAt,
+      },
     });
     await brandDatabase.save();
   }
-  async update(brand: Brand): Promise<void> {
+
+  async update(brand: Brand, company: Company): Promise<void> {
     const brandDatabase = await BrandModel.findOne({
       identifier: brand.identifier,
     });
@@ -26,9 +34,15 @@ export class MongoBrandRepository implements BrandRepository {
     await brandDatabase.save();
   }
 
-  async findByIdentifier(identifier: string): Promise<Brand | null> {
+  async findByIdentifier(
+    identifier: string,
+    company: Company
+  ): Promise<Brand | null> {
     const brandDatabase = await BrandModel.findOne({
       identifier: identifier,
+      company: {
+        identifier: company.identifier,
+      },
     });
 
     if (!brandDatabase) {
@@ -38,8 +52,9 @@ export class MongoBrandRepository implements BrandRepository {
     const brand = Brand.from(
       brandDatabase.identifier,
       brandDatabase.name,
+      brandDatabase.company.identifier,
       brandDatabase.createdAt,
-      brandDatabase.updatedAt,
+      brandDatabase.updatedAt
     );
 
     if (brand instanceof BrandNameTooShortError) {
@@ -49,7 +64,7 @@ export class MongoBrandRepository implements BrandRepository {
     return brand;
   }
 
-  async findByName(name: string): Promise<Brand | null> {
+  async findByName(name: string, company: Company): Promise<Brand | null> {
     const brandDatabase = await BrandModel.findOne({
       name,
     });
@@ -61,8 +76,9 @@ export class MongoBrandRepository implements BrandRepository {
     const brand = Brand.from(
       brandDatabase.identifier,
       brandDatabase.name,
+      brandDatabase.company.identifier,
       brandDatabase.createdAt,
-      brandDatabase.updatedAt,
+      brandDatabase.updatedAt
     );
 
     if (brand instanceof BrandNameTooShortError) {
@@ -72,8 +88,12 @@ export class MongoBrandRepository implements BrandRepository {
     return brand;
   }
 
-  async findAll(): Promise<Brand[]> {
-    const brandsDatabase = await BrandModel.find();
+  async findAll(company: Company): Promise<Brand[]> {
+    const brandsDatabase = await BrandModel.find({
+      company: {
+        identifier: company.identifier,
+      },
+    });
 
     const brands: Brand[] = [];
 
@@ -81,8 +101,9 @@ export class MongoBrandRepository implements BrandRepository {
       const brand = Brand.from(
         brandDatabase.identifier,
         brandDatabase.name,
+        brandDatabase.company.identifier,
         brandDatabase.createdAt,
-        brandDatabase.updatedAt,
+        brandDatabase.updatedAt
       );
 
       if (brand instanceof BrandNameTooShortError) {
@@ -95,7 +116,12 @@ export class MongoBrandRepository implements BrandRepository {
     return brands;
   }
 
-  async delete(brand: Brand): Promise<void> {
-    await BrandModel.findOneAndDelete({ identifier: brand.identifier }).exec();
+  async delete(brand: Brand, company: Company): Promise<void> {
+    await BrandModel.findOneAndDelete({
+      identifier: brand.identifier,
+      company: {
+        identifier: company.identifier,
+      },
+    }).exec();
   }
 }

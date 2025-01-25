@@ -2,32 +2,40 @@ import { BrandRepository } from "@application/repositories/BrandRepository";
 import { PrismaClient } from "@prisma/client";
 import { Brand } from "@domain/entities/Brand";
 import { BrandNameTooShortError } from "@domain/errors/brand/BrandNameTooShortError";
+import { Company } from "@domain/entities/Company";
 
 const prisma = new PrismaClient();
 
 export class PostgresBrandRepository implements BrandRepository {
-  async save(brand: Brand): Promise<void> {
+  async save(brand: Brand, company: Company): Promise<void> {
     await prisma.brand.create({
       data: {
         id: brand.identifier,
         name: brand.name.value,
+        companyId: company.identifier,
       },
     });
   }
 
-  async update(brand: Brand): Promise<void> {
+  async update(brand: Brand, company: Company): Promise<void> {
     await prisma.brand.update({
-      where: { id: brand.identifier },
+      where: { id: brand.identifier, companyId: company.identifier },
       data: {
         name: brand.name.value,
+        companyId: company.identifier,
       },
     });
   }
 
-  async findByIdentifier(identifier: string): Promise<Brand | null> {
+  async findByIdentifier(
+    identifier: string,
+    company: Company
+  ): Promise<Brand | null> {
     const brandDatabase = await prisma.brand.findUnique({
       where: {
         id: identifier,
+        // Pas nécessaire comme brand id déjà unique (UUID)
+        companyId: company.identifier,
       },
     });
 
@@ -38,8 +46,9 @@ export class PostgresBrandRepository implements BrandRepository {
     const brand = Brand.from(
       brandDatabase.id,
       brandDatabase.name,
+      brandDatabase.companyId,
       brandDatabase.createdAt,
-      brandDatabase.updatedAt,
+      brandDatabase.updatedAt
     );
 
     if (brand instanceof BrandNameTooShortError) {
@@ -49,10 +58,11 @@ export class PostgresBrandRepository implements BrandRepository {
     return brand;
   }
 
-  async findByName(name: string): Promise<Brand | null> {
+  async findByName(name: string, company: Company): Promise<Brand | null> {
     const brandDatabase = await prisma.brand.findFirst({
       where: {
         name,
+        companyId: company.identifier,
       },
     });
 
@@ -63,8 +73,9 @@ export class PostgresBrandRepository implements BrandRepository {
     const brand = Brand.from(
       brandDatabase.id,
       brandDatabase.name,
+      brandDatabase.companyId,
       brandDatabase.createdAt,
-      brandDatabase.updatedAt,
+      brandDatabase.updatedAt
     );
 
     if (brand instanceof BrandNameTooShortError) {
@@ -74,8 +85,10 @@ export class PostgresBrandRepository implements BrandRepository {
     return brand;
   }
 
-  async findAll(): Promise<Brand[]> {
-    const brandDatabases = await prisma.brand.findMany();
+  async findAll(company: Company): Promise<Brand[]> {
+    const brandDatabases = await prisma.brand.findMany({
+      where: { companyId: company.identifier },
+    });
 
     const brands: Brand[] = [];
 
@@ -83,8 +96,9 @@ export class PostgresBrandRepository implements BrandRepository {
       const brand = Brand.from(
         brandDatabase.id,
         brandDatabase.name,
+        brandDatabase.companyId,
         brandDatabase.createdAt,
-        brandDatabase.updatedAt,
+        brandDatabase.updatedAt
       );
 
       if (brand instanceof BrandNameTooShortError) {
@@ -97,9 +111,9 @@ export class PostgresBrandRepository implements BrandRepository {
     return brands;
   }
 
-  async delete(brand: Brand): Promise<void> {
+  async delete(brand: Brand, company: Company): Promise<void> {
     await prisma.brand.delete({
-      where: { id: brand.identifier },
+      where: { id: brand.identifier, companyId: company.identifier },
     });
   }
 }

@@ -3,7 +3,7 @@ import { ListModelsUsecase } from "@application/usecases/model/ListModelUsecase"
 import {
   PostgresBrandRepository,
   PostgresModelRepository,
-} from "@infrastructure/repositories/postgres/";
+} from "@infrastructure/repositories/postgres";
 import { StatusCodes } from "http-status-codes";
 import { Model } from "@domain/entities/Model";
 import { CreateModelUsecase } from "@application/usecases/model/CreateModelUsecase";

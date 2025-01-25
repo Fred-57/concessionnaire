@@ -6,15 +6,17 @@ export class Brand implements Entity {
   private constructor(
     public readonly identifier: string,
     public readonly name: BrandName,
+    public readonly companyIdentifier: string,
     public readonly createdAt: Date,
-    public readonly updatedAt: Date,
+    public readonly updatedAt: Date
   ) {}
 
   public static from(
     identifier: string,
     nameValue: string,
+    companyIdentifier: string,
     createdAt: Date,
-    updatedAt: Date,
+    updatedAt: Date
   ) {
     const name = BrandName.from(nameValue);
 
@@ -22,14 +24,20 @@ export class Brand implements Entity {
       return name;
     }
 
-    return new Brand(identifier, name, createdAt, updatedAt);
+    return new Brand(identifier, name, companyIdentifier, createdAt, updatedAt);
   }
 
-  public static create(name: string) {
+  public static create(name: string, companyIdentifier: string) {
     const identifier = randomUUID();
     const createdAt = new Date();
     const updatedAt = new Date();
 
-    return Brand.from(identifier, name, createdAt, updatedAt);
+    return Brand.from(
+      identifier,
+      name,
+      companyIdentifier,
+      createdAt,
+      updatedAt
+    );
   }
 }
