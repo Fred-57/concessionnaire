@@ -14,10 +14,13 @@ datasource db {
 }
 
 model Company {
-  id        String   @id @db.Uuid
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String       @id @db.Uuid
+  name        String
+  type        CompanyType
+  drivers     Driver[]
+  motorcycles Motorcycle[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Driver {
@@ -25,9 +28,11 @@ model Driver {
   name                      String
   license                   License
   numberOfYearsOfExperience Int
+  company                   Company  @relation(fields: [companyId], references: [id])
+  companyId                 String   @db.Uuid
+  rentals                   Rental[]
   createdAt                 DateTime @default(now())
   updatedAt                 DateTime @updatedAt
-  Rental                    Rental[]
 }
 
 model Model {
@@ -35,9 +40,9 @@ model Model {
   name           String
   repairMileage  Int
   repairDeadline Int
+  motorcycles    Motorcycle[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
-  Motorcycle     Motorcycle[]
 }
 
 model Motorcycle {
@@ -46,90 +51,130 @@ model Motorcycle {
   mileage             Int
   dateOfCommissioning DateTime
   status              Status
+  company             Company       @relation(fields: [companyId], references: [id])
+  companyId           String        @db.Uuid
   model               Model         @relation(fields: [modelId], references: [id])
   modelId             String        @db.Uuid
   guarantee           Guarantee     @relation(fields: [guaranteeId], references: [id])
   guaranteeId         String        @db.Uuid
+  rentals             Rental[]
+  maintenances        Maintenance[]
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
-  Rental              Rental[]
-  Maintenance         Maintenance[]
 }
 
 model Rental {
   id               String      @id @db.Uuid
   startDate        DateTime
   durationInMonths Int
+  type             RentalType
   driver           Driver      @relation(fields: [driverId], references: [id])
   motorcycle       Motorcycle  @relation(fields: [motorcycleId], references: [id])
   driverId         String      @db.Uuid
   motorcycleId     String
+  breakdown        Breakdown[]
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
-  Breakdown        Breakdown[]
 }
 
 model Breakdown {
-  id          String   @id @db.Uuid
+  id          String                     @id @db.Uuid
   date        DateTime
   description String
-  rental      Rental   @relation(fields: [rentalId], references: [id])
-  rentalId    String   @db.Uuid
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  repair      Repair?  @relation(fields: [repairId], references: [id])
-  repairId    String?  @db.Uuid
-}
-
-model Guarantee {
-  id         String       @id @db.Uuid
-  name       String
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  Motorcycle Motorcycle[]
-  // Part        Part[]
-}
-
-model Part {
-  id        String   @id @db.Uuid
-  reference String
-  name      String
-  cost      Float
-  stock     Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Repair    Repair[]
+  status      StatusMaintenanceBreakdown @default(PENDING)
+  totalCost   Float?                     @default(0)
+  rental      Rental                     @relation(fields: [rentalId], references: [id])
+  rentalId    String                     @db.Uuid
+  createdAt   DateTime                   @default(now())
+  updatedAt   DateTime                   @updatedAt
+  parts       BreakdownPart[]
 }
 
 model Maintenance {
-  id             String            @id @db.Uuid
+  id             String                     @id @db.Uuid
   date           DateTime
-  motorcycle     Motorcycle        @relation(fields: [motorcycleId], references: [id])
-  motorcycleId   String
-  repair         Repair?           @relation(fields: [repairId], references: [id])
-  repairId       String?           @db.Uuid
   recommendation String
-  status         StatusMaintenance
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  status         StatusMaintenanceBreakdown @default(PENDING)
+  totalCost      Float?                     @default(0)
+  motorcycle     Motorcycle                 @relation(fields: [motorcycleId], references: [id])
+  motorcycleId   String
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @updatedAt
+  parts          MaintenancePart[]
 }
 
-model Repair {
-  id            String        @id @db.Uuid
-  identifier    String
-  date          DateTime
-  replacedParts Part[]
-  cost          Float
-  status        StatusRepair
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  Maintenance   Maintenance[]
-  Breakdown     Breakdown[]
+model Guarantee {
+  id               String          @id @db.Uuid
+  name             String
+  durationInMonths Int
+  coveredAmount    Float
+  motorcycles      Motorcycle[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  GuaranteePart    GuaranteePart[]
+}
+
+model Part {
+  id               String            @id @db.Uuid
+  reference        String
+  name             String
+  cost             Float
+  stock            Int
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  guaranteeParts   GuaranteePart[]
+  breakdownParts   BreakdownPart[]
+  maintenanceParts MaintenancePart[]
+}
+
+model BreakdownPart {
+  breakdown   Breakdown @relation(fields: [breakdownId], references: [id])
+  breakdownId String    @db.Uuid
+  part        Part      @relation(fields: [partId], references: [id])
+  partId      String    @db.Uuid
+  quantity    Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@id([breakdownId, partId])
+}
+
+model MaintenancePart {
+  maintenance   Maintenance @relation(fields: [maintenanceId], references: [id])
+  maintenanceId String      @db.Uuid
+  part          Part        @relation(fields: [partId], references: [id])
+  partId        String      @db.Uuid
+  quantity      Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@id([maintenanceId, partId])
+}
+
+model GuaranteePart {
+  guarantee   Guarantee @relation(fields: [guaranteeId], references: [id])
+  guaranteeId String    @db.Uuid
+  part        Part      @relation(fields: [partId], references: [id])
+  partId      String    @db.Uuid
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@id([guaranteeId, partId])
+}
+
+enum CompanyType {
+  CAR_DEALER
+  PARTNER
 }
 
 enum License {
   A
   A2
+}
+
+enum RentalType {
+  RENTAL
+  TRIAL
 }
 
 enum Status {
@@ -139,13 +184,7 @@ enum Status {
   IN_MAINTENANCE
 }
 
-enum StatusMaintenance {
-  PENDING
-  DONE
-  CANCELED
-}
-
-enum StatusRepair {
+enum StatusMaintenanceBreakdown {
   PENDING
   DONE
   CANCELED
