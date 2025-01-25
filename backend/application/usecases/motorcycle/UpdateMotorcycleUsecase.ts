@@ -3,7 +3,7 @@ import { Motorcycle } from "@domain/entities/Motorcycle";
 import { MotorcycleRepository } from "@application/repositories/MotorcycleRepository";
 import { MotorcycleNotFoundError } from "@domain/errors/MotorcycleNotFoundError";
 
-export class UpdateMotorcycleUsecase implements Usecase {
+export class UpdateMotorcycleUsecase implements Usecase<Motorcycle> {
   public constructor(
     private readonly motorcycleRepository: MotorcycleRepository
   ) {}

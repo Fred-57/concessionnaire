@@ -5,7 +5,7 @@ import { DateBehindNowError } from "@domain/errors/DateBehindNowError";
 import { Usecase } from "../Usecase";
 import { Repair } from "@domain/entities/Repair";
 
-export class CreateRepairUsecase implements Usecase {
+export class CreateRepairUsecase implements Usecase<Repair> {
   public constructor(private readonly repairRepository: RepairRepository) {}
 
   public async execute(repair: Repair) {

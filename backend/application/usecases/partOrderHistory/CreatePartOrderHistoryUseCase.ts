@@ -2,7 +2,9 @@ import { PartOrderHistory } from "../../../domain/entities/PartOrderHistory";
 import { PartOrderHistoryRepository } from "../../repositories/PartOrderHistoryRepository";
 import { Usecase } from "../Usecase";
 
-export class CreatePartOrderHistoryUseCase implements Usecase {
+export class CreatePartOrderHistoryUseCase
+  implements Usecase<PartOrderHistory>
+{
   public constructor(
     private readonly partOrderHistoryRepository: PartOrderHistoryRepository
   ) {}
