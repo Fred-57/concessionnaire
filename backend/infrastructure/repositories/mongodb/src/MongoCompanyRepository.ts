@@ -1,103 +1,107 @@
 import { CompanyModel } from "./models/CompanyModel";
 import { CompanyRepository } from "@application/repositories/CompanyRepository";
 import { Company } from "@domain/entities/Company";
-import { CompanyNameTooShortError } from "@domain/errors/compagny/CompanyNameTooShortError";
+import { CompanyNameTooShortError } from "@domain/errors/company/CompanyNameTooShortError";
 
 export class MongoCompanyRepository implements CompanyRepository {
-  async save(compagny: Company): Promise<void> {
-    const compagnyDatabase = new CompanyModel({
-      identifier: compagny.identifier,
-      name: compagny.name.value,
+  async save(company: Company): Promise<void> {
+    const companyDatabase = new CompanyModel({
+      identifier: company.identifier,
+      name: company.name.value,
+      type: company.type,
     });
-    await compagnyDatabase.save();
+    await companyDatabase.save();
   }
-  async update(compagny: Company): Promise<void> {
-    const compagnyDatabase = await CompanyModel.findOne({
-      identifier: compagny.identifier,
+  async update(company: Company): Promise<void> {
+    const companyDatabase = await CompanyModel.findOne({
+      identifier: company.identifier,
     });
 
     // La vérification de l'existence de l'entité en base de données est réalisée côté application
     // Donc le scénario suivant ne devrait pas se produire, mais on doit s'en prémunir
-    if (!compagnyDatabase) {
+    if (!companyDatabase) {
       return;
     }
 
-    compagnyDatabase.name = compagny.name.value;
-    await compagnyDatabase.save();
+    companyDatabase.name = company.name.value;
+    await companyDatabase.save();
   }
 
   async findByIdentifier(identifier: string): Promise<Company | null> {
-    const compagnyDatabase = await CompanyModel.findOne({
+    const companyDatabase = await CompanyModel.findOne({
       identifier: identifier,
     });
 
-    if (!compagnyDatabase) {
+    if (!companyDatabase) {
       return null;
     }
 
-    const compagny = Company.from(
-      compagnyDatabase.identifier,
-      compagnyDatabase.name,
-      compagnyDatabase.createdAt,
-      compagnyDatabase.updatedAt
+    const company = Company.from(
+      companyDatabase.identifier,
+      companyDatabase.name,
+      companyDatabase.type,
+      companyDatabase.createdAt,
+      companyDatabase.updatedAt
     );
 
-    if (compagny instanceof CompanyNameTooShortError) {
-      throw compagny;
+    if (company instanceof CompanyNameTooShortError) {
+      throw company;
     }
 
-    return compagny;
+    return company;
   }
 
   async findByName(name: string): Promise<Company | null> {
-    const compagnyDatabase = await CompanyModel.findOne({
+    const companyDatabase = await CompanyModel.findOne({
       name,
     });
 
-    if (!compagnyDatabase) {
+    if (!companyDatabase) {
       return null;
     }
 
-    const compagny = Company.from(
-      compagnyDatabase.identifier,
-      compagnyDatabase.name,
-      compagnyDatabase.createdAt,
-      compagnyDatabase.updatedAt
+    const company = Company.from(
+      companyDatabase.identifier,
+      companyDatabase.name,
+      companyDatabase.type,
+      companyDatabase.createdAt,
+      companyDatabase.updatedAt
     );
 
-    if (compagny instanceof CompanyNameTooShortError) {
-      throw compagny;
+    if (company instanceof CompanyNameTooShortError) {
+      throw company;
     }
 
-    return compagny;
+    return company;
   }
 
   async findAll(): Promise<Company[]> {
-    const compagniesDatabase = await CompanyModel.find();
+    const companiesDatabase = await CompanyModel.find();
 
     const companies: Company[] = [];
 
-    for (const compagnyDatabase of compagniesDatabase) {
-      const compagny = Company.from(
-        compagnyDatabase.identifier,
-        compagnyDatabase.name,
-        compagnyDatabase.createdAt,
-        compagnyDatabase.updatedAt
+    for (const companyDatabase of companiesDatabase) {
+      const company = Company.from(
+        companyDatabase.identifier,
+        companyDatabase.name,
+        companyDatabase.type,
+        companyDatabase.createdAt,
+        companyDatabase.updatedAt
       );
 
-      if (compagny instanceof CompanyNameTooShortError) {
-        throw compagny;
+      if (company instanceof CompanyNameTooShortError) {
+        throw company;
       }
 
-      compagnies.push(compagny);
+      companies.push(company);
     }
 
     return companies;
   }
 
-  async delete(compagny: Company): Promise<void> {
+  async delete(company: Company): Promise<void> {
     await CompanyModel.findOneAndDelete({
-      identifier: compagny.identifier,
+      identifier: company.identifier,
     }).exec();
   }
 }
