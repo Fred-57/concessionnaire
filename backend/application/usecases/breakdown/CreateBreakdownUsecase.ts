@@ -3,7 +3,7 @@ import { Breakdown } from "@domain/entities/Breakdown";
 import { BreakdownAlreadyExistsError } from "@domain/errors/breakdown/BreakdownAlreadyExistsError";
 import { Usecase } from "../Usecase";
 
-export class CreateBreakdownUsecase implements Usecase {
+export class CreateBreakdownUsecase implements Usecase<Breakdown> {
   public constructor(
     private readonly breakdownRepository: BreakdownRepository
   ) {}

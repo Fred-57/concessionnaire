@@ -4,7 +4,7 @@ import { DateBehindNowError } from "@domain/errors/DateBehindNowError";
 import { MotorcycleNotFoundError } from "@domain/errors/MotorcycleNotFoundError";
 import { Usecase } from "../Usecase";
 
-export class CreateMaintenanceUsecase implements Usecase {
+export class CreateMaintenanceUsecase implements Usecase<Maintenance> {
   public constructor(
     private readonly maintenanceRepository: MaintenanceRepository
   ) {}
