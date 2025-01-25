@@ -23,6 +23,12 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-triumph}
     volumes:
       - mongodb:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   # Database management tools
   adminer:
@@ -44,7 +50,8 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://${MONGO_INITDB_ROOT_USERNAME:-robin}:${MONGO_INITDB_ROOT_PASSWORD:-batman}@mongodb:27017/
       ME_CONFIG_BASICAUTH: false
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
 
 volumes:
   mongodb:

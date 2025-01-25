@@ -9,6 +9,7 @@ export class Driver implements Entity {
     public readonly name: DriverName,
     public readonly license: License,
     public readonly numberOfYearsOfExperience: number,
+    public readonly companyIdentifier: string,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -18,6 +19,7 @@ export class Driver implements Entity {
     name: string,
     license: License,
     numberOfYearsOfExperience: number,
+    companyIdentifier: string,
     createdAt: Date,
     updatedAt: Date
   ): Driver {
@@ -32,6 +34,7 @@ export class Driver implements Entity {
       driverName,
       license,
       numberOfYearsOfExperience,
+      companyIdentifier,
       createdAt,
       updatedAt
     );
@@ -40,7 +43,8 @@ export class Driver implements Entity {
   public static create(
     name: string,
     license: License,
-    numberOfYearsOfExperience: number
+    numberOfYearsOfExperience: number,
+    companyIdentifier: string
   ): Driver {
     const identifier = randomUUID();
     const createdAt = new Date();
@@ -51,6 +55,7 @@ export class Driver implements Entity {
       name,
       license,
       numberOfYearsOfExperience,
+      companyIdentifier,
       createdAt,
       updatedAt
     );

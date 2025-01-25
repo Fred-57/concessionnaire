@@ -41,9 +41,9 @@ CompanyRouter.get("/:id", async (req, res) => {
 });
 
 CompanyRouter.post("/", async (req, res) => {
-  const { name } = req.body;
+  const { name, type } = req.body;
 
-  const company = Company.create(name);
+  const company = Company.create(name, type);
 
   if (company instanceof CompanyNameTooShortError) {
     res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY);
@@ -66,7 +66,7 @@ CompanyRouter.post("/", async (req, res) => {
 
 CompanyRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
+  const { name, type } = req.body;
 
   const company = await new GetCompanyUsecase(
     new PostgresCompanyRepository()
@@ -80,6 +80,7 @@ CompanyRouter.put("/:id", async (req, res) => {
   const updatedCompany = Company.from(
     company.identifier,
     name,
+    type,
     company.createdAt,
     company.updatedAt
   );
