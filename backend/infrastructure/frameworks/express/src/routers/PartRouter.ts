@@ -4,7 +4,7 @@ import { ListPartsUsecase } from "@application/usecases/part/ListPartsUsecase";
 import { UpdatePartUsecase } from "@application/usecases/part/UpdatePartUseCase";
 import { DeletePartUsecase } from "@application/usecases/part/DeletePartUsecase";
 import { Part } from "@domain/entities/Part";
-import { PostgresPartRepository } from "@infrastructure/repositories/postgres/src/PostgresPartRepository";
+import { MongoPartRepository } from "@infrastructure/repositories/mongodb/src/MongoPartRepository";
 import { PartReferenceAlreadyExistsError } from "@domain/errors/part/PartReferenceAlreadyExistsError";
 import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
 import { PartReferenceTooShortError } from "@domain/errors/part/PartReferenceTooShortError";
@@ -17,17 +17,13 @@ import { InvalidQuantityError } from "@domain/errors/InvalidQuantityError";
 export const PartRouter = Router();
 
 PartRouter.get("/", async (_, res) => {
-  const parts = await new ListPartsUsecase(
-    new PostgresPartRepository()
-  ).execute();
+  const parts = await new ListPartsUsecase(new MongoPartRepository()).execute();
   res.status(StatusCodes.OK).json(parts);
 });
 
 PartRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const parts = await new ListPartsUsecase(
-    new PostgresPartRepository()
-  ).execute();
+  const parts = await new ListPartsUsecase(new MongoPartRepository()).execute();
 
   if (!parts) {
     res.sendStatus(StatusCodes.NOT_FOUND);
@@ -65,7 +61,7 @@ PartRouter.post("/", async (req, res) => {
     return;
   }
   try {
-    await new CreatePartUsecase(new PostgresPartRepository()).execute(part);
+    await new CreatePartUsecase(new MongoPartRepository()).execute(part);
   } catch (error) {
     if (error instanceof PartReferenceAlreadyExistsError) {
       res.sendStatus(StatusCodes.CONFLICT);
@@ -80,9 +76,7 @@ PartRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { name, reference, cost, stock } = req.body;
 
-  const part = await new GetPartUsecase(new PostgresPartRepository()).execute(
-    id
-  );
+  const part = await new GetPartUsecase(new MongoPartRepository()).execute(id);
 
   if (!part) {
     res.sendStatus(StatusCodes.NOT_FOUND);
@@ -122,9 +116,7 @@ PartRouter.put("/:id", async (req, res) => {
     return;
   }
   try {
-    await new UpdatePartUsecase(new PostgresPartRepository()).execute(
-      updatedPart
-    );
+    await new UpdatePartUsecase(new MongoPartRepository()).execute(updatedPart);
   } catch (error) {
     if (error instanceof PartReferenceAlreadyExistsError) {
       res.sendStatus(StatusCodes.CONFLICT);
@@ -142,16 +134,14 @@ PartRouter.put("/:id", async (req, res) => {
 PartRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  const part = await new GetPartUsecase(new PostgresPartRepository()).execute(
-    id
-  );
+  const part = await new GetPartUsecase(new MongoPartRepository()).execute(id);
 
   if (!part) {
     res.sendStatus(StatusCodes.NOT_FOUND);
     return;
   }
 
-  await new DeletePartUsecase(new PostgresPartRepository()).execute(id);
+  await new DeletePartUsecase(new MongoPartRepository()).execute(id);
 
   res.sendStatus(StatusCodes.NO_CONTENT);
 });

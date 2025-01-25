@@ -1,7 +1,4 @@
 import { Schema, model } from "mongoose";
-import { IGuaranteePart, GuaranteePartSchema } from "./GuaranteePart";
-import { IBreakdownPart, BreakdownPartSchema } from "./BreakdownPart";
-import { IMaintenancePart, MaintenancePartSchema } from "./MaintenancePart";
 
 export interface IPart {
   identifier: string;
@@ -9,9 +6,9 @@ export interface IPart {
   name: string;
   cost: number;
   stock: number;
-  guaranteeParts: IGuaranteePart[];
-  breakdownParts: IBreakdownPart[];
-  maintenanceParts: IMaintenancePart[];
+  guaranteePartsId: string[];
+  breakdownPartsId: string[];
+  maintenancePartsId: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,9 +20,9 @@ export const PartSchema = new Schema<IPart>(
     name: { type: String, required: true },
     cost: { type: Number, required: true },
     stock: { type: Number, required: true },
-    guaranteeParts: { type: [GuaranteePartSchema], required: true },
-    breakdownParts: { type: [BreakdownPartSchema], required: true },
-    maintenanceParts: { type: [MaintenancePartSchema], required: true },
+    guaranteePartsId: { type: [String], required: false },
+    breakdownPartsId: { type: [String], required: false },
+    maintenancePartsId: { type: [String], required: false },
   },
   { timestamps: true }
 );

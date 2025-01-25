@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { Guarantee } from "@domain/entities/Guarantee";
 import { Part } from "@domain/entities/Part";
 import { randomUUID } from "crypto";
+import { Motorcycle } from "@domain/entities/Motorcycle";
 
 const prisma = new PrismaClient();
 
@@ -32,11 +33,11 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
         coveredAmount: guarantee.coveredAmount.value,
         updatedAt: guarantee.updatedAt,
         parts: {
-          set: guarantee.parts.map((part) => ({
-            guaranteeId_partId: {
-              guaranteeId: guarantee.identifier,
-              partId: part.identifier,
-            },
+          deleteMany: {
+            guaranteeId: guarantee.identifier,
+          },
+          create: guarantee.parts.map((part) => ({
+            partId: part.identifier,
           })),
         },
       },
@@ -77,12 +78,32 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
       )
       .filter((part): part is Part => part instanceof Part);
 
+    const motorcycles = await prisma.motorcycle.findMany({
+      where: {
+        guaranteeId: guaranteeDatabase.id,
+      },
+    });
+
+    const motorcyclesValue = motorcycles.map((motorcycle) =>
+      Motorcycle.from(
+        motorcycle.id,
+        motorcycle.mileage,
+        motorcycle.dateOfCommissioning,
+        motorcycle.status,
+        motorcycle.modelId,
+        motorcycle.guaranteeId,
+        motorcycle.createdAt,
+        motorcycle.updatedAt
+      )
+    );
+
     const guarantee = Guarantee.from(
       guaranteeDatabase.id,
       guaranteeDatabase.name,
       guaranteeDatabase.durationInMonths,
       guaranteeDatabase.coveredAmount,
       partsValue,
+      motorcyclesValue,
       guaranteeDatabase.createdAt,
       guaranteeDatabase.updatedAt
     );
@@ -127,12 +148,32 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
       )
       .filter((part): part is Part => part instanceof Part);
 
+    const motorcycles = await prisma.motorcycle.findMany({
+      where: {
+        guaranteeId: guaranteeDatabase.id,
+      },
+    });
+
+    const motorcyclesValue = motorcycles.map((motorcycle) =>
+      Motorcycle.from(
+        motorcycle.id,
+        motorcycle.mileage,
+        motorcycle.dateOfCommissioning,
+        motorcycle.status,
+        motorcycle.modelId,
+        motorcycle.guaranteeId,
+        motorcycle.createdAt,
+        motorcycle.updatedAt
+      )
+    );
+
     const guarantee = Guarantee.from(
       guaranteeDatabase.id,
       guaranteeDatabase.name,
       guaranteeDatabase.durationInMonths,
       guaranteeDatabase.coveredAmount,
       partsValue,
+      motorcyclesValue,
       guaranteeDatabase.createdAt,
       guaranteeDatabase.updatedAt
     );
@@ -177,12 +218,32 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
         )
         .filter((part): part is Part => part instanceof Part);
 
+      const motorcycles = await prisma.motorcycle.findMany({
+        where: {
+          guaranteeId: guarantee.id,
+        },
+      });
+
+      const motorcyclesValue = motorcycles.map((motorcycle) =>
+        Motorcycle.from(
+          motorcycle.id,
+          motorcycle.mileage,
+          motorcycle.dateOfCommissioning,
+          motorcycle.status,
+          motorcycle.modelId,
+          motorcycle.guaranteeId,
+          motorcycle.createdAt,
+          motorcycle.updatedAt
+        )
+      );
+
       const guaranteeData = Guarantee.from(
         guarantee.id,
         guarantee.name,
         guarantee.durationInMonths,
         guarantee.coveredAmount,
         partsValue,
+        motorcyclesValue,
         guarantee.createdAt,
         guarantee.updatedAt
       );
