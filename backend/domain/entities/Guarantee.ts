@@ -9,7 +9,7 @@ export class Guarantee implements Entity {
   private constructor(
     public readonly identifier: string,
     public readonly name: GuaranteeName,
-    public readonly durationInMonths: number,
+    public readonly durationInMonths: GuaranteeDurationInMonths,
     public readonly coveredAmount: GuaranteeCoveredAmount,
     public readonly parts: Part[],
     public readonly createdAt: Date,
@@ -19,7 +19,7 @@ export class Guarantee implements Entity {
   public static from(
     identifier: string,
     nameValue: string,
-    durationInMonths: number,
+    durationInMonthsValue: number,
     coveredAmountValue: number,
     parts: Part[],
     createdAt: Date,
@@ -28,19 +28,21 @@ export class Guarantee implements Entity {
     const name = GuaranteeName.from(nameValue);
 
     if (name instanceof Error) {
-      return name;
+      throw name;
     }
 
-    const duration = GuaranteeDurationInMonths.from(durationInMonths);
+    const durationInMonths = GuaranteeDurationInMonths.from(
+      durationInMonthsValue
+    );
 
-    if (duration instanceof Error) {
-      return duration;
+    if (durationInMonths instanceof Error) {
+      throw durationInMonths;
     }
 
     const coveredAmount = GuaranteeCoveredAmount.from(coveredAmountValue);
 
     if (coveredAmount instanceof Error) {
-      return coveredAmount;
+      throw coveredAmount;
     }
 
     return new Guarantee(
