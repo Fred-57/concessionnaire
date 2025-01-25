@@ -20,7 +20,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    const storedIsAdmin = localStorage.getItem("isAdmin") === "true";
+    const storedIsAdmin = localStorage.getItem("is_admin") === "true";
     setIsAdmin(storedIsAdmin);
   }, []);
 

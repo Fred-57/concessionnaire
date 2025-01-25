@@ -46,7 +46,7 @@ export const columns = ({
     },
     {
       accessorKey: "updatedAt",
-      header: "Date de mise à jour",
+      header: "Date de dernière mise à jour",
     },
     {
       id: "actions",
