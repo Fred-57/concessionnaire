@@ -85,9 +85,9 @@ model Breakdown {
   totalCost   Float?                     @default(0)
   rental      Rental                     @relation(fields: [rentalId], references: [id])
   rentalId    String                     @db.Uuid
+  parts       BreakdownPart[]
   createdAt   DateTime                   @default(now())
   updatedAt   DateTime                   @updatedAt
-  parts       BreakdownPart[]
 }
 
 model Maintenance {
@@ -98,9 +98,9 @@ model Maintenance {
   totalCost      Float?                     @default(0)
   motorcycle     Motorcycle                 @relation(fields: [motorcycleId], references: [id])
   motorcycleId   String
+  parts          MaintenancePart[]
   createdAt      DateTime                   @default(now())
   updatedAt      DateTime                   @updatedAt
-  parts          MaintenancePart[]
 }
 
 model Guarantee {
@@ -109,9 +109,9 @@ model Guarantee {
   durationInMonths Int
   coveredAmount    Float
   motorcycles      Motorcycle[]
+  parts            GuaranteePart[]
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
-  parts            GuaranteePart[]
 }
 
 model Part {
@@ -120,11 +120,11 @@ model Part {
   name             String
   cost             Float
   stock            Int
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
   guaranteeParts   GuaranteePart[]
   breakdownParts   BreakdownPart[]
   maintenanceParts MaintenancePart[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 }
 
 model BreakdownPart {
