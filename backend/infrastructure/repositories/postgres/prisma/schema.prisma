@@ -111,7 +111,7 @@ model Guarantee {
   motorcycles      Motorcycle[]
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
-  GuaranteePart    GuaranteePart[]
+  parts            GuaranteePart[]
 }
 
 model Part {
