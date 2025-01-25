@@ -7,7 +7,6 @@ export class Maintenance implements Entity {
     public readonly identifier: string,
     public readonly date: Date,
     public readonly motorcycleIdentifier: string,
-    public readonly repairIdentifier: string | null,
     public readonly recommendation: string,
     public readonly status: StatusMaintenance = "PENDING",
     public readonly createdAt: Date,
@@ -18,7 +17,6 @@ export class Maintenance implements Entity {
     identifier: string,
     date: Date,
     motorcycleIdentifier: string,
-    repairIdentifier: string,
     recommendation: string,
     status: StatusMaintenance,
     createdAt: Date,
@@ -28,7 +26,6 @@ export class Maintenance implements Entity {
       identifier,
       date,
       motorcycleIdentifier,
-      repairIdentifier,
       recommendation,
       status,
       createdAt,
@@ -39,7 +36,6 @@ export class Maintenance implements Entity {
   public static create(
     date: Date,
     motorcycleIdentifier: string,
-    repairIdentifier: string,
     recommendation: string
   ): Maintenance {
     const identifier = randomUUID();
@@ -50,7 +46,6 @@ export class Maintenance implements Entity {
       identifier,
       date,
       motorcycleIdentifier,
-      repairIdentifier,
       recommendation,
       "PENDING",
       createdAt,
