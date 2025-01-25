@@ -5,6 +5,7 @@ import {
   HomeIcon,
   KeyIcon,
   PackageIcon,
+  ShieldIcon,
   TriangleAlertIcon,
   UserIcon,
   WrenchIcon,
@@ -35,12 +36,14 @@ export const routes = [
     path: "/companies",
     icon: Building2Icon,
     element: Company,
+    adminOnly: true,
   },
   {
     title: "Modèles",
     path: "/models",
     icon: PackageIcon,
     element: Model,
+    adminOnly: true,
   },
   {
     title: "Motos",
@@ -73,10 +76,18 @@ export const routes = [
     element: Maintenance,
   },
   {
+    title: "Garanties",
+    path: "/guarantees",
+    icon: ShieldIcon,
+    element: Home,
+    adminOnly: true,
+  },
+  {
     title: "Pièces",
     path: "/parts",
     icon: BoltIcon,
     element: Part,
+    adminOnly: true,
   },
 ];
 

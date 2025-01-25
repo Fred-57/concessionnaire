@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { AppHeader } from "./header/AppHeader";
 import { useNavigate } from "react-router";
 import { Button } from "./ui/button";
+import { AdminProvider } from "@/context/AdminContext";
 
 export function Layout({
   title,
@@ -20,7 +21,7 @@ export function Layout({
   const navigate = useNavigate();
 
   return (
-    <>
+    <AdminProvider>
       <SidebarProvider className="h-screen">
         <AppSidebar title={title} />
         <main className="flex flex-col w-screen">
@@ -42,6 +43,6 @@ export function Layout({
         </main>
       </SidebarProvider>
       <Toaster />
-    </>
+    </AdminProvider>
   );
 }

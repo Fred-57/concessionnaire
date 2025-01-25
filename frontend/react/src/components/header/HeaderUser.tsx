@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Switch } from "@/components/ui/switch";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,33 +9,36 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowRightLeft } from "lucide-react";
+import { Building2, UserCircle } from "lucide-react";
+import { useAdmin } from "@/context/AdminContext";
 
 interface RoleInterface {
   name: string;
   initials: string;
+  icon: React.ReactNode;
 }
 
 const ROLES: Record<string, RoleInterface> = {
-  client: {
-    name: "Client",
-    initials: "CL",
-  },
   gestionnaire: {
     name: "Gestionnaire",
     initials: "GN",
+    icon: <Building2 />,
+  },
+  client: {
+    name: "Client",
+    initials: "CL",
+    icon: <UserCircle />,
   },
 };
 
 export function HeaderUser() {
+  const { isAdmin, toggleAdmin } = useAdmin();
+
   const [role, setRole] = useState("gestionnaire");
 
-  useEffect(() => {
-    const storedRole = localStorage.getItem("role");
-    if (storedRole) {
-      setRole(storedRole);
-    }
-  }, []);
+  const handleAdminToggle = (checked: boolean) => {
+    toggleAdmin(checked);
+  };
 
   const handleClick = () => {
     const newRole = role === "client" ? "gestionnaire" : "client";
@@ -52,12 +56,23 @@ export function HeaderUser() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>{ROLES[role].name}</DropdownMenuLabel>
+        <div className="flex items-center justify-between px-2 py-2">
+          <DropdownMenuLabel>Administrateur</DropdownMenuLabel>
+          <Switch
+            checked={isAdmin}
+            onCheckedChange={handleAdminToggle}
+            aria-label="Admin toggle"
+          />
+        </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleClick}>
-          <ArrowRightLeft />
-          <span>Changer de rôle</span>
-        </DropdownMenuItem>
+        <DropdownMenuLabel>Changer de rôle</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {Object.values(ROLES).map((role) => (
+          <DropdownMenuItem key={role.name} onClick={handleClick}>
+            {role.icon}
+            <DropdownMenuItem key={role.name}>{role.name}</DropdownMenuItem>
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
