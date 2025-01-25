@@ -7,7 +7,6 @@ export class Breakdown implements Entity {
     public readonly date: Date,
     public readonly description: string,
     public readonly rentalIdentifier: string,
-    public readonly repairIdentifier: string | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -17,7 +16,6 @@ export class Breakdown implements Entity {
     date: Date,
     description: string,
     rentalIdentifier: string,
-    repairIdentifier: string | null,
     createdAt: Date,
     updatedAt: Date
   ): Breakdown {
@@ -26,7 +24,6 @@ export class Breakdown implements Entity {
       date,
       description,
       rentalIdentifier,
-      repairIdentifier,
       createdAt,
       updatedAt
     );
@@ -35,8 +32,7 @@ export class Breakdown implements Entity {
   public static create(
     date: Date,
     description: string,
-    rentalIdentifier: string,
-    repairIdentifier: string | null
+    rentalIdentifier: string
   ): Breakdown {
     const identifier = randomUUID();
     const createdAt = new Date();
@@ -47,7 +43,6 @@ export class Breakdown implements Entity {
       date,
       description,
       rentalIdentifier,
-      repairIdentifier,
       createdAt,
       updatedAt
     );
