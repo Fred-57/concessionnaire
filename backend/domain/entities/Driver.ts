@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { License } from "../types/License";
 import { DriverName } from "../values/driver/DriverName";
 import { Entity } from "./Entity";
+import { Company } from "./Company";
 
 export class Driver implements Entity {
   private constructor(

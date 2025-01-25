@@ -7,6 +7,7 @@ import { CompanyRouter } from "./routers/CompanyRouter";
 import { ModelRouter } from "./routers/ModelRouter";
 import { MotorcycleRouter } from "./routers/MotorcycleRouter";
 import { PartRouter } from "./routers/PartRouter";
+import { GuaranteeRouter } from "./routers/GuaranteeRouter";
 
 dotenv.config({ path: "../.env" });
 
@@ -22,6 +23,7 @@ app.use("/companies", CompanyRouter);
 app.use("/models", ModelRouter);
 app.use("/motorcycles", MotorcycleRouter);
 app.use("/parts", PartRouter);
+app.use("/guarantees", GuaranteeRouter);
 
 // Error handling
 app.use(errorHandler);
