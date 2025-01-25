@@ -3,7 +3,7 @@ import { Guarantee } from "@domain/entities/Guarantee";
 import { GuaranteeRepository } from "@application/repositories/GuaranteeRepository";
 import { GuaranteeNameAlreadyTakenError } from "@domain/errors/guarantee/GuaranteeNameAlreadyTakenError";
 
-export class CreateGuaranteeUsecase implements Usecase {
+export class CreateGuaranteeUsecase implements Usecase<Guarantee> {
   public constructor(
     private readonly guaranteeRepository: GuaranteeRepository
   ) {}

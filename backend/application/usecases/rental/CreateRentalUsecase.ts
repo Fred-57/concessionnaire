@@ -3,7 +3,7 @@ import { Rental } from "@domain/entities/Rental";
 import { RentalAlreadyExistsError } from "@domain/errors/rental/RentalAlreadyExistsError";
 import { Usecase } from "../Usecase";
 
-export class CreateRentalUsecase implements Usecase {
+export class CreateRentalUsecase implements Usecase<Rental> {
   public constructor(private readonly rentalRepository: RentalRepository) {}
 
   public async execute(rental: Rental) {
