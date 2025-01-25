@@ -8,6 +8,7 @@ export class MongoCompanyRepository implements CompanyRepository {
     const companyDatabase = new CompanyModel({
       identifier: company.identifier,
       name: company.name.value,
+      type: company.type,
     });
     await companyDatabase.save();
   }
@@ -38,6 +39,7 @@ export class MongoCompanyRepository implements CompanyRepository {
     const company = Company.from(
       companyDatabase.identifier,
       companyDatabase.name,
+      companyDatabase.type,
       companyDatabase.createdAt,
       companyDatabase.updatedAt
     );
@@ -61,6 +63,7 @@ export class MongoCompanyRepository implements CompanyRepository {
     const company = Company.from(
       companyDatabase.identifier,
       companyDatabase.name,
+      companyDatabase.type,
       companyDatabase.createdAt,
       companyDatabase.updatedAt
     );
@@ -81,6 +84,7 @@ export class MongoCompanyRepository implements CompanyRepository {
       const company = Company.from(
         companyDatabase.identifier,
         companyDatabase.name,
+        companyDatabase.type,
         companyDatabase.createdAt,
         companyDatabase.updatedAt
       );

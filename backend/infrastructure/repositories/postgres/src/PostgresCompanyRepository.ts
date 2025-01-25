@@ -2,6 +2,7 @@ import { CompanyRepository } from "@application/repositories/CompanyRepository";
 import { PrismaClient } from "@prisma/client";
 import { Company } from "@domain/entities/Company";
 import { CompanyNameTooShortError } from "@domain/errors/company/CompanyNameTooShortError";
+import { CompanyTypeEnum } from "@domain/types/CompanyTypeEnum";
 
 const prisma = new PrismaClient();
 
@@ -11,6 +12,7 @@ export class PostgresCompanyRepository implements CompanyRepository {
       data: {
         id: company.identifier,
         name: company.name.value,
+        type: company.type,
       },
     });
   }
@@ -20,6 +22,7 @@ export class PostgresCompanyRepository implements CompanyRepository {
       where: { id: company.identifier },
       data: {
         name: company.name.value,
+        type: company.type,
       },
     });
   }
@@ -38,6 +41,7 @@ export class PostgresCompanyRepository implements CompanyRepository {
     const company = Company.from(
       companyDatabase.id,
       companyDatabase.name,
+      companyDatabase.type as CompanyTypeEnum,
       companyDatabase.createdAt,
       companyDatabase.updatedAt
     );
@@ -63,6 +67,7 @@ export class PostgresCompanyRepository implements CompanyRepository {
     const company = Company.from(
       companyDatabase.id,
       companyDatabase.name,
+      companyDatabase.type as CompanyTypeEnum,
       companyDatabase.createdAt,
       companyDatabase.updatedAt
     );
@@ -83,6 +88,7 @@ export class PostgresCompanyRepository implements CompanyRepository {
       const company = Company.from(
         companyDatabase.id,
         companyDatabase.name,
+        companyDatabase.type as CompanyTypeEnum,
         companyDatabase.createdAt,
         companyDatabase.updatedAt
       );

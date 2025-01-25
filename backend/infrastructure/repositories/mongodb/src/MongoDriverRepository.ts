@@ -11,6 +11,7 @@ export class MongoDriverRepository implements DriverRepository {
       name: driver.name.value,
       license: driver.license,
       numberOfYearsOfExperience: driver.numberOfYearsOfExperience,
+      companyIdentifier: driver.companyIdentifier,
     });
 
     await driverDatabase.save();
@@ -45,8 +46,9 @@ export class MongoDriverRepository implements DriverRepository {
       driverDatabase.name,
       driverDatabase.license as License,
       driverDatabase.numberOfYearsOfExperience,
+      driverDatabase.companyIdentifier,
       driverDatabase.createdAt,
-      driverDatabase.updatedAt,
+      driverDatabase.updatedAt
     );
 
     if (driver instanceof DriverNameTooShortError) {
@@ -67,8 +69,9 @@ export class MongoDriverRepository implements DriverRepository {
         driverDatabase.name,
         driverDatabase.license as License,
         driverDatabase.numberOfYearsOfExperience,
+        driverDatabase.companyIdentifier,
         driverDatabase.createdAt,
-        driverDatabase.updatedAt,
+        driverDatabase.updatedAt
       );
 
       if (driver instanceof DriverNameTooShortError) {

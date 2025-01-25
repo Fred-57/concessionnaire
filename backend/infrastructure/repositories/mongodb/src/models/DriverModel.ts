@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import { CompanySchema, ICompany } from "./CompanyModel";
 import { IRental } from "./RentalModel";
 
 export interface IDriver {
@@ -7,7 +6,7 @@ export interface IDriver {
   name: string;
   license: string;
   numberOfYearsOfExperience: number;
-  company: ICompany;
+  companyIdentifier: string;
   rentals: IRental[];
   createdAt: Date;
   updatedAt: Date;
@@ -19,7 +18,7 @@ export const DriverSchema = new Schema<IDriver>(
     name: { type: String, required: true },
     license: { type: String, required: true },
     numberOfYearsOfExperience: { type: Number, required: true },
-    company: { type: CompanySchema, required: true },
+    companyIdentifier: { type: String, required: true },
     rentals: [{ type: Schema.Types.ObjectId, ref: "Rental" }],
   },
   { timestamps: true }
