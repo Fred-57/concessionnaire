@@ -7,14 +7,6 @@ import { ModelType } from "@/types/model";
 import { useNavigate, useParams } from "react-router";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { BrandType } from "@/types/brand";
 
 export function ModelForm({ mode }: { mode: "create" | "update" }) {
   const { identifier } = useParams();
@@ -24,48 +16,22 @@ export function ModelForm({ mode }: { mode: "create" | "update" }) {
   const [name, setName] = useState<string>("");
   const [repairMileage, setRepairMileage] = useState<number>(0);
   const [repairDeadline, setRepairDeadline] = useState<number>(0);
-  const [brandIdentifier, setBrandIdentifier] = useState<string>("");
-  const [brands, setBrands] = useState<BrandType[]>([]);
-
-  // Get brands
-  useEffect(() => {
-    const fetchBrands = async () => {
-      const brandsApi = await ky.get("/express/brands").json();
-      setBrands(brandsApi as BrandType[]);
-    };
-
-    fetchBrands();
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       const model = (await ky
         .get(`/express/models/${identifier}`)
         .json()) as ModelType;
-      console.log(model.brandIdentifier);
 
       setName(model.name.value);
       setRepairMileage(model.repairMileage);
       setRepairDeadline(model.repairDeadline.value);
-      setBrandIdentifier(model.brandIdentifier);
     };
 
     if (mode === "update") {
       fetchData();
     }
   }, [mode, identifier]);
-
-  //force refresh to get the name of the brand preselected
-  useEffect(() => {
-    if (brands.length > 0 && mode === "update") {
-      const associateBrand = brands.find(
-        (brand) => brand.identifier === brandIdentifier
-      );
-      if (associateBrand) {
-        setBrandIdentifier(associateBrand.identifier);
-      }
-    }
-  }, [brands, brandIdentifier, mode]);
 
   const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -76,7 +42,7 @@ export function ModelForm({ mode }: { mode: "create" | "update" }) {
         mode === "create" ? "/express/models" : `/express/models/${identifier}`;
 
       const response = await ky[method](endpoint, {
-        json: { name, repairMileage, repairDeadline, brandIdentifier },
+        json: { name, repairMileage, repairDeadline },
       });
 
       if (response.ok) {
@@ -89,7 +55,6 @@ export function ModelForm({ mode }: { mode: "create" | "update" }) {
           setName("");
           setRepairMileage(0);
           setRepairDeadline(0);
-          setBrandIdentifier("");
         }
       }
     } catch {
@@ -137,28 +102,6 @@ export function ModelForm({ mode }: { mode: "create" | "update" }) {
             value={repairDeadline}
             onChange={(e) => setRepairDeadline(Number(e.target.value))}
           />
-        </div>
-
-        {/* Brand Identifier */}
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label>Marque associée</Label>
-          <Select
-            value={brandIdentifier}
-            // defaultValue={brandIdentifier}
-            onValueChange={(value) => setBrandIdentifier(value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Séléctionner une marque" />
-            </SelectTrigger>
-            <SelectContent>
-              {/* Brands */}
-              {brands.map((brand) => (
-                <SelectItem key={brand.identifier} value={brand.identifier}>
-                  {brand.name.value}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </div>
 
         <div className="flex gap-3">

@@ -9,7 +9,6 @@ import {
   UserIcon,
   WrenchIcon,
 } from "lucide-react";
-import { Brand } from "./pages/Brand";
 import { Breakdown } from "./pages/Breakdown";
 import { Driver } from "./pages/Driver";
 import { Home } from "./pages/Home";
@@ -18,7 +17,6 @@ import { Model } from "./pages/Model";
 import { Motorcycle } from "./pages/Motorcycle";
 import { Part } from "./pages/Part";
 import { Rental } from "./pages/Rental";
-import { BrandCreate, BrandUpdate } from "./pages/forms/Brand";
 import { DriverCreate, DriverUpdate } from "./pages/forms/Driver";
 import { PartCreate, PartUpdate } from "./pages/forms/Part";
 import { ModelCreate, ModelUpdate } from "./pages/forms/Model";
@@ -29,12 +27,6 @@ export const routes = [
     path: "/home",
     icon: HomeIcon,
     element: Home,
-  },
-  {
-    title: "Marques",
-    path: "/brands",
-    icon: TargetIcon,
-    element: Brand,
   },
   {
     title: "Modèles",
@@ -83,14 +75,6 @@ export const routes = [
 export const hiddenRoutes = [
   // Route create en premier, sinon "create" est considéré comme :identifier
   // par la route d'update
-  {
-    path: "/brands/create",
-    element: BrandCreate,
-  },
-  {
-    path: "/brands/:identifier",
-    element: BrandUpdate,
-  },
   {
     path: "/models/create",
     element: ModelCreate,

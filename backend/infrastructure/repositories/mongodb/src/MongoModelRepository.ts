@@ -1,39 +1,26 @@
 import { ModelRepository } from "@application/repositories/ModelRepository";
 import { ModelModel } from "./models/ModelModel";
 import { Model } from "@domain/entities/Model";
-import { Brand } from "@domain/entities/Brand";
 
 export class MongoModelRepository implements ModelRepository {
-  public async save(model: Model, brand: Brand): Promise<void> {
+  public async save(model: Model): Promise<void> {
     const modelDatabase = new ModelModel({
       identifier: model.identifier,
       name: model.name.value,
       repairMileage: model.repairMileage,
       repairDeadline: model.repairDeadline.value,
-      brand: {
-        identifier: brand.identifier,
-        name: brand.name.value,
-        createdAt: brand.createdAt,
-        updatedAt: brand.updatedAt,
-      },
     });
 
     await modelDatabase.save();
   }
 
-  public async update(model: Model, brand: Brand): Promise<void> {
+  public async update(model: Model): Promise<void> {
     await ModelModel.updateOne(
       { identifier: model.identifier },
       {
         name: model.name.value,
         repairMileage: model.repairMileage,
         repairDeadline: model.repairDeadline.value,
-        brand: {
-          identifier: brand.identifier,
-          name: brand.name.value,
-          createdAt: brand.createdAt,
-          updatedAt: brand.updatedAt,
-        },
       }
     );
   }
@@ -52,7 +39,6 @@ export class MongoModelRepository implements ModelRepository {
       modelDatabase.name,
       modelDatabase.repairMileage,
       modelDatabase.repairDeadline,
-      modelDatabase.brand.identifier,
       modelDatabase.createdAt,
       modelDatabase.updatedAt
     );
@@ -78,7 +64,6 @@ export class MongoModelRepository implements ModelRepository {
       modelDatabase.name,
       modelDatabase.repairMileage,
       modelDatabase.repairDeadline,
-      modelDatabase.brand.identifier,
       modelDatabase.createdAt,
       modelDatabase.updatedAt
     );
@@ -88,36 +73,6 @@ export class MongoModelRepository implements ModelRepository {
     }
 
     return model;
-  }
-
-  public async findByBrandIdentifier(
-    brandIdentifier: string
-  ): Promise<Model[]> {
-    const modelDatabases = await ModelModel.find({
-      "brand.identifier": brandIdentifier,
-    });
-
-    const models: Model[] = [];
-
-    for (const modelDatabase of modelDatabases) {
-      const model = Model.from(
-        modelDatabase.identifier,
-        modelDatabase.name,
-        modelDatabase.repairMileage,
-        modelDatabase.repairDeadline,
-        modelDatabase.brand.identifier,
-        modelDatabase.createdAt,
-        modelDatabase.updatedAt
-      );
-
-      if (model instanceof Error) {
-        throw model;
-      }
-
-      models.push(model);
-    }
-
-    return models;
   }
 
   public async findAll(): Promise<Model[]> {
@@ -131,7 +86,6 @@ export class MongoModelRepository implements ModelRepository {
         modelDatabase.name,
         modelDatabase.repairMileage,
         modelDatabase.repairDeadline,
-        modelDatabase.brand.identifier,
         modelDatabase.createdAt,
         modelDatabase.updatedAt
       );
