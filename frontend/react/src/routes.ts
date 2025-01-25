@@ -1,15 +1,17 @@
 import {
   BikeIcon,
   BoltIcon,
+  Building2Icon,
   HomeIcon,
   KeyIcon,
   PackageIcon,
-  TargetIcon,
+  ShieldIcon,
   TriangleAlertIcon,
   UserIcon,
   WrenchIcon,
 } from "lucide-react";
 import { Breakdown } from "./pages/Breakdown";
+import { Company } from "./pages/Company";
 import { Driver } from "./pages/Driver";
 import { Home } from "./pages/Home";
 import { Maintenance } from "./pages/Maintenance";
@@ -17,9 +19,10 @@ import { Model } from "./pages/Model";
 import { Motorcycle } from "./pages/Motorcycle";
 import { Part } from "./pages/Part";
 import { Rental } from "./pages/Rental";
+import { CompanyCreate, CompanyUpdate } from "./pages/forms/Company";
 import { DriverCreate, DriverUpdate } from "./pages/forms/Driver";
-import { PartCreate, PartUpdate } from "./pages/forms/Part";
 import { ModelCreate, ModelUpdate } from "./pages/forms/Model";
+import { PartCreate, PartUpdate } from "./pages/forms/Part";
 
 export const routes = [
   {
@@ -29,10 +32,18 @@ export const routes = [
     element: Home,
   },
   {
+    title: "Entreprises",
+    path: "/companies",
+    icon: Building2Icon,
+    element: Company,
+    adminOnly: true,
+  },
+  {
     title: "Modèles",
     path: "/models",
     icon: PackageIcon,
     element: Model,
+    adminOnly: true,
   },
   {
     title: "Motos",
@@ -65,16 +76,32 @@ export const routes = [
     element: Maintenance,
   },
   {
+    title: "Garanties",
+    path: "/guarantees",
+    icon: ShieldIcon,
+    element: Home,
+    adminOnly: true,
+  },
+  {
     title: "Pièces",
     path: "/parts",
     icon: BoltIcon,
     element: Part,
+    adminOnly: true,
   },
 ];
 
 export const hiddenRoutes = [
   // Route create en premier, sinon "create" est considéré comme :identifier
   // par la route d'update
+  {
+    path: "/companies/create",
+    element: CompanyCreate,
+  },
+  {
+    path: "/companies/:identifier",
+    element: CompanyUpdate,
+  },
   {
     path: "/models/create",
     element: ModelCreate,

@@ -16,6 +16,7 @@ CompanyRouter.get("/", async (_, res) => {
   const companies = await new ListCompaniesUsecase(
     new PostgresCompanyRepository()
   ).execute();
+
   res.status(StatusCodes.OK).json(companies);
 });
 
