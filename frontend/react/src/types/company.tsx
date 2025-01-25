@@ -6,6 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon } from "lucide-react";
 
@@ -31,6 +32,15 @@ export const columns = ({
   goToUpdate: (company: CompanyType) => void;
   handleDelete: (company: CompanyType) => Promise<void>;
 }): ColumnDef<CompanyType>[] => {
+  const { toast } = useToast();
+
+  const impersonate = (company: CompanyType) => {
+    localStorage.setItem("company_id", company.identifier);
+    toast({
+      title: "Vous êtes maintenant dans l'entreprise " + company.name.value,
+    });
+  };
+
   return [
     {
       accessorKey: "name.value",
@@ -46,7 +56,7 @@ export const columns = ({
     },
     {
       accessorKey: "updatedAt",
-      header: "Date de mise à jour",
+      header: "Date de dernière mise à jour",
     },
     {
       id: "actions",
@@ -69,6 +79,9 @@ export const columns = ({
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDelete(company)}>
                 Supprimer
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => impersonate(company)}>
+                Usurper
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

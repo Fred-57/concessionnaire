@@ -11,16 +11,16 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isAdmin, setIsAdmin] = useState(
-    localStorage.getItem("isAdmin") === "true"
+    localStorage.getItem("is_admin") === "true"
   );
 
   const toggleAdmin = (value: boolean) => {
     setIsAdmin(value);
-    localStorage.setItem("isAdmin", value.toString());
+    localStorage.setItem("is_admin", value.toString());
   };
 
   useEffect(() => {
-    const storedIsAdmin = localStorage.getItem("isAdmin") === "true";
+    const storedIsAdmin = localStorage.getItem("is_admin") === "true";
     setIsAdmin(storedIsAdmin);
   }, []);
 
