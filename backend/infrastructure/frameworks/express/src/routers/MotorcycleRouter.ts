@@ -64,7 +64,6 @@ MotorcycleRouter.post("/", async (req, res) => {
       new PostgresMotorcycleRepository()
     ).execute(motorcycle);
   } catch (error) {
-    console.log(error);
     res.sendStatus(StatusCodes.BAD_REQUEST);
     return;
   }
@@ -75,9 +74,15 @@ MotorcycleRouter.post("/", async (req, res) => {
 MotorcycleRouter.get("/:identifier", async (req, res) => {
   const { identifier } = req.params;
 
-  const motorcycle = await new GetMotorcycleUsecase(
-    new PostgresMotorcycleRepository()
-  ).execute(identifier);
+  let motorcycle: Motorcycle | null = null;
+  try {
+    motorcycle = await new GetMotorcycleUsecase(
+      new PostgresMotorcycleRepository()
+    ).execute(identifier);
+  } catch (error) {
+    res.sendStatus(StatusCodes.NOT_FOUND);
+    return;
+  }
 
   res.status(StatusCodes.OK).json(motorcycle);
 });
@@ -115,9 +120,15 @@ MotorcycleRouter.put("/:identifier", async (req, res) => {
     return;
   }
 
-  await new UpdateMotorcycleUsecase(new PostgresMotorcycleRepository()).execute(
-    motorcycle
-  );
+  try {
+    await new UpdateMotorcycleUsecase(
+      new PostgresMotorcycleRepository()
+    ).execute(updatedMotorcycle);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(StatusCodes.BAD_REQUEST);
+    return;
+  }
 
   res.sendStatus(StatusCodes.OK);
 });
@@ -134,9 +145,14 @@ MotorcycleRouter.delete("/:identifier", async (req, res) => {
     return;
   }
 
-  await new DeleteMotorcycleUsecase(new PostgresMotorcycleRepository()).execute(
-    motorcycle
-  );
+  try {
+    await new DeleteMotorcycleUsecase(
+      new PostgresMotorcycleRepository()
+    ).execute(motorcycle);
+  } catch (error) {
+    res.sendStatus(StatusCodes.BAD_REQUEST);
+    return;
+  }
 
   res.sendStatus(StatusCodes.OK);
 });

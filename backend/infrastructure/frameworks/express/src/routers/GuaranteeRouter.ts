@@ -7,7 +7,12 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Guarantee } from "@domain/entities/Guarantee";
 import { GuaranteeNotFoundError } from "@domain/errors/guarantee/GuaranteeNotFoundError";
-import { MongoGuaranteeRepository } from "@infrastructure/repositories/mongodb";
+// import { MongoGuaranteeRepository } from "@infrastructure/repositories/mongodb";
+// import {
+//   MongoPartRepository,
+// } from "@infrastructure/repositories/mongodb";
+import { PostgresPartRepository } from "@infrastructure/repositories/postgres";
+import { PostgresGuaranteeRepository } from "@infrastructure/repositories/postgres";
 import { MongoPartRepository } from "@infrastructure/repositories/mongodb";
 
 export const GuaranteeRouter = Router();
@@ -15,7 +20,7 @@ export const GuaranteeRouter = Router();
 GuaranteeRouter.get("/", async (_, res) => {
   try {
     const guarantees = await new ListGuaranteesUsecase(
-      new MongoGuaranteeRepository()
+      new PostgresGuaranteeRepository()
     ).execute();
     res.status(StatusCodes.OK).json(guarantees);
   } catch (error) {
@@ -50,8 +55,8 @@ GuaranteeRouter.post("/", async (req, res) => {
     }
 
     await new CreateGuaranteeUsecase(
-      new MongoGuaranteeRepository(),
-      new MongoPartRepository()
+      new PostgresGuaranteeRepository(),
+      new PostgresPartRepository()
     ).execute(guarantee);
   } catch (error) {
     if (error instanceof Error) {
@@ -67,7 +72,7 @@ GuaranteeRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const guarantee = await new GetGuaranteeUsecase(
-      new MongoGuaranteeRepository()
+      new PostgresGuaranteeRepository()
     ).execute(id);
 
     if (guarantee instanceof GuaranteeNotFoundError) {
@@ -96,7 +101,7 @@ GuaranteeRouter.put("/:id", async (req, res) => {
 
   try {
     const guarantee = await new GetGuaranteeUsecase(
-      new MongoGuaranteeRepository()
+      new PostgresGuaranteeRepository()
     ).execute(id);
 
     const updatedGuarantee = Guarantee.from(
@@ -116,8 +121,8 @@ GuaranteeRouter.put("/:id", async (req, res) => {
     }
 
     await new UpdateGuaranteeUsecase(
-      new MongoGuaranteeRepository(),
-      new MongoPartRepository()
+      new PostgresGuaranteeRepository(),
+      new PostgresPartRepository()
     ).execute(updatedGuarantee);
 
     res.sendStatus(StatusCodes.OK);
@@ -133,7 +138,7 @@ GuaranteeRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    await new DeleteGuaranteeUsecase(new MongoGuaranteeRepository()).execute(
+    await new DeleteGuaranteeUsecase(new PostgresGuaranteeRepository()).execute(
       id
     );
   } catch (error) {

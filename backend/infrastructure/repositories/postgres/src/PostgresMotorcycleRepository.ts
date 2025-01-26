@@ -28,7 +28,7 @@ export class PostgresMotorcycleRepository implements MotorcycleRepository {
         status: motorcycle.status.value,
         companyId: motorcycle.companyIdentifier,
         modelId: motorcycle.modelIdentifier,
-        guaranteeId: motorcycle.guaranteeIdentifier ?? undefined,
+        guaranteeId: motorcycle.guaranteeIdentifier ?? null,
       },
     });
   }

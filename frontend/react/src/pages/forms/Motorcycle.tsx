@@ -1,12 +1,7 @@
 import { Layout } from "@/components/Layout";
-import { useToast } from "@/hooks/use-toast";
-import ky from "ky";
-import { Input } from "@/components/ui/input";
-import { SyntheticEvent, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { MotorcycleType } from "@/types/motorcycle";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -14,7 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { GuaranteeType } from "@/types/guarantee";
 import { ModelType } from "@/types/model";
+import { MotorcycleType } from "@/types/motorcycle";
+import ky from "ky";
+import { SyntheticEvent, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 
 export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
   const { identifier } = useParams();
@@ -34,7 +35,9 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
   });
 
   const [models, setModels] = useState<ModelType[]>([]);
-  // const [guarantees, setGuarantees] = useState<GuaranteeType[]>([]);
+  const [guarantees, setGuarantees] = useState<GuaranteeType[]>([]);
+  const [doneFetchingModels, setDoneFetchingModels] = useState(false);
+  const [doneFetchingGuarantees, setDoneFetchingGuarantees] = useState(false);
 
   // Motorcycle form state
   const [formIdentifier, setFormIdentifier] = useState<string>("");
@@ -42,9 +45,29 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
   const [dateOfCommissioning, setDateOfCommissioning] = useState<string>("");
   const [status, setStatus] = useState<string>("");
   const [modelIdentifier, setModelIdentifier] = useState<string>("");
-  const [guaranteeIdentifier, setGuaranteeIdentifier] = useState<string | null>(
-    ""
-  );
+  const [guaranteeIdentifier, setGuaranteeIdentifier] = useState<string>("");
+
+  // Fetch models
+  useEffect(() => {
+    const fetchModels = async () => {
+      const modelsApi = await api.get("/express/models").json();
+      setModels(modelsApi as ModelType[]);
+      setDoneFetchingModels(true);
+    };
+
+    fetchModels();
+  }, []);
+
+  // Fetch guarantees
+  useEffect(() => {
+    const fetchGuarantees = async () => {
+      const guaranteesApi = await api.get("/express/guarantees").json();
+      setGuarantees(guaranteesApi as GuaranteeType[]);
+      setDoneFetchingGuarantees(true);
+    };
+
+    fetchGuarantees();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,22 +88,13 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
       setDateOfCommissioning(formattedDateOfCommissioning);
       setStatus(motorcycle.status.value);
       setModelIdentifier(motorcycle.modelIdentifier);
-      setGuaranteeIdentifier(motorcycle.guaranteeIdentifier);
+      setGuaranteeIdentifier(motorcycle.guaranteeIdentifier ?? "");
     };
 
-    if (mode === "update") {
+    if (mode === "update" && doneFetchingModels && doneFetchingGuarantees) {
       fetchData();
     }
-  }, [mode, identifier]);
-
-  useEffect(() => {
-    const fetchModels = async () => {
-      const modelsApi = await api.get("/express/models").json();
-      setModels(modelsApi as ModelType[]);
-    };
-
-    fetchModels();
-  }, []);
+  }, [mode, identifier, doneFetchingModels, doneFetchingGuarantees]);
 
   const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -100,9 +114,7 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
           status,
           modelIdentifier,
           guaranteeIdentifier:
-            guaranteeIdentifier && guaranteeIdentifier !== ""
-              ? guaranteeIdentifier
-              : null,
+            guaranteeIdentifier !== "" ? guaranteeIdentifier : null,
         },
       });
 
@@ -117,7 +129,7 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
           setDateOfCommissioning("");
           setStatus("");
           setModelIdentifier("");
-          setGuaranteeIdentifier(null);
+          setGuaranteeIdentifier("");
         }
       }
     } catch {
@@ -220,13 +232,33 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
         {/* Guarantee */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="guarantee">Garantie</Label>
-          <Input
-            type="text"
-            id="guarantee"
-            placeholder="Garantie"
-            value={guaranteeIdentifier ?? ""}
-            onChange={(e) => setGuaranteeIdentifier(e.target.value)}
-          />
+          <Select
+            value={guaranteeIdentifier}
+            onValueChange={(value) => setGuaranteeIdentifier(value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Garantie" />
+            </SelectTrigger>
+            <SelectContent>
+              {guarantees.map((guarantee) => (
+                <SelectItem
+                  key={guarantee.identifier}
+                  value={guarantee.identifier}
+                >
+                  {guarantee.name.value}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {/* Clear Guarantee Text */}
+          {guaranteeIdentifier && ( // Only show if a guarantee is selected
+            <span
+              className="mt-1 text-xs cursor-pointer hover:underline"
+              onClick={() => setGuaranteeIdentifier("")} // Clear the guarantee
+            >
+              Supprimer garantie
+            </span>
+          )}
         </div>
 
         <div className="flex gap-3">
