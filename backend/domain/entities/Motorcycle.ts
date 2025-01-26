@@ -1,11 +1,13 @@
 import { Entity } from "./Entity";
 import { MotorcycleMileage } from "@domain/values/motorcycle/MotorcycleMileage";
 import { MotorcycleStatus } from "@domain/values/motorcycle/MotorcycleStatus";
+import { Rental } from "./Rental";
+import { Maintenance } from "./Maintenance";
 
 export class Motorcycle implements Entity {
   private constructor(
     /**
-     * @description Immatriculation
+     * @description Numéro d'identification du véhicule (VIN)
      */
     public readonly identifier: string,
 
@@ -20,8 +22,12 @@ export class Motorcycle implements Entity {
     public readonly dateOfCommissioning: Date,
 
     public readonly status: MotorcycleStatus,
+
+    public readonly companyIdentifier: string,
     public readonly modelIdentifier: string,
     public readonly guaranteeIdentifier: string | null,
+    public readonly rentals: Rental[],
+    public readonly maintenances: Maintenance[],
 
     public readonly createdAt: Date,
     public readonly updatedAt: Date
@@ -32,8 +38,11 @@ export class Motorcycle implements Entity {
     mileageValue: number,
     dateOfCommissioning: Date,
     statusValue: string,
+    companyIdentifier: string,
     modelIdentifier: string,
     guaranteeIdentifier: string | null,
+    rentals: Rental[],
+    maintenances: Maintenance[],
     createdAt: Date,
     updatedAt: Date
   ) {
@@ -54,8 +63,11 @@ export class Motorcycle implements Entity {
       mileage,
       dateOfCommissioning,
       status,
+      companyIdentifier,
       modelIdentifier,
       guaranteeIdentifier,
+      rentals,
+      maintenances,
       createdAt,
       updatedAt
     );
@@ -66,8 +78,11 @@ export class Motorcycle implements Entity {
     mileage: number,
     dateOfCommissioning: Date,
     status: string,
+    companyIdentifier: string,
     modelIdentifier: string,
-    guaranteeIdentifier: string | null
+    guaranteeIdentifier: string | null,
+    rentals: Rental[],
+    maintenances: Maintenance[]
   ) {
     const createdAt = new Date();
     const updatedAt = new Date();
@@ -77,8 +92,11 @@ export class Motorcycle implements Entity {
       mileage,
       dateOfCommissioning,
       status,
+      companyIdentifier,
       modelIdentifier,
       guaranteeIdentifier,
+      rentals,
+      maintenances,
       createdAt,
       updatedAt
     );
