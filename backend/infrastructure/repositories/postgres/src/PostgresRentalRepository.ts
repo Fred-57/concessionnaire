@@ -32,6 +32,28 @@ export class PostgresRentalRepository implements RentalRepository {
     });
   }
 
+  async findAll(): Promise<Rental[]> {
+    const rentalsDatabase = await prisma.rental.findMany();
+
+    const rentals: Rental[] = [];
+
+    for (const rentalDatabase of rentalsDatabase) {
+      const rental = await this.findByIdentifier(rentalDatabase.id);
+
+      if (!rental) {
+        continue;
+      }
+
+      if (rental instanceof Error) {
+        throw rental;
+      }
+
+      rentals.push(rental);
+    }
+
+    return rentals;
+  }
+
   async findByIdentifier(identifier: string): Promise<Rental | null> {
     const rentalDatabase = await prisma.rental.findUnique({
       where: { id: identifier },
