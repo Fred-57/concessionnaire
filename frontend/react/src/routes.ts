@@ -25,6 +25,7 @@ import { MotorcycleCreate, MotorcycleUpdate } from "./pages/forms/Motorcycle";
 import { DriverCreate, DriverUpdate } from "./pages/forms/Driver";
 import { ModelCreate, ModelUpdate } from "./pages/forms/Model";
 import { PartCreate, PartUpdate } from "./pages/forms/Part";
+import { GuaranteeCreate, GuaranteeUpdate } from "./pages/forms/Guarantee";
 
 export const routes = [
   {
@@ -135,5 +136,13 @@ export const hiddenRoutes = [
   {
     path: "/parts/:identifier",
     element: PartUpdate,
+  },
+  {
+    path: "/guarantees/create",
+    element: GuaranteeCreate,
+  },
+  {
+    path: "/guarantees/:identifier",
+    element: GuaranteeUpdate,
   },
 ];
