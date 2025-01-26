@@ -15,20 +15,11 @@ import { StatusCodes } from "http-status-codes";
 export const DriverRouter = Router();
 
 DriverRouter.get("/", async (req, res) => {
-  const companyIdentifierHeader = req.get("companyId");
-
-  if (!companyIdentifierHeader) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "companyId header is missing" });
-    return;
-  }
-
   try {
     const drivers = await new ListDriversByCompanyUsecase(
       new PostgresDriverRepository(),
       new PostgresCompanyRepository()
-    ).execute(companyIdentifierHeader);
+    ).execute(req.companyIdentifier);
     res.status(StatusCodes.OK).json(drivers);
   } catch (error) {
     if (error instanceof Error) {
@@ -55,15 +46,6 @@ DriverRouter.get("/:id", async (req, res) => {
 });
 
 DriverRouter.post("/", async (req, res) => {
-  const companyIdentifierHeader = req.get("companyId");
-
-  if (!companyIdentifierHeader) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "companyId header is missing" });
-    return;
-  }
-
   const { name, license, numberOfYearsOfExperience, companyIdentifier } =
     req.body;
 
@@ -83,7 +65,7 @@ DriverRouter.post("/", async (req, res) => {
     await new CreateDriverUsecase(
       new PostgresDriverRepository(),
       new PostgresCompanyRepository()
-    ).execute(driver, companyIdentifierHeader);
+    ).execute(driver, req.companyIdentifier);
   } catch (error) {
     if (error instanceof Error) {
       res.status(StatusCodes.CONFLICT).send(error.name);
@@ -95,15 +77,6 @@ DriverRouter.post("/", async (req, res) => {
 });
 
 DriverRouter.put("/:id", async (req, res) => {
-  const companyIdentifierHeader = req.get("companyId");
-
-  if (!companyIdentifierHeader) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "companyId header is missing" });
-    return;
-  }
-
   const { id } = req.params;
   const { name, license, numberOfYearsOfExperience, companyIdentifier } =
     req.body;
@@ -131,7 +104,7 @@ DriverRouter.put("/:id", async (req, res) => {
     await new UpdateDriverUsecase(
       new PostgresDriverRepository(),
       new PostgresCompanyRepository()
-    ).execute(updatedDriver, companyIdentifierHeader);
+    ).execute(updatedDriver, req.companyIdentifier);
   } catch (error) {
     if (error instanceof Error) {
       res.status(StatusCodes.CONFLICT).send(error.name);
@@ -143,22 +116,13 @@ DriverRouter.put("/:id", async (req, res) => {
 });
 
 DriverRouter.delete("/:id", async (req, res) => {
-  const companyIdentifierHeader = req.get("companyId");
-
-  if (!companyIdentifierHeader) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "companyId header is missing" });
-    return;
-  }
-
   const { id } = req.params;
 
   try {
     await new DeleteDriverUsecase(
       new PostgresDriverRepository(),
       new PostgresCompanyRepository()
-    ).execute(id, companyIdentifierHeader);
+    ).execute(id, req.companyIdentifier);
 
     res.sendStatus(StatusCodes.NO_CONTENT);
   } catch (error) {
