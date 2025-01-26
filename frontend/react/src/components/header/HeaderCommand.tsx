@@ -11,6 +11,7 @@ import {
 import { routes } from "@/routes";
 import { Description, DialogTitle } from "@radix-ui/react-dialog";
 import { useNavigate } from "react-router";
+import { HeaderCompanies } from "./HeaderCompanies";
 
 export function HeaderCommand() {
   const navigate = useNavigate();
@@ -39,39 +40,44 @@ export function HeaderCommand() {
   };
 
   return (
-    <div className="relative">
-      <Search className="absolute top-0 left-0 w-5 h-5 m-2 text-muted-foreground" />
-      <input
-        type="search"
-        className="flex border-input bg-background px-3 py-2 placeholder:text-muted-foreground focus:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 h-9 cursor-pointer rounded-md border pl-10 pr-4 text-sm shadow-sm"
-        placeholder="Rechercher..."
-        onClick={handleClick}
-      />
-      <div className="absolute right-2 top-1/2 hidden -translate-y-1/2 items-center gap-0.5 rounded-sm bg-zinc-200 p-1 font-mono text-xs font-medium dark:bg-neutral-700 sm:flex">
-        <CommandIcon className="size-3" />
-        <span>k</span>
+    <div className="flex justify-between gap-2 w-full">
+      <div className="relative">
+        <Search className="absolute top-0 left-0 w-5 h-5 m-2 text-muted-foreground" />
+        <input
+          type="search"
+          className="flex border-input bg-background px-3 py-2 placeholder:text-muted-foreground focus:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 h-9 cursor-pointer rounded-md border pl-10 pr-4 text-sm shadow-sm"
+          placeholder="Rechercher..."
+          onClick={handleClick}
+        />
+        <div className="absolute right-2 top-1/2 hidden -translate-y-1/2 items-center gap-0.5 rounded-sm bg-zinc-200 p-1 font-mono text-xs font-medium dark:bg-neutral-700 sm:flex">
+          <CommandIcon className="size-3" />
+          <span>k</span>
+        </div>
+
+        <CommandDialog open={open} onOpenChange={setOpen}>
+          <DialogTitle className="sr-only">Rechercher</DialogTitle>
+          <Description className="sr-only">
+            Rechercher une page ou une fonctionnalité.
+          </Description>
+          <CommandInput placeholder="Rechercher..." />
+          <CommandList>
+            <CommandEmpty>Aucun résultat.</CommandEmpty>
+            <CommandGroup heading="Triumph Motorcycles">
+              {routes.map((route) => (
+                <CommandItem
+                  key={route.path}
+                  onSelect={() => handleSelect(route.path)}
+                >
+                  {route.title}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </CommandDialog>
       </div>
 
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <DialogTitle className="sr-only">Rechercher</DialogTitle>
-        <Description className="sr-only">
-          Rechercher une page ou une fonctionnalité.
-        </Description>
-        <CommandInput placeholder="Rechercher..." />
-        <CommandList>
-          <CommandEmpty>Aucun résultat.</CommandEmpty>
-          <CommandGroup heading="Triumph Motorcycles">
-            {routes.map((route) => (
-              <CommandItem
-                key={route.path}
-                onSelect={() => handleSelect(route.path)}
-              >
-                {route.title}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </CommandList>
-      </CommandDialog>
+      {/* Select Companies  */}
+      <HeaderCompanies />
     </div>
   );
 }

@@ -10,10 +10,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { createApiClientHeader } from "@/tools/apiClientHeader";
 import { GuaranteeType } from "@/types/guarantee";
 import { ModelType } from "@/types/model";
 import { MotorcycleType } from "@/types/motorcycle";
-import ky from "ky";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
@@ -28,11 +28,7 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
     return;
   }
 
-  const api = ky.create({
-    headers: {
-      "company-identifier": companyIdentifier,
-    },
-  });
+  const apiClient = createApiClientHeader();
 
   const [models, setModels] = useState<ModelType[]>([]);
   const [guarantees, setGuarantees] = useState<GuaranteeType[]>([]);
@@ -71,7 +67,7 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const motorcycle = (await api
+      const motorcycle = (await apiClient
         .get(`/express/motorcycles/${identifier}`)
         .json()) as MotorcycleType;
 
@@ -106,7 +102,7 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
           ? "/express/motorcycles"
           : `/express/motorcycles/${identifier}`;
 
-      const response = await api[method](endpoint, {
+      const response = await apiClient[method](endpoint, {
         json: {
           identifier: mode === "create" ? formIdentifier : identifier,
           mileage,
