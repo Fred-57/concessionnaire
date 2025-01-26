@@ -30,14 +30,21 @@ export class CreateGuaranteeUsecase implements Usecase<Guarantee> {
       throw durationInMonths;
     }
 
-    for (const part of guarantee.parts) {
-      const partExists = await this.partRepository.findByIdentifier(
-        part.identifier
-      );
+    for (const partIdentifier of guarantee.partsIdentifiers) {
+      const partExists =
+        await this.partRepository.findByIdentifier(partIdentifier);
       if (!partExists) {
         throw new PartNotFoundError();
       }
     }
+
+    // for (const motorcycleIdentifier of guarantee.motorcyclesIdentifiers) {
+    //   const motorcycleExists =
+    //     await this.motorcycleRepository.findByIdentifier(motorcycleIdentifier);
+    //   if (!motorcycleExists) {
+    //     throw new MotorcycleNotFoundError();
+    //   }
+    // }
 
     await this.guaranteeRepository.save(guarantee);
   }

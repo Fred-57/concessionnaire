@@ -16,8 +16,8 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
         durationInMonths: guarantee.durationInMonths.value,
         coveredAmount: guarantee.coveredAmount.value,
         parts: {
-          create: guarantee.parts.map((part) => ({
-            partId: part.identifier,
+          create: guarantee.partsIdentifiers.map((part) => ({
+            partId: part,
           })),
         },
       },
@@ -35,8 +35,8 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
           deleteMany: {
             guaranteeId: guarantee.identifier,
           },
-          create: guarantee.parts.map((part) => ({
-            partId: part.identifier,
+          create: guarantee.partsIdentifiers.map((part) => ({
+            partId: part,
           })),
         },
       },
@@ -64,18 +64,8 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
     });
 
     const partsValue = parts
-      .map((part) =>
-        Part.from(
-          part.id,
-          part.reference,
-          part.name,
-          part.cost,
-          part.stock,
-          part.createdAt,
-          part.updatedAt
-        )
-      )
-      .filter((part): part is Part => part instanceof Part);
+      .map((part) => part.id)
+      .filter((part): part is string => typeof part === "string");
 
     const motorcycles = await prisma.motorcycle.findMany({
       where: {
@@ -83,18 +73,11 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
       },
     });
 
-    const motorcyclesValue = motorcycles.map((motorcycle) =>
-      Motorcycle.from(
-        motorcycle.id,
-        motorcycle.mileage,
-        motorcycle.dateOfCommissioning,
-        motorcycle.status,
-        motorcycle.modelId,
-        motorcycle.guaranteeId,
-        motorcycle.createdAt,
-        motorcycle.updatedAt
-      )
-    );
+    const motorcyclesValue = motorcycles
+      .map((motorcycle) => motorcycle.id)
+      .filter(
+        (motorcycle): motorcycle is string => typeof motorcycle === "string"
+      );
 
     const guarantee = Guarantee.from(
       guaranteeDatabase.id,
@@ -134,18 +117,8 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
     });
 
     const partsValue = parts
-      .map((part) =>
-        Part.from(
-          part.id,
-          part.reference,
-          part.name,
-          part.cost,
-          part.stock,
-          part.createdAt,
-          part.updatedAt
-        )
-      )
-      .filter((part): part is Part => part instanceof Part);
+      .map((part) => part.id)
+      .filter((part): part is string => typeof part === "string");
 
     const motorcycles = await prisma.motorcycle.findMany({
       where: {
@@ -153,18 +126,11 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
       },
     });
 
-    const motorcyclesValue = motorcycles.map((motorcycle) =>
-      Motorcycle.from(
-        motorcycle.id,
-        motorcycle.mileage,
-        motorcycle.dateOfCommissioning,
-        motorcycle.status,
-        motorcycle.modelId,
-        motorcycle.guaranteeId,
-        motorcycle.createdAt,
-        motorcycle.updatedAt
-      )
-    );
+    const motorcyclesValue = motorcycles
+      .map((motorcycle) => motorcycle.id)
+      .filter(
+        (motorcycle): motorcycle is string => typeof motorcycle === "string"
+      );
 
     const guarantee = Guarantee.from(
       guaranteeDatabase.id,
@@ -204,18 +170,8 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
       });
 
       const partsValue = parts
-        .map((part) =>
-          Part.from(
-            part.id,
-            part.reference,
-            part.name,
-            part.cost,
-            part.stock,
-            part.createdAt,
-            part.updatedAt
-          )
-        )
-        .filter((part): part is Part => part instanceof Part);
+        .map((part) => part.id)
+        .filter((part): part is string => typeof part === "string");
 
       const motorcycles = await prisma.motorcycle.findMany({
         where: {
@@ -223,18 +179,11 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
         },
       });
 
-      const motorcyclesValue = motorcycles.map((motorcycle) =>
-        Motorcycle.from(
-          motorcycle.id,
-          motorcycle.mileage,
-          motorcycle.dateOfCommissioning,
-          motorcycle.status,
-          motorcycle.modelId,
-          motorcycle.guaranteeId,
-          motorcycle.createdAt,
-          motorcycle.updatedAt
-        )
-      );
+      const motorcyclesValue = motorcycles
+        .map((motorcycle) => motorcycle.id)
+        .filter(
+          (motorcycle): motorcycle is string => typeof motorcycle === "string"
+        );
 
       const guaranteeData = Guarantee.from(
         guarantee.id,

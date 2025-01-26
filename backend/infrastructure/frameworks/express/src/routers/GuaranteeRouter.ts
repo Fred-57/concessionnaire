@@ -27,23 +27,28 @@ GuaranteeRouter.get("/", async (_, res) => {
 });
 
 GuaranteeRouter.post("/", async (req, res) => {
-  const { name, durationInMonths, coveredAmount, parts, motorcycles } =
-    req.body;
-
-  const guarantee = Guarantee.create(
-    name,
-    durationInMonths,
-    coveredAmount,
-    parts,
-    motorcycles
-  );
-
-  if (guarantee instanceof Error) {
-    res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY);
-    return;
-  }
-
   try {
+    const {
+      name,
+      durationInMonths,
+      coveredAmount,
+      partsIdentifiers,
+      motorcyclesIdentifiers,
+    } = req.body;
+
+    const guarantee = Guarantee.create(
+      name,
+      durationInMonths,
+      coveredAmount,
+      partsIdentifiers,
+      motorcyclesIdentifiers
+    );
+
+    if (guarantee instanceof Error) {
+      res.sendStatus(StatusCodes.UNPROCESSABLE_ENTITY);
+      return;
+    }
+
     await new CreateGuaranteeUsecase(
       new MongoGuaranteeRepository(),
       new MongoPartRepository()
@@ -81,8 +86,13 @@ GuaranteeRouter.get("/:id", async (req, res) => {
 
 GuaranteeRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { name, durationInMonths, coveredAmount, parts, motorcycles } =
-    req.body;
+  const {
+    name,
+    durationInMonths,
+    coveredAmount,
+    partsIdentifiers,
+    motorcyclesIdentifiers,
+  } = req.body;
 
   try {
     const guarantee = await new GetGuaranteeUsecase(
@@ -94,8 +104,8 @@ GuaranteeRouter.put("/:id", async (req, res) => {
       name,
       durationInMonths,
       coveredAmount,
-      parts,
-      motorcycles,
+      partsIdentifiers,
+      motorcyclesIdentifiers,
       guarantee.createdAt,
       new Date()
     );
