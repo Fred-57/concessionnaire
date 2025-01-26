@@ -18,7 +18,6 @@ export class MongoGuaranteeRepository implements GuaranteeRepository {
       coveredAmount: guarantee.coveredAmount.value,
       durationInMonths: guarantee.durationInMonths.value,
     });
-    console.log(guaranteeDatabase);
     await guaranteeDatabase.save();
   }
 
