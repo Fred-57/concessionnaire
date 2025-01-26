@@ -15,12 +15,12 @@ import { StatusCodes } from "http-status-codes";
 export const DriverRouter = Router();
 
 DriverRouter.get("/", async (req, res) => {
-  const companyIdentifierHeader = req.get("companyId");
+  const companyIdentifierHeader = req.get("company-identifier");
 
   if (!companyIdentifierHeader) {
     res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "companyId header is missing" });
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ error: "company-identifier header is missing" });
     return;
   }
 
@@ -55,23 +55,22 @@ DriverRouter.get("/:id", async (req, res) => {
 });
 
 DriverRouter.post("/", async (req, res) => {
-  const companyIdentifierHeader = req.get("companyId");
+  const companyIdentifierHeader = req.get("company-identifier");
 
   if (!companyIdentifierHeader) {
     res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "companyId header is missing" });
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ error: "company-identifier header is missing" });
     return;
   }
 
-  const { name, license, numberOfYearsOfExperience, companyIdentifier } =
-    req.body;
+  const { name, license, numberOfYearsOfExperience } = req.body;
 
   const driver = Driver.create(
     name,
     license,
     numberOfYearsOfExperience,
-    companyIdentifier
+    companyIdentifierHeader
   );
 
   if (driver instanceof DriverNameTooShortError) {
@@ -95,12 +94,12 @@ DriverRouter.post("/", async (req, res) => {
 });
 
 DriverRouter.put("/:id", async (req, res) => {
-  const companyIdentifierHeader = req.get("companyId");
+  const companyIdentifierHeader = req.get("company-identifier");
 
   if (!companyIdentifierHeader) {
     res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "companyId header is missing" });
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ error: "company-identifier header is missing" });
     return;
   }
 
@@ -143,12 +142,12 @@ DriverRouter.put("/:id", async (req, res) => {
 });
 
 DriverRouter.delete("/:id", async (req, res) => {
-  const companyIdentifierHeader = req.get("companyId");
+  const companyIdentifierHeader = req.get("company-identifier");
 
   if (!companyIdentifierHeader) {
     res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "companyId header is missing" });
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ error: "company-identifier header is missing" });
     return;
   }
 
