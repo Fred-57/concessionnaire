@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 
 export class PostgresMotorcycleRepository implements MotorcycleRepository {
   async save(motorcycle: Motorcycle): Promise<void> {
+    console.log("motorcycle", motorcycle);
     await prisma.motorcycle.create({
       data: {
         id: motorcycle.identifier,

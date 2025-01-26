@@ -21,6 +21,7 @@ import { Motorcycle } from "./pages/Motorcycle";
 import { Part } from "./pages/Part";
 import { Rental } from "./pages/Rental";
 import { CompanyCreate, CompanyUpdate } from "./pages/forms/Company";
+import { MotorcycleCreate, MotorcycleUpdate } from "./pages/forms/Motorcycle";
 import { DriverCreate, DriverUpdate } from "./pages/forms/Driver";
 import { ModelCreate, ModelUpdate } from "./pages/forms/Model";
 import { PartCreate, PartUpdate } from "./pages/forms/Part";
@@ -48,7 +49,7 @@ export const routes = [
   },
   {
     title: "Motos",
-    path: "/bikes",
+    path: "/motorcycles",
     icon: BikeIcon,
     element: Motorcycle,
   },
@@ -110,6 +111,14 @@ export const hiddenRoutes = [
   {
     path: "/models/:identifier",
     element: ModelUpdate,
+  },
+  {
+    path: "/motorcycles/create",
+    element: MotorcycleCreate,
+  },
+  {
+    path: "/motorcycles/:identifier",
+    element: MotorcycleUpdate,
   },
   {
     path: "/drivers/create",

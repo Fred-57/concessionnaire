@@ -13,6 +13,11 @@ export const MotorcycleRouter = Router();
 MotorcycleRouter.get("/", async (req, res) => {
   const companyIdentifier = req.headers["company-identifier"] as string;
 
+  if (!companyIdentifier) {
+    res.sendStatus(StatusCodes.UNAUTHORIZED);
+    return;
+  }
+
   const motorcycles = await new ListMotorcyclesUsecase(
     new PostgresMotorcycleRepository()
   ).execute(companyIdentifier);
@@ -21,12 +26,18 @@ MotorcycleRouter.get("/", async (req, res) => {
 });
 
 MotorcycleRouter.post("/", async (req, res) => {
+  const companyIdentifier = req.headers["company-identifier"] as string;
+
+  if (!companyIdentifier) {
+    res.sendStatus(StatusCodes.UNAUTHORIZED);
+    return;
+  }
+
   const {
     identifier,
     mileage,
     dateOfCommissioning,
     status,
-    companyIdentifier,
     modelIdentifier,
     guaranteeIdentifier,
   } = req.body;
@@ -34,7 +45,7 @@ MotorcycleRouter.post("/", async (req, res) => {
   const motorcycle = Motorcycle.create(
     identifier,
     mileage,
-    dateOfCommissioning,
+    new Date(dateOfCommissioning),
     status,
     companyIdentifier,
     modelIdentifier,
@@ -53,7 +64,8 @@ MotorcycleRouter.post("/", async (req, res) => {
       new PostgresMotorcycleRepository()
     ).execute(motorcycle);
   } catch (error) {
-    res.sendStatus(StatusCodes.CONFLICT);
+    console.log(error);
+    res.sendStatus(StatusCodes.BAD_REQUEST);
     return;
   }
 
@@ -87,7 +99,7 @@ MotorcycleRouter.put("/:identifier", async (req, res) => {
   const updatedMotorcycle = Motorcycle.from(
     motorcycle.identifier,
     mileage,
-    dateOfCommissioning,
+    new Date(dateOfCommissioning),
     status,
     motorcycle.companyIdentifier,
     modelIdentifier,
