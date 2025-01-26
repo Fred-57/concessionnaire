@@ -101,6 +101,11 @@ MotorcycleRouter.put("/:identifier", async (req, res) => {
     new PostgresMotorcycleRepository()
   ).execute(identifier);
 
+  if (motorcycle instanceof Error) {
+    res.sendStatus(StatusCodes.NOT_FOUND);
+    return;
+  }
+
   const updatedMotorcycle = Motorcycle.from(
     motorcycle.identifier,
     mileage,

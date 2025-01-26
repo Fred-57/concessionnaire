@@ -41,7 +41,7 @@ RentalRouter.post("/", async (req, res) => {
   } = req.body;
 
   const rental = Rental.create(
-    startDate,
+    new Date(startDate),
     durationInMonths,
     type,
     driverIdentifier,
@@ -91,22 +91,35 @@ RentalRouter.put("/:identifier", async (req, res) => {
     motorcycleIdentifier,
   } = req.body;
 
-  const rental = Rental.create(
-    startDate,
+  const rental = await new GetRentalUsecase(
+    new PostgresRentalRepository()
+  ).execute(identifier);
+
+  if (rental instanceof Error) {
+    res.sendStatus(StatusCodes.NOT_FOUND);
+    return;
+  }
+
+  const updatedRental = Rental.from(
+    rental.identifier,
+    new Date(startDate),
     durationInMonths,
     type,
     driverIdentifier,
-    motorcycleIdentifier
+    motorcycleIdentifier,
+    rental.breakdownIdentifiers,
+    rental.createdAt,
+    new Date()
   );
 
-  if (rental instanceof Error) {
+  if (updatedRental instanceof Error) {
     res.sendStatus(StatusCodes.BAD_REQUEST);
     return;
   }
 
   try {
     await new UpdateRentalUsecase(new PostgresRentalRepository()).execute(
-      rental
+      updatedRental
     );
   } catch {
     res.sendStatus(StatusCodes.BAD_REQUEST);
