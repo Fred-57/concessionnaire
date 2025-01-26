@@ -1,30 +1,35 @@
 import { Maintenance } from "@domain/entities/Maintenance";
-import { MaintenanceRepository } from "@application/repositories/MaintenanceRepository";
-import { DateBehindNowError } from "@domain/errors/DateBehindNowError";
-import { MotorcycleNotFoundError } from "@domain/errors/MotorcycleNotFoundError";
-import { MaintenanceTotalCostLessThanZeroError } from "@domain/errors/maintenance/MaintenanceTotalCostLessThanZeroError";
 import { Usecase } from "../Usecase";
-import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
+import { MaintenanceRepository } from "@application/repositories/MaintenanceRepository";
+import { MaintenanceNotFoundError } from "@domain/errors/maintenance/MaintenanceNotFoundError";
 import { PartRepository } from "@application/repositories/PartRepository";
+import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
+import { DateBehindNowError } from "@domain/errors/DateBehindNowError";
+import { MaintenanceTotalCostLessThanZeroError } from "@domain/errors/maintenance/MaintenanceTotalCostLessThanZeroError";
 
-export class CreateMaintenanceUsecase implements Usecase<Maintenance> {
+export class UpdateMaintenanceUsecase implements Usecase<Maintenance> {
   public constructor(
     private readonly maintenanceRepository: MaintenanceRepository,
     private readonly partRepository: PartRepository
   ) {}
 
   public async execute(maintenance: Maintenance) {
-    if (maintenance.date < new Date()) {
-      throw new DateBehindNowError();
+    const maintenanceExists = await this.maintenanceRepository.findByIdentifier(
+      maintenance.identifier
+    );
+
+    if (!maintenanceExists) {
+      throw new MaintenanceNotFoundError();
     }
 
-    if (maintenance.motorcycleIdentifier === null) {
-      throw new MotorcycleNotFoundError();
+    if (maintenance.date < new Date()) {
+      throw new DateBehindNowError();
     }
 
     if (maintenance.totalCost < 0) {
       throw new MaintenanceTotalCostLessThanZeroError();
     }
+
     for (const part of maintenance.parts) {
       const partExists = await this.partRepository.findByIdentifier(
         part.part.identifier
@@ -33,6 +38,7 @@ export class CreateMaintenanceUsecase implements Usecase<Maintenance> {
         throw new PartNotFoundError();
       }
     }
-    await this.maintenanceRepository.save(maintenance);
+
+    await this.maintenanceRepository.update(maintenance);
   }
 }

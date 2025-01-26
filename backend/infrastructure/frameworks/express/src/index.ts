@@ -8,7 +8,7 @@ import { ModelRouter } from "./routers/ModelRouter";
 import { MotorcycleRouter } from "./routers/MotorcycleRouter";
 import { PartRouter } from "./routers/PartRouter";
 import { GuaranteeRouter } from "./routers/GuaranteeRouter";
-
+import { MaintenanceRouter } from "./routers/MaintenanceRouter";
 dotenv.config({ path: "../.env" });
 
 const app: Express = express();
@@ -24,6 +24,7 @@ app.use("/models", ModelRouter);
 app.use("/motorcycles", MotorcycleRouter);
 app.use("/parts", PartRouter);
 app.use("/guarantees", GuaranteeRouter);
+app.use("/maintenances", MaintenanceRouter);
 
 // Error handling
 app.use(errorHandler);

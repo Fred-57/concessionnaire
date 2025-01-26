@@ -6,4 +6,5 @@ export interface MaintenanceRepository {
   findByMotorcycleIdentifier(identifier: string): Promise<Maintenance[]>;
   findAll(): Promise<Maintenance[]>;
   delete(maintenance: Maintenance): Promise<void>;
+  update(maintenance: Maintenance): Promise<void>;
 }

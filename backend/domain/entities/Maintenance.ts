@@ -2,6 +2,7 @@ import { Entity } from "./Entity";
 import { StatusMaintenanceBreakdownEnum } from "../types/StatusMaintenanceBreakdownEnum";
 import { randomUUID } from "crypto";
 import { Part } from "./Part";
+import { MaintenancePartType } from "@domain/types/MaintenancePartType";
 
 export class Maintenance implements Entity {
   private constructor(
@@ -11,7 +12,7 @@ export class Maintenance implements Entity {
     public readonly status: StatusMaintenanceBreakdownEnum = StatusMaintenanceBreakdownEnum.PENDING,
     public readonly totalCost: number = 0,
     public readonly motorcycleIdentifier: string,
-    public readonly parts: Part[],
+    public readonly parts: MaintenancePartType[],
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -23,7 +24,7 @@ export class Maintenance implements Entity {
     status: StatusMaintenanceBreakdownEnum,
     totalCost: number,
     motorcycleIdentifier: string,
-    parts: Part[],
+    parts: MaintenancePartType[],
     createdAt: Date,
     updatedAt: Date
   ) {
@@ -44,13 +45,16 @@ export class Maintenance implements Entity {
     date: Date,
     recommendation: string,
     motorcycleIdentifier: string,
-    parts: Part[]
+    parts: MaintenancePartType[]
   ) {
     const identifier = randomUUID();
     const createdAt = new Date();
     const updatedAt = new Date();
 
-    const totalCost = parts.reduce((acc, part) => acc + part.cost.value, 0);
+    const totalCost = parts.reduce(
+      (acc, part) => acc + part.part.cost.value * part.quantity,
+      0
+    );
 
     return Maintenance.from(
       identifier,
@@ -59,9 +63,37 @@ export class Maintenance implements Entity {
       StatusMaintenanceBreakdownEnum.PENDING,
       totalCost,
       motorcycleIdentifier,
-      parts,
+      parts.map((part) => ({
+        part: part.part,
+        quantity: part.quantity,
+      })),
       createdAt,
       updatedAt
+    );
+  }
+
+  public static update(
+    maintenance: Maintenance,
+    date: Date,
+    recommendation: string,
+    motorcycleIdentifier: string,
+    parts: MaintenancePartType[]
+  ) {
+    const totalCost = parts.reduce(
+      (acc, part) => acc + part.part.cost.value * part.quantity,
+      0
+    );
+
+    return Maintenance.from(
+      maintenance.identifier,
+      date,
+      recommendation,
+      maintenance.status,
+      totalCost,
+      motorcycleIdentifier,
+      parts,
+      maintenance.createdAt,
+      new Date()
     );
   }
 }
