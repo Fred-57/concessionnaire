@@ -18,7 +18,7 @@ export class Breakdown implements Entity {
     rentalIdentifier: string,
     createdAt: Date,
     updatedAt: Date
-  ): Breakdown {
+  ) {
     return new Breakdown(
       identifier,
       date,
@@ -33,7 +33,7 @@ export class Breakdown implements Entity {
     date: Date,
     description: string,
     rentalIdentifier: string
-  ): Breakdown {
+  ) {
     const identifier = randomUUID();
     const createdAt = new Date();
     const updatedAt = new Date();

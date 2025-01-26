@@ -20,7 +20,7 @@ export class PartOrderHistory implements Entity {
     cost: number,
     createdAt: Date,
     updatedAt: Date
-  ): PartOrderHistory {
+  ) {
     return new PartOrderHistory(
       identifier,
       date,
@@ -37,7 +37,7 @@ export class PartOrderHistory implements Entity {
     partIdentifier: string,
     quantity: number,
     cost: number
-  ): PartOrderHistory {
+  ) {
     const identifier = randomUUID();
     const createdAt = new Date();
     const updatedAt = new Date();

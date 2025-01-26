@@ -21,7 +21,7 @@ export class Maintenance implements Entity {
     status: StatusMaintenanceBreakdownEnum,
     createdAt: Date,
     updatedAt: Date
-  ): Maintenance {
+  ) {
     return new Maintenance(
       identifier,
       date,
@@ -37,7 +37,7 @@ export class Maintenance implements Entity {
     date: Date,
     motorcycleIdentifier: string,
     recommendation: string
-  ): Maintenance {
+  ) {
     const identifier = randomUUID();
     const createdAt = new Date();
     const updatedAt = new Date();

@@ -22,7 +22,7 @@ export class Driver implements Entity {
     companyIdentifier: string,
     createdAt: Date,
     updatedAt: Date
-  ): Driver {
+  ) {
     const driverName = DriverName.from(name);
 
     if (driverName instanceof Error) {
@@ -45,7 +45,7 @@ export class Driver implements Entity {
     license: License,
     numberOfYearsOfExperience: number,
     companyIdentifier: string
-  ): Driver {
+  ) {
     const identifier = randomUUID();
     const createdAt = new Date();
     const updatedAt = new Date();
