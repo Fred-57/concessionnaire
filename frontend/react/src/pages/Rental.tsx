@@ -5,33 +5,63 @@ import ky from "ky";
 import { useNavigate } from "react-router";
 import { useToast } from "@/hooks/use-toast";
 import { DataTable } from "@/components/ui/data-table";
+import { DriverType } from "@/types/driver";
 
 export function Rental() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const companyIdentifier = localStorage.getItem("company_id");
+  if (!companyIdentifier) {
+    navigate("/home");
+    return;
+  }
+
+  const api = ky.create({
+    headers: {
+      "company-identifier": companyIdentifier,
+    },
+  });
+
+  const [drivers, setDrivers] = useState<DriverType[]>([]);
+  const [doneFetchingDrivers, setDoneFetchingDrivers] = useState(false);
+
   const [rentals, setRentals] = useState<RentalType[]>([]);
 
   useEffect(() => {
-    const fetchRentals = async () => {
-      const companyIdentifier = localStorage.getItem("company_id");
-      if (!companyIdentifier) {
-        navigate("/home");
-        return;
-      }
-
-      const api = ky.create({
-        headers: {
-          "company-identifier": companyIdentifier,
-        },
-      });
-
-      const rentalsApi = await api.get("/express/rentals").json();
-      setRentals(rentalsApi as RentalType[]);
+    const fetchDrivers = async () => {
+      const driversApi = await api.get("/express/drivers").json();
+      setDrivers(driversApi as DriverType[]);
+      setDoneFetchingDrivers(true);
     };
 
-    fetchRentals();
+    fetchDrivers();
   }, []);
+
+  useEffect(() => {
+    const fetchRentals = async () => {
+      const rentalsApi = (await api
+        .get("/express/rentals")
+        .json()) as RentalType[];
+
+      // Pour afficher le nom du pilote au lieu de son identifiant
+      const rentals = rentalsApi.map((rental) => {
+        const driver = drivers.find(
+          (driver) => driver.identifier === rental.driverIdentifier
+        );
+        return {
+          ...rental,
+          driverIdentifier: driver?.name.value,
+        };
+      });
+
+      setRentals(rentals as RentalType[]);
+    };
+
+    if (doneFetchingDrivers) {
+      fetchRentals();
+    }
+  }, [doneFetchingDrivers]);
 
   const goToUpdate = (rental: RentalType) => {
     navigate(`/rentals/${rental.identifier}`);
