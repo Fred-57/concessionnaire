@@ -8,10 +8,9 @@ export class GetMotorcycleUsecase implements Usecase<Motorcycle> {
     private readonly motorcycleRepository: MotorcycleRepository
   ) {}
 
-  public async execute(motorcycle: Motorcycle) {
-    const motorcycleExists = await this.motorcycleRepository.findByIdentifier(
-      motorcycle.identifier
-    );
+  public async execute(identifier: string) {
+    const motorcycleExists =
+      await this.motorcycleRepository.findByIdentifier(identifier);
 
     if (!motorcycleExists) {
       throw new MotorcycleNotFoundError();
