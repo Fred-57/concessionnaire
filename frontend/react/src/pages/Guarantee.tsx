@@ -6,7 +6,6 @@ import ky from "ky";
 import { useToast } from "@/hooks/use-toast";
 import { GuaranteeType } from "@/types/guarantee";
 import { useNavigate } from "react-router";
-import { Button } from "@/components/ui/button";
 
 export function Guarantee() {
   const navigate = useNavigate();

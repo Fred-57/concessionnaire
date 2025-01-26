@@ -74,7 +74,11 @@ export function GuaranteeForm({ mode }: { mode: "create" | "update" }) {
           title: mode === "create" ? "Garantie créée" : "Garantie mise à jour",
         });
 
-        navigate("/guarantees");
+        // Reset form
+        setName("");
+        setDurationInMonths(0);
+        setCoveredAmount(0);
+        setPartsIdentifiers([]);
       }
     } catch {
       toast({
@@ -89,8 +93,8 @@ export function GuaranteeForm({ mode }: { mode: "create" | "update" }) {
 
   return (
     <Layout title="Garanties">
-      <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-2">
+      <form className="flex flex-col gap-5 items-start" onSubmit={handleSubmit}>
+        <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="name">Nom</Label>
           <Input
             type="text"
@@ -98,7 +102,7 @@ export function GuaranteeForm({ mode }: { mode: "create" | "update" }) {
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="durationInMonths">Durée (mois)</Label>
           <Input
             type="number"
@@ -106,7 +110,7 @@ export function GuaranteeForm({ mode }: { mode: "create" | "update" }) {
             onChange={(e) => setDurationInMonths(Number(e.target.value))}
           />
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="coveredAmount">Montant couvert (€)</Label>
           <Input
             type="number"
@@ -117,7 +121,7 @@ export function GuaranteeForm({ mode }: { mode: "create" | "update" }) {
             step={0.01}
           />
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="parts">Pièces</Label>
           <Select
             value={partsIdentifiers[0]}
@@ -147,9 +151,19 @@ export function GuaranteeForm({ mode }: { mode: "create" | "update" }) {
             </SelectContent>
           </Select>
         </div>
-        <Button type="submit" className="mt-4">
-          {mode === "create" ? "Créer" : "Mettre à jour"}
-        </Button>
+
+        <div className="flex gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate("/guarantees")}
+          >
+            Retour
+          </Button>
+          <Button type="submit">
+            {mode === "create" ? "Créer" : "Mettre à jour"}
+          </Button>
+        </div>
       </form>
     </Layout>
   );

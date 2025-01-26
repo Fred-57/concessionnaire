@@ -6,5 +6,6 @@ export interface ModelRepository {
   findByIdentifier(identifier: string): Promise<Model | null>;
   findByName(name: string): Promise<Model | null>;
   findAll(): Promise<Model[]>;
-  delete(id: string): Promise<void>;
+  // TODO: use model instead of identifier like the others
+  delete(identifier: string): Promise<void>;
 }

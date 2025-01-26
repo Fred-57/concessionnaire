@@ -47,20 +47,20 @@ model Model {
 
 model Motorcycle {
   // Vehicle Identification Number (VIN)
-  id                  String        @id
+  id                  String           @id
   mileage             Int
   dateOfCommissioning DateTime
-  status              Status
-  company             Company       @relation(fields: [companyId], references: [id])
-  companyId           String        @db.Uuid
-  model               Model         @relation(fields: [modelId], references: [id])
-  modelId             String        @db.Uuid
-  guarantee           Guarantee     @relation(fields: [guaranteeId], references: [id])
-  guaranteeId         String        @db.Uuid
+  status              MotorcycleStatus
+  company             Company          @relation(fields: [companyId], references: [id])
+  companyId           String           @db.Uuid
+  model               Model            @relation(fields: [modelId], references: [id])
+  modelId             String           @db.Uuid
+  guarantee           Guarantee?       @relation(fields: [guaranteeId], references: [id])
+  guaranteeId         String?          @db.Uuid
   rentals             Rental[]
   maintenances        Maintenance[]
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
 }
 
 model Rental {
@@ -69,10 +69,10 @@ model Rental {
   durationInMonths Int
   type             RentalType
   driver           Driver      @relation(fields: [driverId], references: [id])
-  motorcycle       Motorcycle  @relation(fields: [motorcycleId], references: [id])
   driverId         String      @db.Uuid
+  motorcycle       Motorcycle  @relation(fields: [motorcycleId], references: [id])
   motorcycleId     String
-  breakdown        Breakdown[]
+  breakdowns       Breakdown[]
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
 }
@@ -177,7 +177,7 @@ enum RentalType {
   TRIAL
 }
 
-enum Status {
+enum MotorcycleStatus {
   RENTED
   AVAILABLE
   IN_REPAIR
