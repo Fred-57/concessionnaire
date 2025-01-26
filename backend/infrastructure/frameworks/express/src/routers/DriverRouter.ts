@@ -163,7 +163,7 @@ DriverRouter.delete("/:id", async (req, res) => {
     res.sendStatus(StatusCodes.NO_CONTENT);
   } catch (error) {
     if (error instanceof Error) {
-      res.sendStatus(StatusCodes.NOT_FOUND);
+      res.status(StatusCodes.NOT_FOUND).send(error.name);
     }
   }
 });

@@ -6,19 +6,19 @@ import { License } from "@domain/types/License";
 import { Company } from "@domain/entities/Company";
 
 export class MongoDriverRepository implements DriverRepository {
-  async save(driver: Driver): Promise<void> {
+  async save(driver: Driver, company: Company): Promise<void> {
     const driverDatabase = new DriverModel({
       identifier: driver.identifier,
       name: driver.name.value,
       license: driver.license,
       numberOfYearsOfExperience: driver.numberOfYearsOfExperience,
-      companyIdentifier: driver.companyIdentifier,
+      companyIdentifier: company.identifier,
     });
 
     await driverDatabase.save();
   }
 
-  async update(driver: Driver): Promise<void> {
+  async update(driver: Driver, company: Company): Promise<void> {
     const driverDatabase = await DriverModel.findOne({
       identifier: driver.identifier,
     });
@@ -30,6 +30,7 @@ export class MongoDriverRepository implements DriverRepository {
     driverDatabase.name = driver.name.value;
     driverDatabase.license = driver.license;
     driverDatabase.numberOfYearsOfExperience = driver.numberOfYearsOfExperience;
+    driverDatabase.companyIdentifier = company.identifier;
     await driverDatabase.save();
   }
 
