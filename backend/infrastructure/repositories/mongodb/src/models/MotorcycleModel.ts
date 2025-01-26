@@ -11,9 +11,9 @@ export interface IMotorcycle {
   mileage: number;
   dateOfCommissioning: Date;
   status: MotorcycleStatusEnum;
-  company: ICompany;
-  model: IModel;
-  guarantee?: IGuarantee;
+  companyId: string;
+  modelId: string;
+  guaranteeId: string;
   rentals: IRental[];
   maintenances: IMaintenance[];
   createdAt: Date;
@@ -26,9 +26,9 @@ export const MotorcycleSchema = new Schema<IMotorcycle>(
     mileage: { type: Number, required: true },
     dateOfCommissioning: { type: Date, required: true },
     status: { type: String, enum: MotorcycleStatusEnum, required: true },
-    company: { type: Schema.Types.ObjectId, ref: "Company" },
-    model: { type: Schema.Types.ObjectId, ref: "Model" },
-    guarantee: { type: Schema.Types.ObjectId, ref: "Guarantee" },
+    companyId: { type: String, required: true },
+    modelId: { type: String, required: true },
+    guaranteeId: { type: String, required: true },
     rentals: [{ type: Schema.Types.ObjectId, ref: "Rental" }],
     maintenances: [{ type: Schema.Types.ObjectId, ref: "Maintenance" }],
   },
