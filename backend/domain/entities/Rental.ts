@@ -21,11 +21,11 @@ export class Rental implements Entity {
     motorcycleIdentifier: string,
     createdAt: Date,
     updatedAt: Date
-  ): Rental {
+  ) {
     const rentalDurationInMonths = IntervalInMonths.from(durationInMonths);
 
     if (rentalDurationInMonths instanceof Error) {
-      throw rentalDurationInMonths;
+      return rentalDurationInMonths;
     }
 
     return new Rental(
@@ -44,7 +44,7 @@ export class Rental implements Entity {
     durationInMonths: number,
     driverIdentifier: string,
     motorcycleIdentifier: string
-  ): Rental {
+  ) {
     const identifier = randomUUID();
     const createdAt = new Date();
     const updatedAt = new Date();

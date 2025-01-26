@@ -36,17 +36,17 @@ export class Motorcycle implements Entity {
     guaranteeIdentifier: string | null,
     createdAt: Date,
     updatedAt: Date
-  ): Motorcycle {
+  ) {
     const mileage = MotorcycleMileage.from(mileageValue);
 
     if (mileage instanceof Error) {
-      throw mileage;
+      return mileage;
     }
 
     const status = MotorcycleStatus.from(statusValue);
 
     if (status instanceof Error) {
-      throw status;
+      return status;
     }
 
     return new Motorcycle(
@@ -68,7 +68,7 @@ export class Motorcycle implements Entity {
     status: string,
     modelIdentifier: string,
     guaranteeIdentifier: string | null
-  ): Motorcycle {
+  ) {
     const createdAt = new Date();
     const updatedAt = new Date();
 
