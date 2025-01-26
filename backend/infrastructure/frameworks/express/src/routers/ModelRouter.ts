@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ListModelsUsecase } from "@application/usecases/model/ListModelUsecase";
+import { ListModelsUsecase } from "@application/usecases/model/ListModelsUsecase";
 import { PostgresModelRepository } from "@infrastructure/repositories/postgres/";
 import { StatusCodes } from "http-status-codes";
 import { Model } from "@domain/entities/Model";
