@@ -11,10 +11,8 @@ export class MongoGuaranteeRepository implements GuaranteeRepository {
     const guaranteeDatabase = new GuaranteeModel({
       identifier: guarantee.identifier,
       name: guarantee.name.value,
-      motorcyclesId: guarantee.motorcycles.map(
-        (motorcycle) => motorcycle.identifier
-      ),
-      partsId: guarantee.parts.map((part) => part.identifier),
+      motorcyclesId: guarantee.motorcyclesIdentifiers,
+      partsId: guarantee.partsIdentifiers,
       coveredAmount: guarantee.coveredAmount.value,
       durationInMonths: guarantee.durationInMonths.value,
     });
@@ -26,9 +24,11 @@ export class MongoGuaranteeRepository implements GuaranteeRepository {
       { identifier: guarantee.identifier },
       {
         name: guarantee.name.value,
-        partsId: guarantee.parts.map((part) => part.identifier),
-        coveredAmountValue: guarantee.coveredAmount.value,
-        durationInMonthsValue: guarantee.durationInMonths.value,
+        partsId: guarantee.partsIdentifiers,
+        motorcyclesId: guarantee.motorcyclesIdentifiers,
+        coveredAmount: guarantee.coveredAmount.value,
+        durationInMonths: guarantee.durationInMonths.value,
+        updatedAt: new Date(),
       }
     );
   }
@@ -47,35 +47,19 @@ export class MongoGuaranteeRepository implements GuaranteeRepository {
     });
 
     const partsValue = parts
-      .map((part) =>
-        Part.from(
-          part.id,
-          part.reference,
-          part.name,
-          part.cost,
-          part.stock,
-          part.createdAt,
-          part.updatedAt
-        )
-      )
-      .filter((part): part is Part => part instanceof Part);
+      .map((part) => part.identifier)
+      .filter((part): part is string => typeof part === "string");
 
     const motorcycles = await MotorcycleModel.find({
       identifier: { $in: guaranteeDatabase.motorcyclesId },
     });
 
-    const motorcyclesValue = motorcycles.map((motorcycle) =>
-      Motorcycle.from(
-        motorcycle.identifier,
-        motorcycle.mileage,
-        motorcycle.dateOfCommissioning,
-        motorcycle.status,
-        motorcycle.modelId,
-        motorcycle.guaranteeId,
-        motorcycle.createdAt,
-        motorcycle.updatedAt
-      )
-    );
+    const motorcyclesValue = motorcycles
+      .map((motorcycle) => motorcycle.identifier)
+      .filter(
+        (motorcycle): motorcycle is string => typeof motorcycle === "string"
+      );
+
     const guarantee = Guarantee.from(
       guaranteeDatabase.identifier,
       guaranteeDatabase.name,
@@ -99,35 +83,18 @@ export class MongoGuaranteeRepository implements GuaranteeRepository {
     });
 
     const partsValue = parts
-      .map((part) =>
-        Part.from(
-          part.id,
-          part.reference,
-          part.name,
-          part.cost,
-          part.stock,
-          part.createdAt,
-          part.updatedAt
-        )
-      )
-      .filter((part): part is Part => part instanceof Part);
+      .map((part) => part.identifier)
+      .filter((part): part is string => typeof part === "string");
 
     const motorcycles = await MotorcycleModel.find({
       identifier: { $in: guaranteeDatabase.motorcyclesId },
     });
 
-    const motorcyclesValue = motorcycles.map((motorcycle) =>
-      Motorcycle.from(
-        motorcycle.identifier,
-        motorcycle.mileage,
-        motorcycle.dateOfCommissioning,
-        motorcycle.status,
-        motorcycle.modelId,
-        motorcycle.guaranteeId,
-        motorcycle.createdAt,
-        motorcycle.updatedAt
-      )
-    );
+    const motorcyclesValue = motorcycles
+      .map((motorcycle) => motorcycle.identifier)
+      .filter(
+        (motorcycle): motorcycle is string => typeof motorcycle === "string"
+      );
 
     return guaranteeDatabase
       ? Guarantee.from(
@@ -158,35 +125,19 @@ export class MongoGuaranteeRepository implements GuaranteeRepository {
       if (!parts) continue;
 
       const partsValue = parts
-        .map((part) =>
-          Part.from(
-            part.id,
-            part.reference,
-            part.name,
-            part.cost,
-            part.stock,
-            part.createdAt,
-            part.updatedAt
-          )
-        )
-        .filter((part): part is Part => part instanceof Part);
+        .map((part) => part.identifier)
+        .filter((part): part is string => typeof part === "string");
 
       const motorcycles = await MotorcycleModel.find({
         identifier: { $in: guaranteeData.motorcyclesId },
       });
 
-      const motorcyclesValue = motorcycles.map((motorcycle) =>
-        Motorcycle.from(
-          motorcycle.identifier,
-          motorcycle.mileage,
-          motorcycle.dateOfCommissioning,
-          motorcycle.status,
-          motorcycle.modelId,
-          motorcycle.guaranteeId,
-          motorcycle.createdAt,
-          motorcycle.updatedAt
-        )
-      );
+      const motorcyclesValue = motorcycles
+        .map((motorcycle) => motorcycle.identifier)
+        .filter(
+          (motorcycle): motorcycle is string => typeof motorcycle === "string"
+        );
+
       const guarantee = Guarantee.from(
         guaranteeData.identifier,
         guaranteeData.name,

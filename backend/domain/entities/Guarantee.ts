@@ -12,8 +12,8 @@ export class Guarantee implements Entity {
     public readonly name: GuaranteeName,
     public readonly durationInMonths: GuaranteeDurationInMonths,
     public readonly coveredAmount: GuaranteeCoveredAmount,
-    public readonly parts: Part[],
-    public readonly motorcycles: Motorcycle[],
+    public readonly partsIdentifiers: string[],
+    public readonly motorcyclesIdentifiers: string[],
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -23,8 +23,8 @@ export class Guarantee implements Entity {
     nameValue: string,
     durationInMonthsValue: number,
     coveredAmountValue: number,
-    parts: Part[],
-    motorcycles: Motorcycle[],
+    partsIdentifiers: string[],
+    motorcyclesIdentifiers: string[],
     createdAt: Date,
     updatedAt: Date
   ) {
@@ -53,8 +53,8 @@ export class Guarantee implements Entity {
       name,
       durationInMonths,
       coveredAmount,
-      parts,
-      motorcycles,
+      partsIdentifiers,
+      motorcyclesIdentifiers,
       createdAt,
       updatedAt
     );
@@ -64,8 +64,8 @@ export class Guarantee implements Entity {
     name: string,
     durationInMonths: number,
     coveredAmount: number,
-    parts: Part[],
-    motorcycles: Motorcycle[]
+    partsIdentifiers: string[],
+    motorcyclesIdentifiers: string[]
   ) {
     const identifier = randomUUID();
     const createdAt = new Date();
@@ -76,8 +76,8 @@ export class Guarantee implements Entity {
       name,
       durationInMonths,
       coveredAmount,
-      parts,
-      motorcycles,
+      partsIdentifiers,
+      motorcyclesIdentifiers,
       createdAt,
       updatedAt
     );
