@@ -16,6 +16,7 @@ export type DriverType = {
   };
   license: string;
   numberOfYearsOfExperience: number;
+  companyIdentifier: string;
   createdAt: string;
   updatedAt: string;
 };

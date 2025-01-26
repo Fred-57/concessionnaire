@@ -1,6 +1,7 @@
 import { Layout } from "@/components/Layout";
 import { DataTable } from "@/components/ui/data-table";
 import { useToast } from "@/hooks/use-toast";
+import { createApiClientHeader } from "@/tools/apiClientHeader";
 import { DriverType, columns } from "@/types/driver";
 import ky from "ky";
 import { useEffect, useState } from "react";
@@ -14,7 +15,15 @@ export function Driver() {
 
   useEffect(() => {
     const fetchDrivers = async () => {
-      const driversApi = await ky.get("/nest/drivers").json();
+      const companyIdentifier = localStorage.getItem("company_id");
+      if (!companyIdentifier) {
+        navigate("/home");
+        return;
+      }
+
+      const apiClient = createApiClientHeader();
+
+      const driversApi = await apiClient.get("/express/drivers").json();
       setDrivers(driversApi as DriverType[]);
     };
 
@@ -27,7 +36,10 @@ export function Driver() {
 
   const handleDelete = async (driver: DriverType) => {
     try {
-      const response = await ky.delete(`/nest/drivers/${driver.identifier}`);
+      const apiClient = createApiClientHeader();
+      const response = await apiClient.delete(
+        `/express/drivers/${driver.identifier}`
+      );
       if (response.ok) {
         toast({
           title: "Conducteur supprimé",

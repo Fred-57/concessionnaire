@@ -9,6 +9,7 @@ import { MotorcycleRouter } from "./routers/MotorcycleRouter";
 import { PartRouter } from "./routers/PartRouter";
 import { GuaranteeRouter } from "./routers/GuaranteeRouter";
 import { DriverRouter } from "./routers/DriverRouter";
+import { extractCompanyId } from "./middlewares/headerHandler";
 
 dotenv.config({ path: "../.env" });
 
@@ -18,6 +19,7 @@ const port = process.env.PORT || 3000;
 // Middlewares
 app.use(cors());
 app.use(express.json());
+app.use("/drivers", extractCompanyId);
 
 // Routers
 app.use("/companies", CompanyRouter);
