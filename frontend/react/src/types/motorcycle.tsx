@@ -56,14 +56,6 @@ export const columns = ({
       header: "Modèle",
     },
     {
-      accessorKey: "createdAt",
-      header: "Date de création",
-    },
-    {
-      accessorKey: "updatedAt",
-      header: "Date de dernière mise à jour",
-    },
-    {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => {
