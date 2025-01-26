@@ -15,7 +15,6 @@ export class MongoPartRepository implements PartRepository {
       cost: part.cost.value,
       stock: part.stock.value,
     });
-    console.log(partDatabase);
     await partDatabase.save();
   }
 

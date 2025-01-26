@@ -4,7 +4,6 @@ import { ListPartsUsecase } from "@application/usecases/part/ListPartsUsecase";
 import { UpdatePartUsecase } from "@application/usecases/part/UpdatePartUseCase";
 import { DeletePartUsecase } from "@application/usecases/part/DeletePartUsecase";
 import { Part } from "@domain/entities/Part";
-import { PostgresPartRepository } from "@infrastructure/repositories/postgres/src/PostgresPartRepository";
 import { PartReferenceAlreadyExistsError } from "@domain/errors/part/PartReferenceAlreadyExistsError";
 import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
 import { PartReferenceTooShortError } from "@domain/errors/part/PartReferenceTooShortError";
@@ -13,6 +12,7 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import { CostLessThanZeroError } from "@domain/errors/CostLessThanZeroError";
 import { InvalidQuantityError } from "@domain/errors/InvalidQuantityError";
+import { PostgresPartRepository } from "@infrastructure/repositories/postgres";
 
 export const PartRouter = Router();
 

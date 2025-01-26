@@ -1,12 +1,14 @@
 import { randomUUID } from "crypto";
 import { IntervalInMonths } from "../values/IntervalInMonths";
 import { Entity } from "./Entity";
+import { RentalTypeEnum } from "../types/RentalTypeEnum";
 
 export class Rental implements Entity {
   private constructor(
     public readonly identifier: string,
     public readonly startDate: Date,
     public readonly durationInMonths: IntervalInMonths,
+    public readonly type: RentalTypeEnum,
     public readonly driverIdentifier: string,
     public readonly motorcycleIdentifier: string,
     public readonly createdAt: Date,
@@ -17,6 +19,7 @@ export class Rental implements Entity {
     identifier: string,
     startDate: Date,
     durationInMonths: number,
+    type: RentalTypeEnum,
     driverIdentifier: string,
     motorcycleIdentifier: string,
     createdAt: Date,
@@ -32,6 +35,7 @@ export class Rental implements Entity {
       identifier,
       startDate,
       rentalDurationInMonths,
+      type,
       driverIdentifier,
       motorcycleIdentifier,
       createdAt,
@@ -42,6 +46,7 @@ export class Rental implements Entity {
   public static create(
     startDate: Date,
     durationInMonths: number,
+    type: RentalTypeEnum,
     driverIdentifier: string,
     motorcycleIdentifier: string
   ) {
@@ -53,6 +58,7 @@ export class Rental implements Entity {
       identifier,
       startDate,
       durationInMonths,
+      type,
       driverIdentifier,
       motorcycleIdentifier,
       createdAt,

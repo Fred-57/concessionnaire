@@ -1,11 +1,13 @@
+import { connect } from "@infrastructure/repositories/mongodb";
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
 import { errorHandler } from "./middlewares/errorHandler";
 import { CompanyRouter } from "./routers/CompanyRouter";
-import { PartRouter } from "./routers/PartRouter";
 import { ModelRouter } from "./routers/ModelRouter";
-import { connect } from "@infrastructure/repositories/mongodb";
+import { MotorcycleRouter } from "./routers/MotorcycleRouter";
+import { PartRouter } from "./routers/PartRouter";
+import { GuaranteeRouter } from "./routers/GuaranteeRouter";
 import { DriverRouter } from "./routers/DriverRouter";
 
 dotenv.config({ path: "../.env" });
@@ -20,8 +22,10 @@ app.use(express.json());
 // Routers
 app.use("/companies", CompanyRouter);
 app.use("/drivers", DriverRouter);
-app.use("/parts", PartRouter);
 app.use("/models", ModelRouter);
+app.use("/motorcycles", MotorcycleRouter);
+app.use("/parts", PartRouter);
+app.use("/guarantees", GuaranteeRouter);
 
 // Error handling
 app.use(errorHandler);

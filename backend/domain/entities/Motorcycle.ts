@@ -5,7 +5,7 @@ import { MotorcycleStatus } from "@domain/values/motorcycle/MotorcycleStatus";
 export class Motorcycle implements Entity {
   private constructor(
     /**
-     * @description Immatriculation
+     * @description Numéro d'identification du véhicule (VIN)
      */
     public readonly identifier: string,
 
@@ -20,8 +20,12 @@ export class Motorcycle implements Entity {
     public readonly dateOfCommissioning: Date,
 
     public readonly status: MotorcycleStatus,
+
+    public readonly companyIdentifier: string,
     public readonly modelIdentifier: string,
     public readonly guaranteeIdentifier: string | null,
+    public readonly rentalIdentifiers: string[],
+    public readonly maintenanceIdentifiers: string[],
 
     public readonly createdAt: Date,
     public readonly updatedAt: Date
@@ -32,8 +36,11 @@ export class Motorcycle implements Entity {
     mileageValue: number,
     dateOfCommissioning: Date,
     statusValue: string,
+    companyIdentifier: string,
     modelIdentifier: string,
     guaranteeIdentifier: string | null,
+    rentalIdentifiers: string[],
+    maintenanceIdentifiers: string[],
     createdAt: Date,
     updatedAt: Date
   ) {
@@ -54,8 +61,11 @@ export class Motorcycle implements Entity {
       mileage,
       dateOfCommissioning,
       status,
+      companyIdentifier,
       modelIdentifier,
       guaranteeIdentifier,
+      rentalIdentifiers,
+      maintenanceIdentifiers,
       createdAt,
       updatedAt
     );
@@ -66,8 +76,11 @@ export class Motorcycle implements Entity {
     mileage: number,
     dateOfCommissioning: Date,
     status: string,
+    companyIdentifier: string,
     modelIdentifier: string,
-    guaranteeIdentifier: string | null
+    guaranteeIdentifier: string | null,
+    rentalIdentifiers: string[],
+    maintenanceIdentifiers: string[]
   ) {
     const createdAt = new Date();
     const updatedAt = new Date();
@@ -77,8 +90,11 @@ export class Motorcycle implements Entity {
       mileage,
       dateOfCommissioning,
       status,
+      companyIdentifier,
       modelIdentifier,
       guaranteeIdentifier,
+      rentalIdentifiers,
+      maintenanceIdentifiers,
       createdAt,
       updatedAt
     );
