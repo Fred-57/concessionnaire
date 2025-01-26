@@ -1,6 +1,6 @@
 export enum MotorcycleStatusEnum {
-  Rented = "Rented",
-  Available = "Available",
-  InRepair = "InRepair",
-  InMaintenance = "InMaintenance",
+  RENTED = "RENTED",
+  AVAILABLE = "AVAILABLE",
+  IN_REPAIR = "IN_REPAIR",
+  IN_MAINTENANCE = "IN_MAINTENANCE",
 }

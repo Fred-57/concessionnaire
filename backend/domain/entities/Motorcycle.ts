@@ -1,8 +1,6 @@
 import { Entity } from "./Entity";
 import { MotorcycleMileage } from "@domain/values/motorcycle/MotorcycleMileage";
 import { MotorcycleStatus } from "@domain/values/motorcycle/MotorcycleStatus";
-import { Rental } from "./Rental";
-import { Maintenance } from "./Maintenance";
 
 export class Motorcycle implements Entity {
   private constructor(
@@ -26,8 +24,8 @@ export class Motorcycle implements Entity {
     public readonly companyIdentifier: string,
     public readonly modelIdentifier: string,
     public readonly guaranteeIdentifier: string | null,
-    public readonly rentals: Rental[],
-    public readonly maintenances: Maintenance[],
+    public readonly rentalIdentifiers: string[],
+    public readonly maintenanceIdentifiers: string[],
 
     public readonly createdAt: Date,
     public readonly updatedAt: Date
@@ -41,8 +39,8 @@ export class Motorcycle implements Entity {
     companyIdentifier: string,
     modelIdentifier: string,
     guaranteeIdentifier: string | null,
-    rentals: Rental[],
-    maintenances: Maintenance[],
+    rentalIdentifiers: string[],
+    maintenanceIdentifiers: string[],
     createdAt: Date,
     updatedAt: Date
   ) {
@@ -66,8 +64,8 @@ export class Motorcycle implements Entity {
       companyIdentifier,
       modelIdentifier,
       guaranteeIdentifier,
-      rentals,
-      maintenances,
+      rentalIdentifiers,
+      maintenanceIdentifiers,
       createdAt,
       updatedAt
     );
@@ -81,8 +79,8 @@ export class Motorcycle implements Entity {
     companyIdentifier: string,
     modelIdentifier: string,
     guaranteeIdentifier: string | null,
-    rentals: Rental[],
-    maintenances: Maintenance[]
+    rentalIdentifiers: string[],
+    maintenanceIdentifiers: string[]
   ) {
     const createdAt = new Date();
     const updatedAt = new Date();
@@ -95,8 +93,8 @@ export class Motorcycle implements Entity {
       companyIdentifier,
       modelIdentifier,
       guaranteeIdentifier,
-      rentals,
-      maintenances,
+      rentalIdentifiers,
+      maintenanceIdentifiers,
       createdAt,
       updatedAt
     );
