@@ -1,7 +1,6 @@
 import { Entity } from "./Entity";
 import { StatusMaintenanceBreakdownEnum } from "../types/StatusMaintenanceBreakdownEnum";
 import { randomUUID } from "crypto";
-import { Part } from "./Part";
 import { MaintenancePartType } from "@domain/types/MaintenancePartType";
 
 export class Maintenance implements Entity {

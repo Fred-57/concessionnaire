@@ -16,7 +16,6 @@ export function Guarantee() {
   useEffect(() => {
     const fetchGuarantees = async () => {
       const guaranteesApi = await ky.get("/express/guarantees").json();
-      console.log(guaranteesApi);
       setGuarantees(guaranteesApi as GuaranteeType[]);
     };
 

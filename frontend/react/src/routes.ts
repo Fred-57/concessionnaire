@@ -26,6 +26,11 @@ import { DriverCreate, DriverUpdate } from "./pages/forms/Driver";
 import { ModelCreate, ModelUpdate } from "./pages/forms/Model";
 import { PartCreate, PartUpdate } from "./pages/forms/Part";
 import { GuaranteeCreate, GuaranteeUpdate } from "./pages/forms/Guarantee";
+import {
+  MaintenanceCreate,
+  MaintenanceUpdate,
+} from "./pages/forms/Maintenance";
+import { MaintenanceParts } from "./pages/MaintenanceParts";
 
 export const routes = [
   {
@@ -74,7 +79,7 @@ export const routes = [
   },
   {
     title: "Entretiens",
-    path: "/maintenance",
+    path: "/maintenances",
     icon: WrenchIcon,
     element: Maintenance,
   },
@@ -144,5 +149,17 @@ export const hiddenRoutes = [
   {
     path: "/guarantees/:identifier",
     element: GuaranteeUpdate,
+  },
+  {
+    path: "/maintenances/create",
+    element: MaintenanceCreate,
+  },
+  {
+    path: "/maintenances/:identifier",
+    element: MaintenanceUpdate,
+  },
+  {
+    path: "/maintenances/:identifier/parts",
+    element: MaintenanceParts,
   },
 ];
