@@ -6,6 +6,7 @@ import { CompanyRouter } from "./routers/CompanyRouter";
 import { PartRouter } from "./routers/PartRouter";
 import { ModelRouter } from "./routers/ModelRouter";
 import { connect } from "@infrastructure/repositories/mongodb";
+import { DriverRouter } from "./routers/DriverRouter";
 
 dotenv.config({ path: "../.env" });
 
@@ -18,6 +19,7 @@ app.use(express.json());
 
 // Routers
 app.use("/companies", CompanyRouter);
+app.use("/drivers", DriverRouter);
 app.use("/parts", PartRouter);
 app.use("/models", ModelRouter);
 

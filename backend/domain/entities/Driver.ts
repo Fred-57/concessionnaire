@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { License } from "../types/License";
 import { DriverName } from "../values/driver/DriverName";
 import { Entity } from "./Entity";
+import { DriverNameTooShortError } from "@domain/errors/driver/DriverNameTooShortError";
 
 export class Driver implements Entity {
   private constructor(
@@ -25,8 +26,8 @@ export class Driver implements Entity {
   ) {
     const driverName = DriverName.from(name);
 
-    if (driverName instanceof Error) {
-      throw driverName;
+    if (driverName instanceof DriverNameTooShortError) {
+      return driverName;
     }
 
     return new Driver(

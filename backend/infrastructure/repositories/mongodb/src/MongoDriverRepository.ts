@@ -3,6 +3,7 @@ import { DriverRepository } from "./../../../../application/repositories/DriverR
 import { Driver } from "@domain/entities/Driver";
 import { DriverNameTooShortError } from "@domain/errors/driver/DriverNameTooShortError";
 import { License } from "@domain/types/License";
+import { Company } from "@domain/entities/Company";
 
 export class MongoDriverRepository implements DriverRepository {
   async save(driver: Driver): Promise<void> {
@@ -58,8 +59,37 @@ export class MongoDriverRepository implements DriverRepository {
     return driver;
   }
 
-  async findAll(): Promise<Driver[]> {
-    const driversDatabase = await DriverModel.find();
+  async findByName(name: string, company: Company): Promise<Driver | null> {
+    const driverDatabase = await DriverModel.findOne({
+      name: name,
+      companyIdentifier: company.identifier,
+    });
+
+    if (!driverDatabase) {
+      return null;
+    }
+
+    const driver = Driver.from(
+      driverDatabase.identifier,
+      driverDatabase.name,
+      driverDatabase.license as License,
+      driverDatabase.numberOfYearsOfExperience,
+      driverDatabase.companyIdentifier,
+      driverDatabase.createdAt,
+      driverDatabase.updatedAt
+    );
+
+    if (driver instanceof DriverNameTooShortError) {
+      throw driver;
+    }
+
+    return driver;
+  }
+
+  async findAllByCompany(company: Company): Promise<Driver[]> {
+    const driversDatabase = await DriverModel.find({
+      companyIdentifier: company.identifier,
+    });
 
     const drivers: Driver[] = [];
 
