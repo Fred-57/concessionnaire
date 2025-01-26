@@ -9,7 +9,6 @@ const prisma = new PrismaClient();
 
 export class PostgresGuaranteeRepository implements GuaranteeRepository {
   async save(guarantee: Guarantee): Promise<void> {
-    console.log(guarantee);
     await prisma.guarantee.create({
       data: {
         id: guarantee.identifier,
