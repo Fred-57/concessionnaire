@@ -108,16 +108,13 @@ CompanyRouter.put("/:id", async (req, res) => {
 CompanyRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  const company = await new GetCompanyUsecase(
-    new PostgresCompanyRepository()
-  ).execute(id);
+  try {
+    await new DeleteCompanyUsecase(new PostgresCompanyRepository()).execute(id);
 
-  if (!company) {
-    res.sendStatus(StatusCodes.NOT_FOUND);
-    return;
+    res.sendStatus(StatusCodes.NO_CONTENT);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.sendStatus(StatusCodes.NOT_FOUND);
+    }
   }
-
-  await new DeleteCompanyUsecase(new PostgresCompanyRepository()).execute(id);
-
-  res.sendStatus(StatusCodes.NO_CONTENT);
 });

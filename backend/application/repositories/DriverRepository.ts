@@ -1,9 +1,11 @@
+import { Company } from "@domain/entities/Company";
 import { Driver } from "../../domain/entities/Driver";
 
 export interface DriverRepository {
-  save(driver: Driver): Promise<void>;
-  update(driver: Driver): Promise<void>;
+  save(driver: Driver, company: Company): Promise<void>;
+  update(driver: Driver, company: Company): Promise<void>;
   findByIdentifier(identifier: string): Promise<Driver | null>;
-  findAll(): Promise<Driver[]>;
+  findByName(name: string, company: Company): Promise<Driver | null>;
+  findAllByCompany(company: Company): Promise<Driver[]>;
   delete(driver: Driver): Promise<void>;
 }
