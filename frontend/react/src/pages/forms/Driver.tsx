@@ -1,6 +1,5 @@
 import { Layout } from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
-import ky from "ky";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect, SyntheticEvent } from "react";
 import { DriverType } from "@/types/driver";
@@ -15,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createApiClientHeader } from "@/tools/apiClientHeader";
 
 export function DriverForm({ mode }: { mode: "create" | "update" }) {
   const { identifier } = useParams();
@@ -25,15 +25,18 @@ export function DriverForm({ mode }: { mode: "create" | "update" }) {
   const [license, setLicense] = useState<string>("");
   const [numberOfYearsOfExperience, setNumberOfYearsOfExperience] =
     useState<number>(0);
+  const [companyIdentifier, setCompanyIdentifier] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
-      const driver = (await ky
-        .get(`/nest/drivers/${identifier}`)
+      const apiClient = createApiClientHeader();
+      const driver = (await apiClient
+        .get(`/express/drivers/${identifier}`)
         .json()) as DriverType;
       setName(driver.name.value);
       setLicense(driver.license);
       setNumberOfYearsOfExperience(driver.numberOfYearsOfExperience);
+      setCompanyIdentifier(driver.companyIdentifier);
     };
 
     if (mode === "update") {
@@ -47,10 +50,14 @@ export function DriverForm({ mode }: { mode: "create" | "update" }) {
     try {
       const method = mode === "create" ? "post" : "put";
       const endpoint =
-        mode === "create" ? "/nest/drivers" : `/nest/drivers/${identifier}`;
+        mode === "create"
+          ? "/express/drivers"
+          : `/express/drivers/${identifier}`;
 
-      const response = await ky[method](endpoint, {
-        json: { name, license, numberOfYearsOfExperience },
+      const apiClient = createApiClientHeader();
+
+      const response = await apiClient[method](endpoint, {
+        json: { name, license, numberOfYearsOfExperience, companyIdentifier },
       });
 
       if (response.ok) {
@@ -64,6 +71,7 @@ export function DriverForm({ mode }: { mode: "create" | "update" }) {
           setName("");
           setLicense("");
           setNumberOfYearsOfExperience(0);
+          setCompanyIdentifier("");
         }
       }
     } catch {
@@ -93,7 +101,7 @@ export function DriverForm({ mode }: { mode: "create" | "update" }) {
         {/* License */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label>Permis de conduire</Label>
-          <Select onValueChange={(value) => setLicense(value)}>
+          <Select value={license} onValueChange={(value) => setLicense(value)}>
             <SelectTrigger>
               <SelectValue placeholder="Permis de conduire" />
             </SelectTrigger>

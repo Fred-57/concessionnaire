@@ -5,6 +5,7 @@ import ky from "ky";
 import { useEffect, useState } from "react";
 import { columns, MotorcycleType } from "@/types/motorcycle";
 import { DataTable } from "@/components/ui/data-table";
+import { createApiClientHeader } from "@/tools/apiClientHeader";
 
 export function Motorcycle() {
   const navigate = useNavigate();
@@ -20,13 +21,9 @@ export function Motorcycle() {
         return;
       }
 
-      const api = ky.create({
-        headers: {
-          "company-identifier": companyIdentifier,
-        },
-      });
+      const apiClient = createApiClientHeader();
 
-      const motorcyclesApi = await api.get("/express/motorcycles").json();
+      const motorcyclesApi = await apiClient.get("/express/motorcycles").json();
       setMotorcycles(motorcyclesApi as MotorcycleType[]);
     };
 
