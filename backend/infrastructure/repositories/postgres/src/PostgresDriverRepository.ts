@@ -7,7 +7,7 @@ import { CompanyTypeEnum } from "@domain/types/CompanyTypeEnum";
 const prisma = new PrismaClient();
 
 export class PostgresDriverRepository implements DriverRepository {
-  async save(driver: Driver): Promise<void> {
+  async save(driver: Driver, company: Company): Promise<void> {
     await prisma.driver.create({
       data: {
         id: driver.identifier,
@@ -16,14 +16,14 @@ export class PostgresDriverRepository implements DriverRepository {
         numberOfYearsOfExperience: driver.numberOfYearsOfExperience,
         company: {
           connect: {
-            id: driver.companyIdentifier,
+            id: company.identifier,
           },
         },
       },
     });
   }
 
-  async update(driver: Driver): Promise<void> {
+  async update(driver: Driver, company: Company): Promise<void> {
     await prisma.driver.update({
       where: {
         id: driver.identifier,
@@ -34,7 +34,7 @@ export class PostgresDriverRepository implements DriverRepository {
         numberOfYearsOfExperience: driver.numberOfYearsOfExperience,
         company: {
           connect: {
-            id: driver.companyIdentifier,
+            id: company.identifier,
           },
         },
       },
@@ -84,34 +84,55 @@ export class PostgresDriverRepository implements DriverRepository {
     return driver;
   }
 
-  async findAll(): Promise<Driver[]> {
+  async findByName(name: string, company: Company): Promise<Driver | null> {
+    const driverDatabase = await prisma.driver.findFirst({
+      where: {
+        name,
+        company: {
+          id: company.identifier,
+        },
+      },
+    });
+
+    if (!driverDatabase) {
+      return null;
+    }
+
+    const driver = Driver.from(
+      driverDatabase.id,
+      driverDatabase.name,
+      driverDatabase.license,
+      driverDatabase.numberOfYearsOfExperience,
+      driverDatabase.companyId,
+      driverDatabase.createdAt,
+      driverDatabase.updatedAt
+    );
+
+    if (driver instanceof DriverNameTooShortError) {
+      throw driver;
+    }
+
+    return driver;
+  }
+
+  async findAllByCompany(company: Company): Promise<Driver[]> {
     const driversDatabase = await prisma.driver.findMany({
-      include: {
-        company: true,
+      where: {
+        company: {
+          id: company.identifier,
+        },
       },
     });
 
     const drivers: Driver[] = [];
 
     for (const driverDatabase of driversDatabase) {
-      const company = Company.from(
-        driverDatabase.company.id,
-        driverDatabase.company.name,
-        driverDatabase.company.type as CompanyTypeEnum,
-        driverDatabase.company.createdAt,
-        driverDatabase.company.updatedAt
-      );
-
-      if (company instanceof Error) {
-        throw company;
-      }
-
       const driver = Driver.from(
         driverDatabase.id,
         driverDatabase.name,
         driverDatabase.license,
         driverDatabase.numberOfYearsOfExperience,
-        company.identifier,
+        driverDatabase.companyId,
         driverDatabase.createdAt,
         driverDatabase.updatedAt
       );
