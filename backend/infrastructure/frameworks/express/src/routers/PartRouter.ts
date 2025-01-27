@@ -12,18 +12,23 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import { CostLessThanZeroError } from "@domain/errors/CostLessThanZeroError";
 import { InvalidQuantityError } from "@domain/errors/InvalidQuantityError";
+import { PostgresPartRepository } from "@infrastructure/repositories/postgres";
 import { MongoPartRepository } from "@infrastructure/repositories/mongodb";
 
 export const PartRouter = Router();
 
 PartRouter.get("/", async (_, res) => {
-  const parts = await new ListPartsUsecase(new MongoPartRepository()).execute();
+  const parts = await new ListPartsUsecase(
+    new PostgresPartRepository()
+  ).execute();
   res.status(StatusCodes.OK).json(parts);
 });
 
 PartRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const parts = await new ListPartsUsecase(new MongoPartRepository()).execute();
+  const parts = await new ListPartsUsecase(
+    new PostgresPartRepository()
+  ).execute();
 
   if (!parts) {
     res.sendStatus(StatusCodes.NOT_FOUND);
@@ -61,7 +66,7 @@ PartRouter.post("/", async (req, res) => {
     return;
   }
   try {
-    await new CreatePartUsecase(new MongoPartRepository()).execute(part);
+    await new CreatePartUsecase(new PostgresPartRepository()).execute(part);
   } catch (error) {
     if (error instanceof PartReferenceAlreadyExistsError) {
       res.sendStatus(StatusCodes.CONFLICT);
@@ -76,7 +81,9 @@ PartRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { name, reference, cost, stock } = req.body;
 
-  const part = await new GetPartUsecase(new MongoPartRepository()).execute(id);
+  const part = await new GetPartUsecase(new PostgresPartRepository()).execute(
+    id
+  );
 
   if (!part) {
     res.sendStatus(StatusCodes.NOT_FOUND);
@@ -134,7 +141,9 @@ PartRouter.put("/:id", async (req, res) => {
 PartRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  const part = await new GetPartUsecase(new MongoPartRepository()).execute(id);
+  const part = await new GetPartUsecase(new PostgresPartRepository()).execute(
+    id
+  );
 
   if (!part) {
     res.sendStatus(StatusCodes.NOT_FOUND);

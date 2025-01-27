@@ -2,9 +2,9 @@ import { CreateMaintenanceUsecase } from "@application/usecases/maintenance/Crea
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import {
-  MongoMaintenanceRepository,
-  MongoPartRepository,
-} from "@infrastructure/repositories/mongodb";
+  PostgresMaintenanceRepository,
+  PostgresPartRepository,
+} from "@infrastructure/repositories/postgres";
 import { ListMaintenancesUsecase } from "@application/usecases/maintenance/ListMaintenanceUsecase";
 import { UpdateMaintenanceUsecase } from "@application/usecases/maintenance/UpdateMaintenanceUsecase";
 import { DeleteMaintenanceUsecase } from "@application/usecases/maintenance/DeleteMaintenanceUsecase";
@@ -17,7 +17,7 @@ export const MaintenanceRouter = Router();
 MaintenanceRouter.get("/", async (_, res) => {
   try {
     const maintenances = await new ListMaintenancesUsecase(
-      new MongoMaintenanceRepository()
+      new PostgresMaintenanceRepository()
     ).execute();
 
     res.status(StatusCodes.OK).json(maintenances);
@@ -46,8 +46,8 @@ MaintenanceRouter.post("/", async (req, res) => {
     }
 
     await new CreateMaintenanceUsecase(
-      new MongoMaintenanceRepository(),
-      new MongoPartRepository()
+      new PostgresMaintenanceRepository(),
+      new PostgresPartRepository()
     ).execute(maintenance);
 
     res.status(StatusCodes.OK).json(maintenance);
@@ -65,7 +65,7 @@ MaintenanceRouter.put("/:id", async (req, res) => {
     const { date, recommendation, motorcycleIdentifier, parts } = req.body;
 
     const maintenance = await new GetMaintenanceUsecase(
-      new MongoMaintenanceRepository()
+      new PostgresMaintenanceRepository()
     ).execute(id);
 
     if (maintenance instanceof MaintenanceNotFoundError) {
@@ -87,8 +87,8 @@ MaintenanceRouter.put("/:id", async (req, res) => {
     }
 
     await new UpdateMaintenanceUsecase(
-      new MongoMaintenanceRepository(),
-      new MongoPartRepository()
+      new PostgresMaintenanceRepository(),
+      new PostgresPartRepository()
     ).execute(updatedMaintenance);
 
     res.sendStatus(StatusCodes.OK);
@@ -105,7 +105,7 @@ MaintenanceRouter.delete("/:id", async (req, res) => {
     const { id } = req.params;
 
     const maintenance = await new GetMaintenanceUsecase(
-      new MongoMaintenanceRepository()
+      new PostgresMaintenanceRepository()
     ).execute(id);
 
     if (!maintenance) {
@@ -114,7 +114,7 @@ MaintenanceRouter.delete("/:id", async (req, res) => {
     }
 
     await new DeleteMaintenanceUsecase(
-      new MongoMaintenanceRepository()
+      new PostgresMaintenanceRepository()
     ).execute(id);
 
     res.sendStatus(StatusCodes.NO_CONTENT);
@@ -129,7 +129,7 @@ MaintenanceRouter.delete("/:id", async (req, res) => {
 MaintenanceRouter.get("/:id", async (req, res) => {
   try {
     const maintenance = await new GetMaintenanceUsecase(
-      new MongoMaintenanceRepository()
+      new PostgresMaintenanceRepository()
     ).execute(req.params.id);
 
     res.status(StatusCodes.OK).json(maintenance);
