@@ -11,28 +11,14 @@ import { DeleteMotorcycleUsecase } from "@application/usecases/motorcycle/Delete
 export const MotorcycleRouter = Router();
 
 MotorcycleRouter.get("/", async (req, res) => {
-  const companyIdentifier = req.headers["company-identifier"] as string;
-
-  if (!companyIdentifier) {
-    res.sendStatus(StatusCodes.UNAUTHORIZED);
-    return;
-  }
-
   const motorcycles = await new ListMotorcyclesUsecase(
     new PostgresMotorcycleRepository()
-  ).execute(companyIdentifier);
+  ).execute(req.companyIdentifier);
 
   res.status(StatusCodes.OK).json(motorcycles);
 });
 
 MotorcycleRouter.post("/", async (req, res) => {
-  const companyIdentifier = req.headers["company-identifier"] as string;
-
-  if (!companyIdentifier) {
-    res.sendStatus(StatusCodes.UNAUTHORIZED);
-    return;
-  }
-
   const {
     identifier,
     mileage,
@@ -47,7 +33,7 @@ MotorcycleRouter.post("/", async (req, res) => {
     mileage,
     new Date(dateOfCommissioning),
     status,
-    companyIdentifier,
+    req.companyIdentifier,
     modelIdentifier,
     guaranteeIdentifier ?? null,
     [],

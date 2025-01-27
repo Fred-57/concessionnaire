@@ -11,18 +11,11 @@ import { UpdateRentalUsecase } from "@application/usecases/rental/UpdateRentalUs
 export const RentalRouter = Router();
 
 RentalRouter.get("/", async (req, res) => {
-  const companyIdentifier = req.headers["company-identifier"] as string;
-
-  if (!companyIdentifier) {
-    res.sendStatus(StatusCodes.UNAUTHORIZED);
-    return;
-  }
-
   let rentals;
   try {
     rentals = await new ListRentalsUsecase(
       new PostgresRentalRepository()
-    ).execute(companyIdentifier);
+    ).execute(req.companyIdentifier);
   } catch {
     res.sendStatus(StatusCodes.BAD_REQUEST);
     return;

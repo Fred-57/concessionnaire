@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { MotorcycleType } from "@/types/motorcycle";
 import { DriverType } from "@/types/driver";
+import { createApiClientHeader } from "@/tools/apiClientHeader";
 
 export function RentalForm({ mode }: { mode: "create" | "update" }) {
   const { identifier } = useParams();
@@ -27,12 +28,6 @@ export function RentalForm({ mode }: { mode: "create" | "update" }) {
     navigate("/home");
     return;
   }
-
-  const api = ky.create({
-    headers: {
-      "company-identifier": companyIdentifier,
-    },
-  });
 
   const [motorcycles, setMotorcycles] = useState<MotorcycleType[]>([]);
   const [drivers, setDrivers] = useState<DriverType[]>([]);
@@ -48,7 +43,9 @@ export function RentalForm({ mode }: { mode: "create" | "update" }) {
   // Fetch motorcycles
   useEffect(() => {
     const fetchMotorcycles = async () => {
-      const motorcyclesApi = await api.get("/express/motorcycles").json();
+      const motorcyclesApi = await createApiClientHeader()
+        .get("/express/motorcycles")
+        .json();
       setMotorcycles(motorcyclesApi as MotorcycleType[]);
       setDoneFetchingMotorcycles(true);
     };
@@ -59,7 +56,9 @@ export function RentalForm({ mode }: { mode: "create" | "update" }) {
   // Fetch drivers
   useEffect(() => {
     const fetchDrivers = async () => {
-      const driversApi = await api.get("/express/drivers").json();
+      const driversApi = await createApiClientHeader()
+        .get("/express/drivers")
+        .json();
       setDrivers(driversApi as DriverType[]);
       setDoneFetchingDrivers(true);
     };
@@ -69,7 +68,7 @@ export function RentalForm({ mode }: { mode: "create" | "update" }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const rental = (await api
+      const rental = (await createApiClientHeader()
         .get(`/express/rentals/${identifier}`)
         .json()) as RentalType;
 

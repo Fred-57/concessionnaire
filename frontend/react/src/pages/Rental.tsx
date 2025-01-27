@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { useToast } from "@/hooks/use-toast";
 import { DataTable } from "@/components/ui/data-table";
 import { DriverType } from "@/types/driver";
+import { createApiClientHeader } from "@/tools/apiClientHeader";
 
 export function Rental() {
   const navigate = useNavigate();
@@ -17,12 +18,6 @@ export function Rental() {
     return;
   }
 
-  const api = ky.create({
-    headers: {
-      "company-identifier": companyIdentifier,
-    },
-  });
-
   const [drivers, setDrivers] = useState<DriverType[]>([]);
   const [doneFetchingDrivers, setDoneFetchingDrivers] = useState(false);
 
@@ -30,7 +25,9 @@ export function Rental() {
 
   useEffect(() => {
     const fetchDrivers = async () => {
-      const driversApi = await api.get("/express/drivers").json();
+      const driversApi = await createApiClientHeader()
+        .get("/express/drivers")
+        .json();
       setDrivers(driversApi as DriverType[]);
       setDoneFetchingDrivers(true);
     };
@@ -40,7 +37,7 @@ export function Rental() {
 
   useEffect(() => {
     const fetchRentals = async () => {
-      const rentalsApi = (await api
+      const rentalsApi = (await createApiClientHeader()
         .get("/express/rentals")
         .json()) as RentalType[];
 
