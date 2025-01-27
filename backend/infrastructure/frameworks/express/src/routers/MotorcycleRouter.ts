@@ -7,10 +7,11 @@ import { CreateMotorcycleUsecase } from "@application/usecases/motorcycle/Create
 import { UpdateMotorcycleUsecase } from "@application/usecases/motorcycle/UpdateMotorcycleUsecase";
 import { GetMotorcycleUsecase } from "@application/usecases/motorcycle/GetMotorcycleUsecase";
 import { DeleteMotorcycleUsecase } from "@application/usecases/motorcycle/DeleteMotorcycleUsecase";
+import { extractCompanyId } from "src/middlewares/headerHandler";
 
 export const MotorcycleRouter = Router();
 
-MotorcycleRouter.get("/", async (req, res) => {
+MotorcycleRouter.get("/", extractCompanyId, async (req, res) => {
   const motorcycles = await new ListMotorcyclesUsecase(
     new PostgresMotorcycleRepository()
   ).execute(req.companyIdentifier);
@@ -18,7 +19,7 @@ MotorcycleRouter.get("/", async (req, res) => {
   res.status(StatusCodes.OK).json(motorcycles);
 });
 
-MotorcycleRouter.post("/", async (req, res) => {
+MotorcycleRouter.post("/", extractCompanyId, async (req, res) => {
   const {
     identifier,
     mileage,
@@ -73,7 +74,7 @@ MotorcycleRouter.get("/:identifier", async (req, res) => {
   res.status(StatusCodes.OK).json(motorcycle);
 });
 
-MotorcycleRouter.put("/:identifier", async (req, res) => {
+MotorcycleRouter.put("/:identifier", extractCompanyId, async (req, res) => {
   const { identifier } = req.params;
   const {
     mileage,

@@ -7,10 +7,11 @@ import { CreateRentalUsecase } from "@application/usecases/rental/CreateRentalUs
 import { GetRentalUsecase } from "@application/usecases/rental/GetRentalUsecase";
 import { DeleteRentalUsecase } from "@application/usecases/rental/DeleteRentalUsecase";
 import { UpdateRentalUsecase } from "@application/usecases/rental/UpdateRentalUsecase";
+import { extractCompanyId } from "src/middlewares/headerHandler";
 
 export const RentalRouter = Router();
 
-RentalRouter.get("/", async (req, res) => {
+RentalRouter.get("/", extractCompanyId, async (req, res) => {
   let rentals;
   try {
     rentals = await new ListRentalsUsecase(
