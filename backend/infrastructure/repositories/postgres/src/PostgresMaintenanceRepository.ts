@@ -2,9 +2,7 @@ import { Maintenance } from "@domain/entities/Maintenance";
 import { MaintenanceRepository } from "@application/repositories/MaintenanceRepository";
 import { PrismaClient } from "@prisma/client";
 import { StatusMaintenanceBreakdownEnum } from "@domain/types/StatusMaintenanceBreakdownEnum";
-import { MaintenanceNotFoundError } from "@domain/errors/maintenance/MaintenanceNotFoundError";
 import { MaintenancePartType } from "@domain/types/MaintenancePartType";
-import { Part } from "@domain/entities/Part";
 import { PostgresPartRepository } from "./PostgresPartRepository";
 const prisma = new PrismaClient();
 

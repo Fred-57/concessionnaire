@@ -1,15 +1,15 @@
 import { Schema, model } from "mongoose";
+import { PartSchema } from "./PartModel";
+import { IPart } from "./PartModel";
 
 export interface IMaintenancePart {
-  name: string;
+  part: IPart;
   quantity: number;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const MaintenancePartSchema = new Schema<IMaintenancePart>(
   {
-    name: { type: String, required: true },
+    part: { type: PartSchema, required: true },
     quantity: { type: Number, required: true },
   },
   { timestamps: true }
