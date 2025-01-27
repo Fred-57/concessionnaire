@@ -2,7 +2,9 @@ import { Rental } from "../../domain/entities/Rental";
 
 export interface RentalRepository {
   save(rental: Rental): Promise<void>;
-  findByIdentifier(identifier: string): Promise<Rental | null>;
+  update(rental: Rental): Promise<void>;
   findAll(): Promise<Rental[]>;
+  findByIdentifier(identifier: string): Promise<Rental | null>;
+  findManyByCompanyIdentifier(companyIdentifier: string): Promise<Rental[]>;
   delete(rental: Rental): Promise<void>;
 }

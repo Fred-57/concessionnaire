@@ -3,7 +3,6 @@ import { DataTable } from "@/components/ui/data-table";
 import { useToast } from "@/hooks/use-toast";
 import { createApiClientHeader } from "@/tools/apiClientHeader";
 import { DriverType, columns } from "@/types/driver";
-import ky from "ky";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 

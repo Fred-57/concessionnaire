@@ -1,7 +1,4 @@
 import { model, Schema } from "mongoose";
-import { IDriver } from "./DriverModel";
-import { IMotorcycle } from "./MotorcycleModel";
-import { IBreakdown } from "./BreakdownModel";
 import { RentalTypeEnum } from "@domain/types/RentalTypeEnum";
 
 export interface IRental {
@@ -9,9 +6,9 @@ export interface IRental {
   startDate: Date;
   durationInMonths: number;
   type: RentalTypeEnum;
-  driver: IDriver;
-  motorcycle: IMotorcycle;
-  breakdowns: IBreakdown[];
+  driverIdentifier: string;
+  motorcycleIdentifier: string;
+  breakdownIdentifiers: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,9 +19,9 @@ export const RentalSchema = new Schema<IRental>(
     startDate: { type: Date, required: true },
     durationInMonths: { type: Number, required: true },
     type: { type: String, enum: RentalTypeEnum, required: true },
-    driver: { type: Schema.Types.ObjectId, ref: "Driver" },
-    motorcycle: { type: Schema.Types.ObjectId, ref: "Motorcycle" },
-    breakdowns: [{ type: Schema.Types.ObjectId, ref: "Breakdown" }],
+    driverIdentifier: { type: String, required: true },
+    motorcycleIdentifier: { type: String, required: true },
+    breakdownIdentifiers: { type: [String], required: true },
   },
   { timestamps: true }
 );

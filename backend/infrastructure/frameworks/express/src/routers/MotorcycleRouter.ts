@@ -7,32 +7,19 @@ import { CreateMotorcycleUsecase } from "@application/usecases/motorcycle/Create
 import { UpdateMotorcycleUsecase } from "@application/usecases/motorcycle/UpdateMotorcycleUsecase";
 import { GetMotorcycleUsecase } from "@application/usecases/motorcycle/GetMotorcycleUsecase";
 import { DeleteMotorcycleUsecase } from "@application/usecases/motorcycle/DeleteMotorcycleUsecase";
+import { extractCompanyId } from "src/middlewares/headerHandler";
 
 export const MotorcycleRouter = Router();
 
-MotorcycleRouter.get("/", async (req, res) => {
-  const companyIdentifier = req.headers["company-identifier"] as string;
-
-  if (!companyIdentifier) {
-    res.sendStatus(StatusCodes.UNAUTHORIZED);
-    return;
-  }
-
+MotorcycleRouter.get("/", extractCompanyId, async (req, res) => {
   const motorcycles = await new ListMotorcyclesUsecase(
     new PostgresMotorcycleRepository()
-  ).execute(companyIdentifier);
+  ).execute(req.companyIdentifier);
 
   res.status(StatusCodes.OK).json(motorcycles);
 });
 
-MotorcycleRouter.post("/", async (req, res) => {
-  const companyIdentifier = req.headers["company-identifier"] as string;
-
-  if (!companyIdentifier) {
-    res.sendStatus(StatusCodes.UNAUTHORIZED);
-    return;
-  }
-
+MotorcycleRouter.post("/", extractCompanyId, async (req, res) => {
   const {
     identifier,
     mileage,
@@ -47,7 +34,7 @@ MotorcycleRouter.post("/", async (req, res) => {
     mileage,
     new Date(dateOfCommissioning),
     status,
-    companyIdentifier,
+    req.companyIdentifier,
     modelIdentifier,
     guaranteeIdentifier ?? null,
     [],
@@ -87,7 +74,7 @@ MotorcycleRouter.get("/:identifier", async (req, res) => {
   res.status(StatusCodes.OK).json(motorcycle);
 });
 
-MotorcycleRouter.put("/:identifier", async (req, res) => {
+MotorcycleRouter.put("/:identifier", extractCompanyId, async (req, res) => {
   const { identifier } = req.params;
   const {
     mileage,
@@ -100,6 +87,11 @@ MotorcycleRouter.put("/:identifier", async (req, res) => {
   const motorcycle = await new GetMotorcycleUsecase(
     new PostgresMotorcycleRepository()
   ).execute(identifier);
+
+  if (motorcycle instanceof Error) {
+    res.sendStatus(StatusCodes.NOT_FOUND);
+    return;
+  }
 
   const updatedMotorcycle = Motorcycle.from(
     motorcycle.identifier,

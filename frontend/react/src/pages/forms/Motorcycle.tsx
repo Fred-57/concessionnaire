@@ -46,7 +46,9 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
   // Fetch models
   useEffect(() => {
     const fetchModels = async () => {
-      const modelsApi = await api.get("/express/models").json();
+      const modelsApi = await createApiClientHeader()
+        .get("/express/models")
+        .json();
       setModels(modelsApi as ModelType[]);
       setDoneFetchingModels(true);
     };
@@ -57,7 +59,9 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
   // Fetch guarantees
   useEffect(() => {
     const fetchGuarantees = async () => {
-      const guaranteesApi = await api.get("/express/guarantees").json();
+      const guaranteesApi = await createApiClientHeader()
+        .get("/express/guarantees")
+        .json();
       setGuarantees(guaranteesApi as GuaranteeType[]);
       setDoneFetchingGuarantees(true);
     };
