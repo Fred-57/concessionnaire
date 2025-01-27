@@ -10,6 +10,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon } from "lucide-react";
 import { PartType } from "./part";
 
+const isAdmin =
+  localStorage.getItem("role") === "gestionnaire" ||
+  localStorage.getItem("is_admin") === "true"
+    ? true
+    : false;
+
 export type MaintenancePartType = {
   part: PartType;
 
@@ -64,6 +70,7 @@ export const columns = ({
       accessorKey: "updatedAt",
       header: "Date de dernière mise à jour",
     },
+
     {
       id: "actions",
       header: "Actions",
@@ -78,14 +85,19 @@ export const columns = ({
                 <MoreHorizontalIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => goToUpdate(maintenance)}>
-                Modifier
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(maintenance)}>
-                Supprimer
-              </DropdownMenuItem>
+              {isAdmin && (
+                <>
+                  <DropdownMenuItem onClick={() => goToUpdate(maintenance)}>
+                    Modifier
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleDelete(maintenance)}>
+                    Supprimer
+                  </DropdownMenuItem>
+                </>
+              )}
               <DropdownMenuItem onClick={() => goToParts(maintenance)}>
                 Voir les pièces
               </DropdownMenuItem>
