@@ -18,6 +18,12 @@ export function Layout({
   };
   children: React.ReactNode;
 }) {
+  const isAdmin =
+    localStorage.getItem("role") === "gestionnaire" ||
+    localStorage.getItem("is_admin") === "true"
+      ? true
+      : false;
+
   const navigate = useNavigate();
 
   return (
@@ -29,7 +35,7 @@ export function Layout({
           <section className="p-4 flex flex-col gap-5">
             <div className="flex justify-between items-center h-10">
               <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
-              {button && (
+              {button && isAdmin && (
                 <Button
                   onClick={() => navigate(button.path)}
                   className="self-start"

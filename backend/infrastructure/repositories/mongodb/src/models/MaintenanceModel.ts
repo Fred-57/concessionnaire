@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { IMotorcycle } from "./MotorcycleModel";
 import { StatusMaintenanceBreakdownEnum } from "@domain/types/StatusMaintenanceBreakdownEnum";
-import { IMaintenancePart } from "./MaintenancePart";
+import { IMaintenancePart, MaintenancePartSchema } from "./MaintenancePart";
 
 export interface IMaintenance {
   identifier: string;
@@ -9,7 +9,7 @@ export interface IMaintenance {
   recommendation: string;
   status: StatusMaintenanceBreakdownEnum;
   totalCost: number;
-  motorcycle: IMotorcycle;
+  motorcycleIdentifier: string;
   parts: IMaintenancePart[];
   createdAt: Date;
   updatedAt: Date;
@@ -26,12 +26,11 @@ export const MaintenanceSchema = new Schema<IMaintenance>(
       required: true,
     },
     totalCost: { type: Number, required: true },
-    motorcycle: {
-      type: Schema.Types.ObjectId,
-      ref: "Motorcycle",
+    motorcycleIdentifier: {
+      type: String,
       required: true,
     },
-    parts: [{ type: Schema.Types.ObjectId, ref: "MaintenancePart" }],
+    parts: [{ type: MaintenancePartSchema, required: false }],
   },
   { timestamps: true }
 );
