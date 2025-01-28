@@ -6,6 +6,7 @@ import { PartRepository } from "@application/repositories/PartRepository";
 import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
 import { DateBehindNowError } from "@domain/errors/DateBehindNowError";
 import { MaintenanceTotalCostLessThanZeroError } from "@domain/errors/maintenance/MaintenanceTotalCostLessThanZeroError";
+import { MotorcycleNotFoundError } from "@domain/errors/MotorcycleNotFoundError";
 
 export class UpdateMaintenanceUsecase implements Usecase<Maintenance> {
   public constructor(
@@ -22,12 +23,8 @@ export class UpdateMaintenanceUsecase implements Usecase<Maintenance> {
       throw new MaintenanceNotFoundError();
     }
 
-    if (maintenance.date < new Date()) {
-      throw new DateBehindNowError();
-    }
-
-    if (maintenance.totalCost < 0) {
-      throw new MaintenanceTotalCostLessThanZeroError();
+    if (maintenance.motorcycleIdentifier === null) {
+      throw new MotorcycleNotFoundError();
     }
 
     for (const part of maintenance.parts) {

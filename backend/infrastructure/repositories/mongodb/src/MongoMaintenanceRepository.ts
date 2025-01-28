@@ -141,6 +141,10 @@ export class MongoMaintenanceRepository implements MaintenanceRepository {
       maintenanceDatabase.updatedAt
     );
 
+    if (maintenance instanceof Error) {
+      return null;
+    }
+
     return maintenance;
   }
 
@@ -201,19 +205,23 @@ export class MongoMaintenanceRepository implements MaintenanceRepository {
         maintenancePart.push({ part: partValue, quantity: part.quantity });
       }
 
-      maintenances.push(
-        Maintenance.from(
-          maintenance.identifier,
-          maintenance.date,
-          maintenance.recommendation,
-          maintenance.status,
-          maintenance.totalCost,
-          maintenance.motorcycleIdentifier,
-          maintenancePart,
-          maintenance.createdAt,
-          maintenance.updatedAt
-        )
+      const maintenanceResult = Maintenance.from(
+        maintenance.identifier,
+        maintenance.date,
+        maintenance.recommendation,
+        maintenance.status,
+        maintenance.totalCost,
+        maintenance.motorcycleIdentifier,
+        maintenancePart,
+        maintenance.createdAt,
+        maintenance.updatedAt
       );
+
+      if (maintenanceResult instanceof Error) {
+        continue;
+      }
+
+      maintenances.push(maintenanceResult);
     }
 
     return maintenances;
@@ -273,19 +281,23 @@ export class MongoMaintenanceRepository implements MaintenanceRepository {
         maintenancePart.push({ part: partValue, quantity: part.quantity });
       }
 
-      maintenances.push(
-        Maintenance.from(
-          maintenance.identifier,
-          maintenance.date,
-          maintenance.recommendation,
-          maintenance.status,
-          maintenance.totalCost,
-          maintenance.motorcycleIdentifier,
-          maintenancePart,
-          maintenance.createdAt,
-          maintenance.updatedAt
-        )
+      const maintenanceResult = Maintenance.from(
+        maintenance.identifier,
+        maintenance.date,
+        maintenance.recommendation,
+        maintenance.status,
+        maintenance.totalCost,
+        maintenance.motorcycleIdentifier,
+        maintenancePart,
+        maintenance.createdAt,
+        maintenance.updatedAt
       );
+
+      if (maintenanceResult instanceof Error) {
+        continue;
+      }
+
+      maintenances.push(maintenanceResult);
     }
 
     return maintenances;

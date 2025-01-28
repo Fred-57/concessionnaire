@@ -22,9 +22,6 @@ export class CreateMaintenanceUsecase implements Usecase<Maintenance> {
       throw new MotorcycleNotFoundError();
     }
 
-    if (maintenance.totalCost < 0) {
-      throw new MaintenanceTotalCostLessThanZeroError();
-    }
     for (const part of maintenance.parts) {
       const partExists = await this.partRepository.findByIdentifier(
         part.part.identifier

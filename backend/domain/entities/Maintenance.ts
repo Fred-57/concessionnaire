@@ -2,6 +2,10 @@ import { Entity } from "./Entity";
 import { StatusMaintenanceBreakdownEnum } from "../types/StatusMaintenanceBreakdownEnum";
 import { randomUUID } from "crypto";
 import { MaintenancePartType } from "@domain/types/MaintenancePartType";
+import { DateBehindNowError } from "@domain/errors/DateBehindNowError";
+import { MaintenanceDate } from "@domain/values/maintenance/MaintenanceDate";
+import { MaintenanceTotalCostLessThanZeroError } from "@domain/errors/maintenance/MaintenanceTotalCostLessThanZeroError";
+import { MaintenanceTotalCost } from "@domain/values/maintenance/MaintenanceTotalCost";
 
 export class Maintenance implements Entity {
   private constructor(
@@ -27,12 +31,26 @@ export class Maintenance implements Entity {
     createdAt: Date,
     updatedAt: Date
   ) {
+    const maintenanceDate = MaintenanceDate.from(date);
+
+    if (maintenanceDate instanceof DateBehindNowError) {
+      return maintenanceDate;
+    }
+
+    const maintenanceTotalCost = MaintenanceTotalCost.from(
+      totalCost.toString()
+    );
+
+    if (maintenanceTotalCost instanceof MaintenanceTotalCostLessThanZeroError) {
+      return maintenanceTotalCost;
+    }
+
     return new Maintenance(
       identifier,
-      date,
+      maintenanceDate.value,
       recommendation,
       status,
-      totalCost,
+      maintenanceTotalCost.value,
       motorcycleIdentifier,
       parts,
       createdAt,

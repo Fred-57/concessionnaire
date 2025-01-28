@@ -23,6 +23,7 @@ export class PostgresMaintenanceRepository implements MaintenanceRepository {
         continue;
       }
 
+      console.log(maintenanceEntity);
       maintenanceEntities.push(maintenanceEntity);
     }
     return maintenanceEntities;
@@ -109,7 +110,7 @@ export class PostgresMaintenanceRepository implements MaintenanceRepository {
       maintenanceParts.push({ part, quantity: maintenancePart.quantity });
     }
 
-    return Maintenance.from(
+    const maintenanceResult = Maintenance.from(
       maintenanceDatabase.id,
       maintenanceDatabase.date,
       maintenanceDatabase.recommendation,
@@ -120,6 +121,12 @@ export class PostgresMaintenanceRepository implements MaintenanceRepository {
       maintenanceDatabase.createdAt,
       maintenanceDatabase.updatedAt
     );
+
+    if (maintenanceResult instanceof Error) {
+      return null;
+    }
+
+    return maintenanceResult;
   }
 
   public async findByMotorcycleIdentifier(
