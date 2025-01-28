@@ -23,6 +23,7 @@ export class DriversService {
 
   constructor() {
     this.driverRepository = new PostgresDriverRepository();
+    this.companyRepopository = new PostgresCompanyRepository();
     this.listDriversByCompanyUsecase = new ListDriversByCompanyUsecase(
       this.driverRepository,
       this.companyRepopository,
@@ -73,7 +74,7 @@ export class DriversService {
     const existingDriver = await this.getDriverUsecase.execute(identifier);
 
     const updatedDriver = Driver.from(
-      identifier,
+      existingDriver.identifier,
       updateDriverDto.name,
       updateDriverDto.license,
       updateDriverDto.numberOfYearsOfExperience,
