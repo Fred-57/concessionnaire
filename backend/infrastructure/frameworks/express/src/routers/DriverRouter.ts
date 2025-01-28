@@ -46,13 +46,14 @@ DriverRouter.get("/:id", async (req, res) => {
 });
 
 DriverRouter.post("/", async (req, res) => {
-  const { name, license, numberOfYearsOfExperience } = req.body;
+  const { name, license, numberOfYearsOfExperience, companyIdentifier } =
+    req.body;
 
   const driver = Driver.create(
     name,
     license,
     numberOfYearsOfExperience,
-    req.companyIdentifier
+    companyIdentifier
   );
 
   if (driver instanceof DriverNameTooShortError) {
@@ -77,7 +78,8 @@ DriverRouter.post("/", async (req, res) => {
 
 DriverRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { name, license, numberOfYearsOfExperience } = req.body;
+  const { name, license, numberOfYearsOfExperience, companyIdentifier } =
+    req.body;
 
   try {
     const driver = await new GetDriverUsecase(
@@ -89,7 +91,7 @@ DriverRouter.put("/:id", async (req, res) => {
       name,
       license,
       numberOfYearsOfExperience,
-      req.companyIdentifier,
+      companyIdentifier,
       driver.createdAt,
       new Date()
     );
