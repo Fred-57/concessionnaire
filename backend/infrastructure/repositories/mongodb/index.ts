@@ -6,3 +6,4 @@ export { MongoGuaranteeRepository } from "./src/MongoGuaranteeRepository";
 export { MongoPartRepository } from "./src/MongoPartRepository";
 export { MongoMotorcycleRepository } from "./src/MongoMotorcycleRepository";
 export { MongoRentalRepository } from "./src/MongoRentalRepository";
+export { MongoMaintenanceRepository } from "./src/MongoMaintenanceRepository";

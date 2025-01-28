@@ -13,6 +13,7 @@ import { StatusCodes } from "http-status-codes";
 import { CostLessThanZeroError } from "@domain/errors/CostLessThanZeroError";
 import { InvalidQuantityError } from "@domain/errors/InvalidQuantityError";
 import { PostgresPartRepository } from "@infrastructure/repositories/postgres";
+import { MongoPartRepository } from "@infrastructure/repositories/mongodb";
 
 export const PartRouter = Router();
 
@@ -122,9 +123,7 @@ PartRouter.put("/:id", async (req, res) => {
     return;
   }
   try {
-    await new UpdatePartUsecase(new PostgresPartRepository()).execute(
-      updatedPart
-    );
+    await new UpdatePartUsecase(new MongoPartRepository()).execute(updatedPart);
   } catch (error) {
     if (error instanceof PartReferenceAlreadyExistsError) {
       res.sendStatus(StatusCodes.CONFLICT);
@@ -151,7 +150,7 @@ PartRouter.delete("/:id", async (req, res) => {
     return;
   }
 
-  await new DeletePartUsecase(new PostgresPartRepository()).execute(id);
+  await new DeletePartUsecase(new MongoPartRepository()).execute(id);
 
   res.sendStatus(StatusCodes.NO_CONTENT);
 });
