@@ -1,76 +1,98 @@
 import { CreateDriverUsecase } from "@application/usecases/driver/CreateDriverUsecase";
 import { DeleteDriverUsecase } from "@application/usecases/driver/DeleteDriverUsecase";
 import { GetDriverUsecase } from "@application/usecases/driver/GetDriverUsecase";
-import { ListDriversUsecase } from "@application/usecases/driver/ListDriversUsecase";
+import { ListDriversByCompanyUsecase } from "@application/usecases/driver/ListDriversByCompanyUsecase";
 import { UpdateDriverUsecase } from "@application/usecases/driver/UpdateDriverUsecase";
 import { Driver } from "@domain/entities/Driver";
-import { MongoDriverRepository } from "@infrastructure/repositories/mongodb";
+import {
+  PostgresCompanyRepository,
+  PostgresDriverRepository,
+} from "@infrastructure/repositories/postgres";
 import { Injectable } from "@nestjs/common";
 import { CreateDriverDto, UpdateDriverDto } from "./drivers.dto";
 
 @Injectable()
 export class DriversService {
-  private readonly driverRepository: MongoDriverRepository;
-  private readonly listDriversUsecase: ListDriversUsecase;
+  private readonly companyRepopository: PostgresCompanyRepository;
+  private readonly driverRepository: PostgresDriverRepository;
+  private readonly listDriversByCompanyUsecase: ListDriversByCompanyUsecase;
   private readonly getDriverUsecase: GetDriverUsecase;
   private readonly createDriverUsecase: CreateDriverUsecase;
   private readonly updateDriverUsecase: UpdateDriverUsecase;
   private readonly deleteDriverUsecase: DeleteDriverUsecase;
 
   constructor() {
-    this.driverRepository = new MongoDriverRepository();
-    this.listDriversUsecase = new ListDriversUsecase(this.driverRepository);
+    this.driverRepository = new PostgresDriverRepository();
+    this.listDriversByCompanyUsecase = new ListDriversByCompanyUsecase(
+      this.driverRepository,
+      this.companyRepopository,
+    );
     this.getDriverUsecase = new GetDriverUsecase(this.driverRepository);
-    this.createDriverUsecase = new CreateDriverUsecase(this.driverRepository);
-    this.updateDriverUsecase = new UpdateDriverUsecase(this.driverRepository);
-    this.deleteDriverUsecase = new DeleteDriverUsecase(this.driverRepository);
+    this.createDriverUsecase = new CreateDriverUsecase(
+      this.driverRepository,
+      this.companyRepopository,
+    );
+    this.updateDriverUsecase = new UpdateDriverUsecase(
+      this.driverRepository,
+      this.companyRepopository,
+    );
+    this.deleteDriverUsecase = new DeleteDriverUsecase(
+      this.driverRepository,
+      this.companyRepopository,
+    );
   }
 
-  async findAll() {
-    return await this.listDriversUsecase.execute();
+  async findAllByCompany(companyIdentifier: string) {
+    return await this.listDriversByCompanyUsecase.execute(companyIdentifier);
   }
 
   async findOne(identifier: string) {
     return await this.getDriverUsecase.execute(identifier);
   }
 
-  async create(createDriverDto: CreateDriverDto) {
+  async create(createDriverDto: CreateDriverDto, companyIdentifier: string) {
     const driver = Driver.create(
       createDriverDto.name,
       createDriverDto.license,
       createDriverDto.numberOfYearsOfExperience,
+      createDriverDto.companyIdentifier,
     );
-    await this.createDriverUsecase.execute(driver);
-  }
 
-  async update(identifier: string, updateDriverDto: UpdateDriverDto) {
-    const existingDriver = await this.getDriverUsecase.execute(identifier);
-
-    if (!existingDriver) {
-      return false;
+    if (driver instanceof Error) {
+      throw driver;
     }
 
+    await this.createDriverUsecase.execute(driver, companyIdentifier);
+  }
+
+  async update(
+    identifier: string,
+    updateDriverDto: UpdateDriverDto,
+    companyIdentifier: string,
+  ) {
+    const existingDriver = await this.getDriverUsecase.execute(identifier);
+
     const updatedDriver = Driver.from(
-      existingDriver.identifier,
+      identifier,
       updateDriverDto.name,
       updateDriverDto.license,
       updateDriverDto.numberOfYearsOfExperience,
+      updateDriverDto.companyIdentifier,
       existingDriver.createdAt,
-      existingDriver.updatedAt,
+      new Date(),
     );
 
-    await this.updateDriverUsecase.execute(updatedDriver);
-    return true;
-  }
-
-  async remove(identifier: string) {
-    const driver = await this.getDriverUsecase.execute(identifier);
-
-    if (!driver) {
-      return false;
+    if (updatedDriver instanceof Error) {
+      throw updatedDriver;
     }
 
-    await this.deleteDriverUsecase.execute(identifier);
-    return true;
+    await this.updateDriverUsecase.execute(updatedDriver, companyIdentifier);
+  }
+
+  async remove(identifier: string, companyIdentifier: string) {
+    return await this.deleteDriverUsecase.execute(
+      identifier,
+      companyIdentifier,
+    );
   }
 }

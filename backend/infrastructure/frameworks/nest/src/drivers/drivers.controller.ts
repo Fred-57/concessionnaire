@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   HttpStatus,
   NotFoundException,
@@ -14,68 +15,110 @@ import {
 } from "@nestjs/common";
 import { CreateDriverDto, UpdateDriverDto } from "./drivers.dto";
 import { DriversService } from "./drivers.service";
+import { CompanyNotFoundError } from "@domain/errors/company/CompanyNotFoundError";
+import { DriverNameAlreadyTakenError } from "@domain/errors/driver/DriverNameAlreadyTakenError";
+import { DriverNotFoundError } from "@domain/errors/driver/DriverNotFoundError";
 
 @Controller("drivers")
 export class DriversController {
   constructor(private readonly driversService: DriversService) {}
 
   @Get()
-  async findAll() {
-    return await this.driversService.findAll();
+  async findAllByCompany(
+    @Headers("Company-Identifier") companyIdentifier: string,
+  ) {
+    try {
+      return await this.driversService.findAllByCompany(companyIdentifier);
+    } catch (error) {
+      if (error instanceof CompanyNotFoundError) {
+        throw new NotFoundException("Company not found");
+      }
+    }
   }
 
   @Get(":id")
   async findOne(@Param("id") id: string) {
-    const driver = await this.driversService.findOne(id);
-
-    if (!driver) {
-      throw new NotFoundException("Driver not found");
+    try {
+      return await this.driversService.findOne(id);
+    } catch (error) {
+      if (error instanceof CompanyNotFoundError) {
+        throw new NotFoundException("Company not found");
+      }
+      if (error instanceof DriverNotFoundError) {
+        throw new NotFoundException("Driver not found");
+      }
+      if (error instanceof Error) {
+        throw new UnprocessableEntityException(error.name);
+      }
     }
-
-    return driver;
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createDriverDto: CreateDriverDto) {
+  async create(
+    @Headers("Company-Identifier") companyIdentifier: string,
+    @Body() createDriverDto: CreateDriverDto,
+  ) {
     try {
-      await this.driversService.create(createDriverDto);
+      await this.driversService.create(createDriverDto, companyIdentifier);
     } catch (error) {
       if (error instanceof DriverNameTooShortError) {
         throw new UnprocessableEntityException("Driver name is too short");
       }
-      throw error;
+      if (error instanceof CompanyNotFoundError) {
+        throw new NotFoundException("Company not found");
+      }
+      if (error instanceof DriverNameAlreadyTakenError) {
+        throw new UnprocessableEntityException("Driver name already taken");
+      }
+      if (error instanceof Error) {
+        throw new UnprocessableEntityException(error.name);
+      }
     }
   }
 
   @Put(":id")
   async update(
     @Param("id") id: string,
+    @Headers("Company-Identifier") companyIdentifier: string,
     @Body() updateDriverDto: UpdateDriverDto,
   ) {
     try {
-      const driver = await this.driversService.findOne(id);
-
-      if (!driver) {
-        throw new NotFoundException("Driver not found");
-      }
-
-      await this.driversService.update(id, updateDriverDto);
+      await this.driversService.update(id, updateDriverDto, companyIdentifier);
     } catch (error) {
       if (error instanceof DriverNameTooShortError) {
         throw new UnprocessableEntityException("Driver name is too short");
       }
-      throw error;
+      if (error instanceof CompanyNotFoundError) {
+        throw new NotFoundException("Company not found");
+      }
+      if (error instanceof DriverNameAlreadyTakenError) {
+        throw new UnprocessableEntityException("Driver name already taken");
+      }
+      if (error instanceof Error) {
+        throw new UnprocessableEntityException(error.name);
+      }
     }
   }
 
   @Delete(":id")
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param("id") id: string) {
-    const deleted = await this.driversService.remove(id);
-
-    if (!deleted) {
-      throw new NotFoundException("Driver not found");
+  async remove(
+    @Headers("Company-Identifier") companyIdentifier: string,
+    @Param("id") id: string,
+  ) {
+    try {
+      await this.driversService.remove(id, companyIdentifier);
+    } catch (error) {
+      if (error instanceof CompanyNotFoundError) {
+        throw new NotFoundException("Company not found");
+      }
+      if (error instanceof DriverNotFoundError) {
+        throw new NotFoundException("Driver not found");
+      }
+      if (error instanceof Error) {
+        throw new UnprocessableEntityException(error.name);
+      }
     }
   }
 }
