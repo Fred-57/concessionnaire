@@ -11,6 +11,7 @@ export class Rental implements Entity {
     public readonly type: RentalTypeEnum,
     public readonly driverIdentifier: string,
     public readonly motorcycleIdentifier: string,
+    public readonly breakdownIdentifiers: string[],
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -22,6 +23,7 @@ export class Rental implements Entity {
     type: RentalTypeEnum,
     driverIdentifier: string,
     motorcycleIdentifier: string,
+    breakdownIdentifiers: string[],
     createdAt: Date,
     updatedAt: Date
   ) {
@@ -38,6 +40,7 @@ export class Rental implements Entity {
       type,
       driverIdentifier,
       motorcycleIdentifier,
+      breakdownIdentifiers,
       createdAt,
       updatedAt
     );
@@ -61,6 +64,7 @@ export class Rental implements Entity {
       type,
       driverIdentifier,
       motorcycleIdentifier,
+      [],
       createdAt,
       updatedAt
     );

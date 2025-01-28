@@ -10,6 +10,7 @@ import { PartRouter } from "./routers/PartRouter";
 import { GuaranteeRouter } from "./routers/GuaranteeRouter";
 import { DriverRouter } from "./routers/DriverRouter";
 import { extractCompanyId } from "./middlewares/headerHandler";
+import { RentalRouter } from "./routers/RentalRouter";
 
 import { MaintenanceRouter } from "./routers/MaintenanceRouter";
 dotenv.config({ path: "../.env" });
@@ -29,6 +30,7 @@ app.use("/models", ModelRouter);
 app.use("/motorcycles", MotorcycleRouter);
 app.use("/parts", PartRouter);
 app.use("/guarantees", GuaranteeRouter);
+app.use("/rentals", RentalRouter);
 app.use("/maintenances", MaintenanceRouter);
 
 // Error handling

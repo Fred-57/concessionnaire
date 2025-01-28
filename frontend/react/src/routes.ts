@@ -26,6 +26,7 @@ import { DriverCreate, DriverUpdate } from "./pages/forms/Driver";
 import { ModelCreate, ModelUpdate } from "./pages/forms/Model";
 import { PartCreate, PartUpdate } from "./pages/forms/Part";
 import { GuaranteeCreate, GuaranteeUpdate } from "./pages/forms/Guarantee";
+import { RentalCreate, RentalUpdate } from "./pages/forms/Rental";
 import {
   MaintenanceCreate,
   MaintenanceUpdate,
@@ -133,6 +134,14 @@ export const hiddenRoutes = [
   {
     path: "/drivers/:identifier",
     element: DriverUpdate,
+  },
+  {
+    path: "/rentals/create",
+    element: RentalCreate,
+  },
+  {
+    path: "/rentals/:identifier",
+    element: RentalUpdate,
   },
   {
     path: "/parts/create",
