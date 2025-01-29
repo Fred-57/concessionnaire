@@ -9,6 +9,12 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon } from "lucide-react";
 
+const isAdmin =
+  localStorage.getItem("role") === "gestionnaire" ||
+  localStorage.getItem("is_admin") === "true"
+    ? true
+    : false;
+
 export type MotorcycleType = {
   identifier: string;
   mileage: {
@@ -74,9 +80,11 @@ export const columns = ({
               <DropdownMenuItem onClick={() => goToUpdate(motorcycle)}>
                 Modifier
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(motorcycle)}>
-                Supprimer
-              </DropdownMenuItem>
+              {isAdmin && (
+                <DropdownMenuItem onClick={() => handleDelete(motorcycle)}>
+                  Supprimer
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         );
