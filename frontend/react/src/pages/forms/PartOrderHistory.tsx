@@ -27,6 +27,8 @@ export function PartOrderHistoryForm() {
   const [quantity, setQuantity] = useState<number>(1);
   const [partIdentifier, setPartIdentifier] = useState<string>("");
 
+  const [cost, setCost] = useState<number>(0);
+
   useEffect(() => {
     const fetchParts = async () => {
       const parts = await ky.get("/express/parts").json();
@@ -34,6 +36,25 @@ export function PartOrderHistoryForm() {
     };
     fetchParts();
   }, []);
+
+  const handleQuantityChange = (event: SyntheticEvent<HTMLInputElement>) => {
+    const quantity = parseInt(event.currentTarget.value);
+    setQuantity(quantity);
+
+    const part = parts.find((p) => p.identifier === partIdentifier);
+    if (part) {
+      setCost(part.cost.value * quantity);
+    }
+  };
+
+  const handlePartIdentifierChange = (value: string) => {
+    setPartIdentifier(value);
+
+    const part = parts.find((p) => p.identifier === value);
+    if (part) {
+      setCost(part.cost.value * quantity);
+    }
+  };
 
   const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -87,7 +108,7 @@ export function PartOrderHistoryForm() {
             type="number"
             placeholder="Quantité"
             value={quantity}
-            onChange={(e) => setQuantity(parseInt(e.target.value))}
+            onChange={handleQuantityChange}
             required
             min={1}
           />
@@ -98,7 +119,7 @@ export function PartOrderHistoryForm() {
           <Label htmlFor="partIdentifier">Pièce</Label>
           <Select
             value={partIdentifier}
-            onValueChange={(value) => setPartIdentifier(value)}
+            onValueChange={handlePartIdentifierChange}
             required
           >
             <SelectTrigger>
@@ -112,6 +133,12 @@ export function PartOrderHistoryForm() {
               ))}
             </SelectContent>
           </Select>
+        </div>
+
+        {/* Cost */}
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Label htmlFor="cost">Coût</Label>
+          <Input id="cost" type="number" value={cost} disabled />
         </div>
 
         <div className="flex gap-3">
