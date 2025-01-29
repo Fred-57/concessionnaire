@@ -2,7 +2,7 @@ import { PartOrderHistory } from "../../../domain/entities/PartOrderHistory";
 import { PartOrderHistoryRepository } from "../../repositories/PartOrderHistoryRepository";
 import { Usecase } from "../Usecase";
 
-export class CreatePartOrderHistoryUsecase
+export class UpdatePartOrderHistoryUsecase
   implements Usecase<PartOrderHistory>
 {
   public constructor(
@@ -10,6 +10,6 @@ export class CreatePartOrderHistoryUsecase
   ) {}
 
   public async execute(partOrderHistory: PartOrderHistory) {
-    await this.partOrderHistoryRepository.save(partOrderHistory);
+    await this.partOrderHistoryRepository.update(partOrderHistory);
   }
 }
