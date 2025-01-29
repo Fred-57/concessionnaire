@@ -3,12 +3,13 @@ import { Entity } from "./Entity";
 import { randomUUID } from "crypto";
 import { PartOrderHistoryDate } from "@domain/values/partOrderHistory/PartOrderHistoryDate";
 import { PartOrderHistoryPartIdentifier } from "@domain/values/partOrderHistory/PartOrderHistoryPartIdentifier";
+import { PartOrderHistoryQuantity } from "@domain/values/partOrderHistory/PartOrderHistoryQuantity";
 
 export class PartOrderHistory implements Entity {
   private constructor(
     public readonly identifier: string,
     public readonly date: PartOrderHistoryDate,
-    public readonly quantity: number,
+    public readonly quantity: PartOrderHistoryQuantity,
     public readonly cost: number,
     public readonly status: PartOrderHistoryStatusEnum,
     public readonly partIdentifier: PartOrderHistoryPartIdentifier,
@@ -37,10 +38,15 @@ export class PartOrderHistory implements Entity {
       return partOrderHistoryPartIdentifier;
     }
 
+    const partOrderHistoryQuantity = PartOrderHistoryQuantity.from(quantity);
+    if (partOrderHistoryQuantity instanceof Error) {
+      return partOrderHistoryQuantity;
+    }
+
     return new PartOrderHistory(
       identifier,
       partOrderHistoryDate,
-      quantity,
+      partOrderHistoryQuantity,
       cost,
       status,
       partOrderHistoryPartIdentifier,
@@ -53,7 +59,7 @@ export class PartOrderHistory implements Entity {
     date: Date,
     partIdentifier: string,
     quantity: number,
-    cost: number
+    cost: number = 0
   ) {
     const identifier = randomUUID();
     const createdAt = new Date();

@@ -13,7 +13,7 @@ export class PostgresPartOrderHistoryRepository
       data: {
         id: partOrderHistory.identifier,
         date: partOrderHistory.date.value,
-        quantity: partOrderHistory.quantity,
+        quantity: partOrderHistory.quantity.value,
         cost: partOrderHistory.cost,
         status: partOrderHistory.status,
         partId: partOrderHistory.partIdentifier.value,
@@ -26,7 +26,7 @@ export class PostgresPartOrderHistoryRepository
       where: { id: partOrderHistory.identifier },
       data: {
         date: partOrderHistory.date.value,
-        quantity: partOrderHistory.quantity,
+        quantity: partOrderHistory.quantity.value,
         cost: partOrderHistory.cost,
         status: partOrderHistory.status,
       },

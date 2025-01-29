@@ -28,7 +28,7 @@ export class MongoPartOrderHistoryRepository
     }
 
     partOrderHistoryDatabase.date = partOrderHistory.date.value;
-    partOrderHistoryDatabase.quantity = partOrderHistory.quantity;
+    partOrderHistoryDatabase.quantity = partOrderHistory.quantity.value;
     partOrderHistoryDatabase.cost = partOrderHistory.cost;
     partOrderHistoryDatabase.status = partOrderHistory.status;
 

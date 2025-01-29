@@ -8,9 +8,11 @@ import { PostgresPartOrderHistoryRepository } from "@infrastructure/repositories
 import { PartOrderHistory } from "@domain/entities/PartOrderHistory";
 import { PartOrderHistoryStatusEnum } from "@domain/types/PartOrderHistoryStatusEnum";
 import { StatusCodes } from "http-status-codes";
+import { PostgresPartRepository } from "@infrastructure/repositories/postgres/src/PostgresPartRepository";
 
 export const PartOrderHistoryRouter = Router();
 export const repository = new PostgresPartOrderHistoryRepository();
+export const partRepository = new PostgresPartRepository();
 
 PartOrderHistoryRouter.get("/", async (req, res) => {
   try {
@@ -25,13 +27,12 @@ PartOrderHistoryRouter.get("/", async (req, res) => {
 });
 
 PartOrderHistoryRouter.post("/", async (req, res) => {
-  const { date, quantity, cost, partIdentifier } = req.body;
+  const { date, quantity, partIdentifier } = req.body;
 
   const partOrderHistory = PartOrderHistory.create(
     new Date(date),
     partIdentifier,
-    quantity,
-    cost
+    quantity
   );
 
   if (partOrderHistory instanceof Error) {
@@ -40,7 +41,7 @@ PartOrderHistoryRouter.post("/", async (req, res) => {
   }
 
   try {
-    await new CreatePartOrderHistoryUsecase(repository).execute(
+    await new CreatePartOrderHistoryUsecase(repository, partRepository).execute(
       partOrderHistory
     );
   } catch (error) {
@@ -103,7 +104,7 @@ PartOrderHistoryRouter.patch("/:id/status", async (req, res) => {
       return;
     }
 
-    await new UpdatePartOrderHistoryUsecase(repository).execute(
+    await new UpdatePartOrderHistoryUsecase(repository, partRepository).execute(
       updatedPartOrderHistory
     );
     res.sendStatus(StatusCodes.OK);
