@@ -1,15 +1,17 @@
 import { PartOrderHistoryStatusEnum } from "@domain/types/PartOrderHistoryStatusEnum";
 import { Entity } from "./Entity";
 import { randomUUID } from "crypto";
+import { PartOrderHistoryDate } from "@domain/values/partOrderHistory/PartOrderHistoryDate";
+import { PartOrderHistoryPartIdentifier } from "@domain/values/partOrderHistory/PartOrderHistoryPartIdentifier";
 
 export class PartOrderHistory implements Entity {
   private constructor(
     public readonly identifier: string,
-    public readonly date: Date,
+    public readonly date: PartOrderHistoryDate,
     public readonly quantity: number,
     public readonly cost: number,
     public readonly status: PartOrderHistoryStatusEnum,
-    public readonly partIdentifier: string,
+    public readonly partIdentifier: PartOrderHistoryPartIdentifier,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -24,13 +26,24 @@ export class PartOrderHistory implements Entity {
     createdAt: Date,
     updatedAt: Date
   ) {
+    const partOrderHistoryDate = PartOrderHistoryDate.from(date);
+    if (partOrderHistoryDate instanceof Error) {
+      return partOrderHistoryDate;
+    }
+
+    const partOrderHistoryPartIdentifier =
+      PartOrderHistoryPartIdentifier.from(partIdentifier);
+    if (partOrderHistoryPartIdentifier instanceof Error) {
+      return partOrderHistoryPartIdentifier;
+    }
+
     return new PartOrderHistory(
       identifier,
-      date,
+      partOrderHistoryDate,
       quantity,
       cost,
       status,
-      partIdentifier,
+      partOrderHistoryPartIdentifier,
       createdAt,
       updatedAt
     );
