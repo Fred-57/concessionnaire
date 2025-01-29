@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 
 export interface IPartOrderHistory {
+  identifier: string;
   date: Date;
   quantity: number;
   cost: number;
@@ -12,6 +13,7 @@ export interface IPartOrderHistory {
 
 export const PartOrderHistorySchema = new Schema<IPartOrderHistory>(
   {
+    identifier: { type: String, required: true },
     date: { type: Date, required: true },
     quantity: { type: Number, required: true },
     cost: { type: Number, required: true },
