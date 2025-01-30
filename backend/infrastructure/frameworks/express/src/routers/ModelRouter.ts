@@ -71,7 +71,8 @@ ModelRouter.put("/:id", async (req, res) => {
       repairMileage,
       repairDeadline,
       model.createdAt,
-      new Date()
+      new Date(),
+      model.rappelSendAt
     );
 
     if (updatedModel instanceof Error) {

@@ -10,7 +10,8 @@ export class Model implements Entity {
     public readonly repairMileage: number,
     public readonly repairDeadline: IntervalInMonths,
     public readonly createdAt: Date,
-    public readonly updatedAt: Date
+    public readonly updatedAt: Date,
+    public readonly rappelSendAt: Date | null
   ) {}
 
   public static from(
@@ -19,7 +20,8 @@ export class Model implements Entity {
     repairMileage: number,
     repairDeadline: number,
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
+    rappelSendAt: Date | null
   ) {
     const name = ModelName.from(nameValue);
 
@@ -39,7 +41,8 @@ export class Model implements Entity {
       repairMileage,
       deadlineInMonths,
       createdAt,
-      updatedAt
+      updatedAt,
+      rappelSendAt
     );
   }
 
@@ -58,7 +61,8 @@ export class Model implements Entity {
       repairMileage,
       repairDeadline,
       createdAt,
-      updatedAt
+      updatedAt,
+      null
     );
   }
 }

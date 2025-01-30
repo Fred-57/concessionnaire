@@ -19,7 +19,7 @@ export class MaintenanceCron {
     this.transporter = nodemailer.createTransport({
       host: "localhost", // Mailpit tourne en local
       port: 1025, // Port SMTP de Mailpit
-      secure: false, // Mailpit n’utilise pas SSL/TLS
+      secure: false, // Mailpit n'utilise pas SSL/TLS
     });
   }
 
@@ -44,8 +44,11 @@ export class MaintenanceCron {
         }
 
         if (
-          motorcycle.mileage.value >= model.repairMileage ||
-          model.repairDeadline.value < new Date().getTime()
+          (motorcycle.mileage.value >= model.repairMileage ||
+            model.repairDeadline.value < new Date().getTime()) &&
+          (model.rappelSendAt === null ||
+            model.rappelSendAt.getTime() <
+              new Date().getTime() - 30 * 24 * 60 * 60 * 1000)
         ) {
           const rentals = await this.rentalRepository.findAll();
 
@@ -63,15 +66,17 @@ export class MaintenanceCron {
                 from: "noreply@gmail.com",
                 to: driver.name.value + "@gmail.com",
                 subject: "Maintenance Requise",
-                text: `La moto ${motorcycle.identifier} nécessite une maintenance.`,
+                text: `La moto ${motorcycle.identifier} nécessite une maintenance. Vous pouvez la réserver sur notre site web.`,
               });
 
               await this.transporter.sendMail({
                 from: "noreply@gmail.com",
                 to: "admin@gmail.com",
                 subject: "Maintenance Requise",
-                text: `La moto ${motorcycle.identifier} nécessite une maintenance.`,
+                text: `La moto ${motorcycle.identifier} nécessite une maintenance. Le client ${driver.name.value} a été notifié.`,
               });
+
+              await this.modelRepository.updateRappelSendAt(model, new Date());
             }
           }
         }
