@@ -9,20 +9,13 @@ export class CreateBreakdownUsecase implements Usecase<Breakdown> {
   ) {}
 
   public async execute(breakdown: Breakdown) {
-    const breakdowns = await this.breakdownRepository.findAll();
+    const existingBreakdown =
+      await this.breakdownRepository.findByRentalIdentifierAndDate(
+        breakdown.rentalIdentifier,
+        breakdown.date.value
+      );
 
-    const hasBreakdown = breakdowns.some(
-      (b) => b.rentalIdentifier === breakdown.rentalIdentifier
-    );
-
-    const hasSimilarBreakdown = breakdowns.some(
-      (b) =>
-        b.date.getTime() === breakdown.date.getTime() &&
-        b.description === breakdown.description &&
-        breakdown.rentalIdentifier === breakdown.rentalIdentifier
-    );
-
-    if (hasBreakdown || hasSimilarBreakdown) {
+    if (existingBreakdown) {
       throw new BreakdownAlreadyExistsError();
     }
 
