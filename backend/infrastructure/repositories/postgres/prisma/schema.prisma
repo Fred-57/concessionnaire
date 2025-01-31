@@ -115,7 +115,7 @@ model Guarantee {
 }
 
 model Part {
-  id               String            @id @db.Uuid
+  id               String             @id @db.Uuid
   reference        String
   name             String
   cost             Float
@@ -123,8 +123,9 @@ model Part {
   guaranteeParts   GuaranteePart[]
   breakdownParts   BreakdownPart[]
   maintenanceParts MaintenancePart[]
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  partOrderHistory PartOrderHistory[]
 }
 
 model BreakdownPart {
@@ -162,6 +163,18 @@ model GuaranteePart {
   @@id([guaranteeId, partId])
 }
 
+model PartOrderHistory {
+  id        String                 @id @db.Uuid
+  date      DateTime               @default(now())
+  quantity  Int
+  cost      Float
+  status    StatusPartOrderHistory @default(PENDING)
+  part      Part                   @relation(fields: [partId], references: [id])
+  partId    String                 @db.Uuid
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+}
+
 enum CompanyType {
   CAR_DEALER
   PARTNER
@@ -187,5 +200,12 @@ enum MotorcycleStatus {
 enum StatusMaintenanceBreakdown {
   PENDING
   DONE
+  CANCELED
+}
+
+enum StatusPartOrderHistory {
+  PENDING
+  IN_TRANSIT
+  RECEIVED
   CANCELED
 }

@@ -4,13 +4,10 @@ import { Value } from "../Value";
 export class PartOrderHistoryQuantity implements Value<number> {
   private constructor(public readonly value: number) {}
 
-  public static from(quantity: string): PartOrderHistoryQuantity {
-    const normalizedValue = parseInt(quantity);
-
-    if (normalizedValue < 3) {
+  public static from(quantity: number): PartOrderHistoryQuantity {
+    if (quantity < 1) {
       throw new InvalidQuantityError();
     }
-
-    return new PartOrderHistoryQuantity(normalizedValue);
+    return new PartOrderHistoryQuantity(quantity);
   }
 }

@@ -32,6 +32,7 @@ import {
   MaintenanceUpdate,
 } from "./pages/forms/Maintenance";
 import { MaintenanceParts } from "./pages/MaintenanceParts";
+import { PartOrderHistoryCreate } from "./pages/forms/PartOrderHistory";
 
 export const routes = [
   {
@@ -170,5 +171,9 @@ export const hiddenRoutes = [
   {
     path: "/maintenances/:identifier/parts",
     element: MaintenanceParts,
+  },
+  {
+    path: "/partOrderHistory/create",
+    element: PartOrderHistoryCreate,
   },
 ];
