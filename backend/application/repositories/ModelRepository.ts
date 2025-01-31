@@ -6,7 +6,5 @@ export interface ModelRepository {
   findByIdentifier(identifier: string): Promise<Model | null>;
   findByName(name: string): Promise<Model | null>;
   findAll(): Promise<Model[]>;
-  // TODO: use model instead of identifier like the others
   delete(model: Model): Promise<void>;
-  updateRappelSendAt(model: Model, date: Date): Promise<void>;
 }

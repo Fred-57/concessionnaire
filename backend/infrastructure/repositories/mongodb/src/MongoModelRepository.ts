@@ -40,8 +40,7 @@ export class MongoModelRepository implements ModelRepository {
       modelDatabase.repairMileage,
       modelDatabase.repairDeadline,
       modelDatabase.createdAt,
-      modelDatabase.updatedAt,
-      modelDatabase.rappelSendAt
+      modelDatabase.updatedAt
     );
 
     if (model instanceof Error) {
@@ -66,8 +65,7 @@ export class MongoModelRepository implements ModelRepository {
       modelDatabase.repairMileage,
       modelDatabase.repairDeadline,
       modelDatabase.createdAt,
-      modelDatabase.updatedAt,
-      modelDatabase.rappelSendAt
+      modelDatabase.updatedAt
     );
 
     if (model instanceof Error) {
@@ -89,8 +87,7 @@ export class MongoModelRepository implements ModelRepository {
         modelDatabase.repairMileage,
         modelDatabase.repairDeadline,
         modelDatabase.createdAt,
-        modelDatabase.updatedAt,
-        modelDatabase.rappelSendAt
+        modelDatabase.updatedAt
       );
 
       if (model instanceof Error) {

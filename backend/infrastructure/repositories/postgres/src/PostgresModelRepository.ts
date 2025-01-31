@@ -12,7 +12,6 @@ export class PostgresModelRepository implements ModelRepository {
         name: model.name.value,
         repairMileage: model.repairMileage,
         repairDeadline: model.repairDeadline.value,
-        rappelSendAt: model.rappelSendAt,
       },
     });
   }
@@ -24,7 +23,6 @@ export class PostgresModelRepository implements ModelRepository {
         name: model.name.value,
         repairMileage: model.repairMileage,
         repairDeadline: model.repairDeadline.value,
-        rappelSendAt: model.rappelSendAt,
       },
     });
   }
@@ -46,8 +44,7 @@ export class PostgresModelRepository implements ModelRepository {
       modelDatabase.repairMileage,
       modelDatabase.repairDeadline,
       modelDatabase.createdAt,
-      modelDatabase.updatedAt,
-      modelDatabase.rappelSendAt
+      modelDatabase.updatedAt
     );
 
     if (model instanceof Error) {
@@ -74,8 +71,7 @@ export class PostgresModelRepository implements ModelRepository {
       modelDatabase.repairMileage,
       modelDatabase.repairDeadline,
       modelDatabase.createdAt,
-      modelDatabase.updatedAt,
-      modelDatabase.rappelSendAt
+      modelDatabase.updatedAt
     );
 
     if (model instanceof Error) {
@@ -97,8 +93,7 @@ export class PostgresModelRepository implements ModelRepository {
         modelDatabase.repairMileage,
         modelDatabase.repairDeadline,
         modelDatabase.createdAt,
-        modelDatabase.updatedAt,
-        modelDatabase.rappelSendAt
+        modelDatabase.updatedAt
       );
 
       if (model instanceof Error) {
@@ -114,13 +109,6 @@ export class PostgresModelRepository implements ModelRepository {
   public async delete(model: Model): Promise<void> {
     await prisma.model.delete({
       where: { id: model.identifier },
-    });
-  }
-
-  public async updateRappelSendAt(model: Model, date: Date): Promise<void> {
-    await prisma.model.update({
-      where: { id: model.identifier },
-      data: { rappelSendAt: date },
     });
   }
 }

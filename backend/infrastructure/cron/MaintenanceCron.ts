@@ -24,8 +24,8 @@ export class MaintenanceCron {
   }
 
   public start(): void {
-    // Exécution toutes les minutes
-    new CronJob("* * * * *", async () => {
+    // Exécution toutes les jours à 12h
+    new CronJob("0 12 * * *", async () => {
       await this.checkMaintenances();
     }).start();
   }
@@ -44,11 +44,8 @@ export class MaintenanceCron {
         }
 
         if (
-          (motorcycle.mileage.value >= model.repairMileage ||
-            model.repairDeadline.value < new Date().getTime()) &&
-          (model.rappelSendAt === null ||
-            model.rappelSendAt.getTime() <
-              new Date().getTime() - 30 * 24 * 60 * 60 * 1000)
+          motorcycle.mileage.value >= model.repairMileage ||
+          model.repairDeadline.value < new Date().getTime()
         ) {
           const rentals = await this.rentalRepository.findAll();
 
@@ -75,8 +72,6 @@ export class MaintenanceCron {
                 subject: "Maintenance Requise",
                 text: `La moto ${motorcycle.identifier} nécessite une maintenance. Le client ${driver.name.value} a été notifié.`,
               });
-
-              await this.modelRepository.updateRappelSendAt(model, new Date());
             }
           }
         }

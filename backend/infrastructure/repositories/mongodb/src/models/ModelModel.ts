@@ -9,7 +9,6 @@ export interface IModel {
   motorcycles: IMotorcycle[];
   createdAt: Date;
   updatedAt: Date;
-  rappelSendAt: Date;
 }
 
 export const ModelSchema: Schema = new Schema<IModel>(
@@ -19,7 +18,6 @@ export const ModelSchema: Schema = new Schema<IModel>(
     repairMileage: { type: Number, required: true },
     repairDeadline: { type: Number, required: true },
     motorcycles: [{ type: Schema.Types.ObjectId, ref: "Motorcycle" }],
-    rappelSendAt: { type: Date, required: false },
   },
   { timestamps: true }
 );
