@@ -13,6 +13,7 @@ import { extractCompanyId } from "./middlewares/headerHandler";
 import { RentalRouter } from "./routers/RentalRouter";
 
 import { MaintenanceRouter } from "./routers/MaintenanceRouter";
+import { BreakdownRouter } from "./routers/BreakdownRouter";
 dotenv.config({ path: "../.env" });
 
 const app: Express = express();
@@ -32,6 +33,7 @@ app.use("/parts", PartRouter);
 app.use("/guarantees", GuaranteeRouter);
 app.use("/rentals", RentalRouter);
 app.use("/maintenances", MaintenanceRouter);
+app.use("/breakdowns", BreakdownRouter);
 
 // Error handling
 app.use(errorHandler);
