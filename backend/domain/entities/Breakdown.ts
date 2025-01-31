@@ -5,6 +5,7 @@ import { BreakdownDate } from "@domain/values/breakdown/BreakdownDate";
 import { DateBehindNowError } from "@domain/errors/DateBehindNowError";
 import { BreakdownTotalCost } from "@domain/values/breakdown/BreakdownTotalCost";
 import { BreakdownTotalCostLessThanZeroError } from "@domain/errors/breakdown/BreakdownTotalCostLessThanZero";
+import { BreakdownPartType } from "@domain/types/BreakdownPartType";
 
 export class Breakdown implements Entity {
   private constructor(
@@ -12,8 +13,8 @@ export class Breakdown implements Entity {
     public readonly date: BreakdownDate,
     public readonly description: string,
     public readonly rentalIdentifier: string,
+    public readonly parts: BreakdownPartType[],
     public readonly status: StatusMaintenanceBreakdownEnum,
-    // TODO Parts
     public readonly totalCost: BreakdownTotalCost,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
@@ -24,12 +25,13 @@ export class Breakdown implements Entity {
     date: Date,
     description: string,
     rentalIdentifier: string,
+    parts: BreakdownPartType[],
     status: string,
     totalCost: number,
     createdAt: Date,
     updatedAt: Date
   ) {
-    const breakdownDate = BreakdownDate.from(date);
+    const breakdownDate = BreakdownDate.from(new Date(date));
     if (breakdownDate instanceof DateBehindNowError) {
       return breakdownDate;
     }
@@ -44,6 +46,7 @@ export class Breakdown implements Entity {
       breakdownDate,
       description,
       rentalIdentifier,
+      parts,
       status as StatusMaintenanceBreakdownEnum,
       breakdownTotalCost,
       createdAt,
@@ -55,8 +58,9 @@ export class Breakdown implements Entity {
     date: Date,
     description: string,
     rentalIdentifier: string,
+    parts: BreakdownPartType[],
     status: string,
-    totalCost: number
+    totalCost: number = 0
   ) {
     const identifier = randomUUID();
     const createdAt = new Date();
@@ -67,6 +71,7 @@ export class Breakdown implements Entity {
       date,
       description,
       rentalIdentifier,
+      parts,
       status,
       totalCost,
       createdAt,
