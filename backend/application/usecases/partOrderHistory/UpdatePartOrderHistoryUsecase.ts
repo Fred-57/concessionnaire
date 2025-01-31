@@ -1,10 +1,10 @@
 import { PartRepository } from "@application/repositories/PartRepository";
+import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
 import { PartOrderHistory } from "../../../domain/entities/PartOrderHistory";
 import { PartOrderHistoryRepository } from "../../repositories/PartOrderHistoryRepository";
 import { Usecase } from "../Usecase";
-import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
 
-export class CreatePartOrderHistoryUsecase
+export class UpdatePartOrderHistoryUsecase
   implements Usecase<PartOrderHistory>
 {
   public constructor(
@@ -23,17 +23,21 @@ export class CreatePartOrderHistoryUsecase
 
     const cost = partOrderHistory.quantity.value * part.cost.value;
 
-    const partOrderHistoryWithCost = PartOrderHistory.create(
+    const partOrderHistoryWithCost = PartOrderHistory.from(
+      partOrderHistory.identifier,
       partOrderHistory.date.value,
-      partOrderHistory.partIdentifier.value,
       partOrderHistory.quantity.value,
-      cost
+      cost,
+      partOrderHistory.status,
+      partOrderHistory.partIdentifier.value,
+      partOrderHistory.createdAt,
+      partOrderHistory.updatedAt
     );
 
     if (partOrderHistoryWithCost instanceof Error) {
       throw partOrderHistoryWithCost;
     }
 
-    await this.partOrderHistoryRepository.save(partOrderHistoryWithCost);
+    await this.partOrderHistoryRepository.update(partOrderHistoryWithCost);
   }
 }
