@@ -117,7 +117,6 @@ MotorcycleRouter.put("/:identifier", extractCompanyId, async (req, res) => {
       new PostgresMotorcycleRepository()
     ).execute(updatedMotorcycle);
   } catch (error) {
-    console.log(error);
     res.sendStatus(StatusCodes.BAD_REQUEST);
     return;
   }

@@ -77,7 +77,6 @@ export class MongoMotorcycleRepository implements MotorcycleRepository {
     const motorcyclesDatabase = await MotorcycleModel.find({
       companyIdentifier: companyIdentifier,
     });
-
     const motorcycles: Motorcycle[] = [];
 
     for (const motorcycleDatabase of motorcyclesDatabase) {
@@ -95,5 +94,27 @@ export class MongoMotorcycleRepository implements MotorcycleRepository {
 
   async delete(motorcycle: Motorcycle): Promise<void> {
     await MotorcycleModel.deleteOne({ identifier: motorcycle.identifier });
+  }
+
+  async findAll(): Promise<Motorcycle[]> {
+    const motorcyclesDatabase = await MotorcycleModel.find();
+
+    const motorcycles: Motorcycle[] = [];
+
+    for (const motorcycleDatabase of motorcyclesDatabase) {
+      const motorcycle = await this.findByIdentifier(motorcycleDatabase.id);
+
+      if (!motorcycle) {
+        continue;
+      }
+
+      if (motorcycle instanceof Error) {
+        throw motorcycle;
+      }
+
+      motorcycles.push(motorcycle);
+    }
+
+    return motorcycles;
   }
 }

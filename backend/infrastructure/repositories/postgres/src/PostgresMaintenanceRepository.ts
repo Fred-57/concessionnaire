@@ -23,7 +23,6 @@ export class PostgresMaintenanceRepository implements MaintenanceRepository {
         continue;
       }
 
-      console.log(maintenanceEntity);
       maintenanceEntities.push(maintenanceEntity);
     }
     return maintenanceEntities;

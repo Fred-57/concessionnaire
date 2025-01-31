@@ -106,9 +106,9 @@ export class PostgresModelRepository implements ModelRepository {
     return models;
   }
 
-  public async delete(id: string): Promise<void> {
+  public async delete(model: Model): Promise<void> {
     await prisma.model.delete({
-      where: { id },
+      where: { id: model.identifier },
     });
   }
 }

@@ -100,7 +100,14 @@ export class MongoModelRepository implements ModelRepository {
     return models;
   }
 
-  public async delete(identifier: string): Promise<void> {
-    await ModelModel.findOneAndDelete({ identifier }).exec();
+  public async delete(model: Model): Promise<void> {
+    await ModelModel.findOneAndDelete({ identifier: model.identifier }).exec();
+  }
+
+  public async updateRappelSendAt(model: Model, date: Date): Promise<void> {
+    await ModelModel.updateOne(
+      { identifier: model.identifier },
+      { rappelSendAt: date }
+    );
   }
 }
