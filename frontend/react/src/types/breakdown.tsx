@@ -10,6 +10,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreHorizontalIcon } from "lucide-react";
 
+const isAdmin =
+  localStorage.getItem("role") === "gestionnaire" ||
+  localStorage.getItem("is_admin") === "true"
+    ? true
+    : false;
+
 export type BreakdownPartType = {
   part: PartType;
   quantity: number;
@@ -84,7 +90,7 @@ export const columns = ({
 
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              {
+              {isAdmin && (
                 <>
                   <DropdownMenuItem onClick={() => goToUpdate(breakdown)}>
                     Modifier
@@ -93,7 +99,7 @@ export const columns = ({
                     Supprimer
                   </DropdownMenuItem>
                 </>
-              }
+              )}
               <DropdownMenuItem onClick={() => goToParts(breakdown)}>
                 Voir les pièces
               </DropdownMenuItem>
