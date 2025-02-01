@@ -102,8 +102,7 @@ BreakdownRouter.post("/", async (req, res) => {
 
 BreakdownRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { date, description, rentalIdentifier, parts, status, totalCost } =
-    req.body;
+  const { date, description, rentalIdentifier, parts, status } = req.body;
 
   try {
     const breakdown = await new GetBreakdownUsecase(
@@ -117,7 +116,6 @@ BreakdownRouter.put("/:id", async (req, res) => {
       rentalIdentifier,
       parts,
       status,
-      totalCost,
       breakdown.createdAt,
       new Date()
     );

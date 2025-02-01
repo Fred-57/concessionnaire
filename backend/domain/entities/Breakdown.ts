@@ -15,7 +15,7 @@ export class Breakdown implements Entity {
     public readonly rentalIdentifier: string,
     public readonly parts: BreakdownPartType[],
     public readonly status: StatusMaintenanceBreakdownEnum,
-    public readonly totalCost: BreakdownTotalCost,
+    public readonly totalCost: BreakdownTotalCost = BreakdownTotalCost.from(0),
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -27,7 +27,6 @@ export class Breakdown implements Entity {
     rentalIdentifier: string,
     parts: BreakdownPartType[],
     status: string,
-    totalCost: number,
     createdAt: Date,
     updatedAt: Date
   ) {
@@ -36,7 +35,12 @@ export class Breakdown implements Entity {
       return breakdownDate;
     }
 
-    const breakdownTotalCost = BreakdownTotalCost.from(totalCost);
+    const totalCost2 = parts.reduce(
+      (acc, part) => acc + part.part.cost.value * part.quantity,
+      0
+    );
+
+    const breakdownTotalCost = BreakdownTotalCost.from(totalCost2);
     if (breakdownTotalCost instanceof BreakdownTotalCostLessThanZeroError) {
       return breakdownTotalCost;
     }
@@ -59,8 +63,7 @@ export class Breakdown implements Entity {
     description: string,
     rentalIdentifier: string,
     parts: BreakdownPartType[],
-    status: string,
-    totalCost: number = 0
+    status: string
   ) {
     const identifier = randomUUID();
     const createdAt = new Date();
@@ -73,7 +76,6 @@ export class Breakdown implements Entity {
       rentalIdentifier,
       parts,
       status,
-      totalCost,
       createdAt,
       updatedAt
     );

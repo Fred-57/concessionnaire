@@ -96,7 +96,6 @@ export class PostgresBreakdownRepository implements BreakdownRepository {
       breakdownDatabase.rentalId,
       breakdownParts,
       breakdownDatabase.status,
-      breakdownDatabase.totalCost ? breakdownDatabase.totalCost : 0,
       breakdownDatabase.createdAt,
       breakdownDatabase.updatedAt
     );
@@ -145,7 +144,6 @@ export class PostgresBreakdownRepository implements BreakdownRepository {
         breakdownDatabase.rentalId,
         breakdownParts,
         breakdownDatabase.status,
-        breakdownDatabase.totalCost ? breakdownDatabase.totalCost : 0,
         breakdownDatabase.createdAt,
         breakdownDatabase.updatedAt
       );
@@ -201,7 +199,6 @@ export class PostgresBreakdownRepository implements BreakdownRepository {
       breakdownDatabase.rentalId,
       breakdownParts,
       breakdownDatabase.status,
-      breakdownDatabase.totalCost ? breakdownDatabase.totalCost : 0,
       breakdownDatabase.createdAt,
       breakdownDatabase.updatedAt
     );
@@ -249,7 +246,6 @@ export class PostgresBreakdownRepository implements BreakdownRepository {
         breakdownDatabase.rentalId,
         breakdownParts,
         breakdownDatabase.status,
-        breakdownDatabase.totalCost ? breakdownDatabase.totalCost : 0,
         breakdownDatabase.createdAt,
         breakdownDatabase.updatedAt
       );
