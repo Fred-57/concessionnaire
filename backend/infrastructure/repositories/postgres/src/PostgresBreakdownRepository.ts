@@ -22,11 +22,8 @@ export class PostgresBreakdownRepository implements BreakdownRepository {
         createdAt: breakdown.createdAt,
         updatedAt: breakdown.updatedAt,
         parts: {
-          connect: breakdown.parts.map((part) => ({
-            breakdownId_partId: {
-              breakdownId: breakdown.identifier,
-              partId: part.part.identifier,
-            },
+          create: breakdown.parts.map((part) => ({
+            partId: part.part.identifier,
             quantity: part.quantity,
           })),
         },

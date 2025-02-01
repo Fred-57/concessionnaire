@@ -69,7 +69,7 @@ BreakdownRouter.post("/", async (req, res) => {
     date,
     description,
     rentalIdentifier,
-    [],
+    parts,
     status
   );
 
