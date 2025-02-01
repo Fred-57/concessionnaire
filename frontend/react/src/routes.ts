@@ -34,6 +34,8 @@ import {
 import { MaintenanceParts } from "./pages/MaintenanceParts";
 import { BreakdownCreate, BreakdownUpdate } from "./pages/forms/Breakdown";
 import { PartOrderHistoryCreate } from "./pages/forms/PartOrderHistory";
+import path from "path";
+import { BreakdownParts } from "./pages/BreakdownParts";
 
 export const routes = [
   {
@@ -152,6 +154,10 @@ export const hiddenRoutes = [
   {
     path: "/breakdowns/:identifier",
     element: BreakdownUpdate,
+  },
+  {
+    path: "/breakdowns/:identifier/parts",
+    element: BreakdownParts,
   },
   {
     path: "/parts/create",

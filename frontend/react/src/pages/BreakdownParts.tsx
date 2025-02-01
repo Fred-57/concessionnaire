@@ -26,7 +26,7 @@ export function BreakdownParts() {
 
   return (
     <Layout
-      title={`Breakdown de ${breakdown?.rentalIdentifier} - ${breakdown?.date}`}
+      title={`Breakdown de ${breakdown?.rentalIdentifier} - ${breakdown?.date.value}`}
     >
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
         <div className="space-y-4">

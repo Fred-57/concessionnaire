@@ -24,11 +24,9 @@ export type DriverType = {
 export const columns = ({
   goToUpdate,
   handleDelete,
-  goToParts,
 }: {
   goToUpdate: (driver: DriverType) => void;
   handleDelete: (driver: DriverType) => Promise<void>;
-  goToParts: (driver: DriverType) => void;
 }): ColumnDef<DriverType>[] => {
   return [
     {
@@ -72,9 +70,6 @@ export const columns = ({
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDelete(driver)}>
                 Supprimer
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => goToParts(driver)}>
-                Voir les pièces
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
