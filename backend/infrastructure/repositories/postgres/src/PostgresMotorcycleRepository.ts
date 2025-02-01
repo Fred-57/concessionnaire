@@ -109,4 +109,30 @@ export class PostgresMotorcycleRepository implements MotorcycleRepository {
       where: { id: motorcycle.identifier },
     });
   }
+
+  async findAll(): Promise<Motorcycle[]> {
+    const motorcyclesDatabase = await prisma.motorcycle.findMany();
+
+    if (motorcyclesDatabase instanceof Error) {
+      throw motorcyclesDatabase;
+    }
+
+    const motorcycles: Motorcycle[] = [];
+
+    for (const motorcycleDatabase of motorcyclesDatabase) {
+      const motorcycle = await this.findByIdentifier(motorcycleDatabase.id);
+
+      if (!motorcycle) {
+        continue;
+      }
+
+      if (motorcycle instanceof Error) {
+        throw motorcycle;
+      }
+
+      motorcycles.push(motorcycle);
+    }
+
+    return motorcycles;
+  }
 }

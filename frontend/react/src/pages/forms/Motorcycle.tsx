@@ -22,6 +22,12 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const isAdmin =
+    localStorage.getItem("role") === "gestionnaire" ||
+    localStorage.getItem("is_admin") === "true"
+      ? true
+      : false;
+
   const companyIdentifier = localStorage.getItem("company_id");
   if (!companyIdentifier) {
     navigate("/home");
@@ -147,20 +153,22 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
     <Layout title="Motos">
       <form className="flex flex-col gap-5 items-start" onSubmit={handleSubmit}>
         {/* Identifier */}
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="identifier">
-            Numéro d'identification du véhicule (VIN)
-          </Label>
-          <Input
-            type="text"
-            id="identifier"
-            placeholder="Numéro d'identification du véhicule (VIN)"
-            value={formIdentifier}
-            onChange={(e) => setFormIdentifier(e.target.value)}
-            disabled={mode === "update"}
-            required
-          />
-        </div>
+        {isAdmin && (
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="identifier">
+              Numéro d'identification du véhicule (VIN)
+            </Label>
+            <Input
+              type="text"
+              id="identifier"
+              placeholder="Numéro d'identification du véhicule (VIN)"
+              value={formIdentifier}
+              onChange={(e) => setFormIdentifier(e.target.value)}
+              disabled={mode === "update"}
+              required
+            />
+          </div>
+        )}
 
         {/* Mileage */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -176,90 +184,98 @@ export function MotorcycleForm({ mode }: { mode: "create" | "update" }) {
         </div>
 
         {/* Date of commissioning */}
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="dateOfCommissioning">Date de mise en service</Label>
-          <Input
-            type="date"
-            id="dateOfCommissioning"
-            placeholder="Date de mise en service"
-            value={dateOfCommissioning}
-            onChange={(e) => setDateOfCommissioning(e.target.value)}
-            required
-          />
-        </div>
+        {isAdmin && (
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="dateOfCommissioning">Date de mise en service</Label>
+            <Input
+              type="date"
+              id="dateOfCommissioning"
+              placeholder="Date de mise en service"
+              value={dateOfCommissioning}
+              onChange={(e) => setDateOfCommissioning(e.target.value)}
+              required
+            />
+          </div>
+        )}
 
         {/* Status */}
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="status">Statut</Label>
-          <Select
-            value={status}
-            onValueChange={(value) => setStatus(value)}
-            required
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Statut" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="AVAILABLE">Disponible</SelectItem>
-              <SelectItem value="RENTED">Réservée</SelectItem>
-              <SelectItem value="IN_REPAIR">En réparation</SelectItem>
-              <SelectItem value="IN_MAINTENANCE">En maintenance</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {isAdmin && (
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="status">Statut</Label>
+            <Select
+              value={status}
+              onValueChange={(value) => setStatus(value)}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Statut" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="AVAILABLE">Disponible</SelectItem>
+                <SelectItem value="RENTED">Réservée</SelectItem>
+                <SelectItem value="IN_REPAIR">En réparation</SelectItem>
+                <SelectItem value="IN_MAINTENANCE">En maintenance</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         {/* Model */}
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="model">Modèle</Label>
-          <Select
-            value={modelIdentifier}
-            onValueChange={(value) => setModelIdentifier(value)}
-            required
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Modèle" />
-            </SelectTrigger>
-            <SelectContent>
-              {models.map((model) => (
-                <SelectItem key={model.identifier} value={model.identifier}>
-                  {model.name.value}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        {isAdmin && (
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="model">Modèle</Label>
+            <Select
+              value={modelIdentifier}
+              onValueChange={(value) => setModelIdentifier(value)}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Modèle" />
+              </SelectTrigger>
+              <SelectContent>
+                {models.map((model) => (
+                  <SelectItem key={model.identifier} value={model.identifier}>
+                    {model.name.value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         {/* Guarantee */}
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="guarantee">Garantie</Label>
-          <Select
-            value={guaranteeIdentifier}
-            onValueChange={(value) => setGuaranteeIdentifier(value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Garantie" />
-            </SelectTrigger>
-            <SelectContent>
-              {guarantees.map((guarantee) => (
-                <SelectItem
-                  key={guarantee.identifier}
-                  value={guarantee.identifier}
-                >
-                  {guarantee.name.value}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {/* Clear Guarantee Text */}
-          {guaranteeIdentifier && ( // Only show if a guarantee is selected
-            <span
-              className="mt-1 text-xs cursor-pointer hover:underline"
-              onClick={() => setGuaranteeIdentifier("")} // Clear the guarantee
+        {isAdmin && (
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="guarantee">Garantie</Label>
+            <Select
+              value={guaranteeIdentifier}
+              onValueChange={(value) => setGuaranteeIdentifier(value)}
             >
-              Supprimer garantie
-            </span>
-          )}
-        </div>
+              <SelectTrigger>
+                <SelectValue placeholder="Garantie" />
+              </SelectTrigger>
+              <SelectContent>
+                {guarantees.map((guarantee) => (
+                  <SelectItem
+                    key={guarantee.identifier}
+                    value={guarantee.identifier}
+                  >
+                    {guarantee.name.value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {/* Clear Guarantee Text */}
+            {guaranteeIdentifier && ( // Only show if a guarantee is selected
+              <span
+                className="mt-1 text-xs cursor-pointer hover:underline"
+                onClick={() => setGuaranteeIdentifier("")} // Clear the guarantee
+              >
+                Supprimer garantie
+              </span>
+            )}
+          </div>
+        )}
 
         <div className="flex gap-3">
           <Button

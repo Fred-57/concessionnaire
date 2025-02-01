@@ -13,6 +13,6 @@ export class DeleteModelUsecase implements Usecase<Model> {
       throw new ModelNotFoundError();
     }
 
-    await this.modelRepository.delete(identifier);
+    await this.modelRepository.delete(modelExists);
   }
 }

@@ -1,6 +1,5 @@
 import { MaintenanceTotalCostLessThanZeroError } from "@domain/errors/maintenance/MaintenanceTotalCostLessThanZeroError";
 import { Value } from "../Value";
-import { CostLessThanZeroError } from "@domain/errors/CostLessThanZeroError";
 
 export class MaintenanceTotalCost implements Value<Number> {
   private constructor(public readonly value: number) {}

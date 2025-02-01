@@ -5,5 +5,6 @@ export interface MotorcycleRepository {
   update(model: Motorcycle): Promise<void>;
   findByIdentifier(identifier: string): Promise<Motorcycle | null>;
   findManyByCompanyIdentifier(companyIdentifier: string): Promise<Motorcycle[]>;
+  findAll(): Promise<Motorcycle[]>;
   delete(model: Motorcycle): Promise<void>;
 }

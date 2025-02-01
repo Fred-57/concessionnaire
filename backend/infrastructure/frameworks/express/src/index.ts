@@ -14,6 +14,14 @@ import { RentalRouter } from "./routers/RentalRouter";
 
 import { MaintenanceRouter } from "./routers/MaintenanceRouter";
 import { BreakdownRouter } from "./routers/BreakdownRouter";
+import { PartOrderHistoryRouter } from "./routers/PartOrderHistoryRouter";
+import {
+  PostgresDriverRepository,
+  PostgresModelRepository,
+  PostgresMotorcycleRepository,
+  PostgresRentalRepository,
+} from "@infrastructure/repositories/postgres";
+import { MaintenanceCron } from "../../../cron/MaintenanceCron";
 dotenv.config({ path: "../.env" });
 
 const app: Express = express();
@@ -34,9 +42,19 @@ app.use("/guarantees", GuaranteeRouter);
 app.use("/rentals", RentalRouter);
 app.use("/maintenances", MaintenanceRouter);
 app.use("/breakdowns", BreakdownRouter);
+app.use("/partOrderHistory", PartOrderHistoryRouter);
 
 // Error handling
 app.use(errorHandler);
+
+// Start cron
+const maintenanceCron = new MaintenanceCron(
+  new PostgresMotorcycleRepository(),
+  new PostgresModelRepository(),
+  new PostgresDriverRepository(),
+  new PostgresRentalRepository()
+);
+maintenanceCron.start();
 
 // MongoDB
 connect(process.env.MONGODB_URI!);

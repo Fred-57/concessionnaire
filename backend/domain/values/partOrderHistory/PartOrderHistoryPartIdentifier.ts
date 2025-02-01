@@ -1,4 +1,4 @@
-import { InvalidPartOrderHistorypartIdentifierError } from "@domain/errors/partOrderHistory/InvalidPartOrderHistorypartIdentifierError";
+import { InvalidPartOrderHistoryPartIdentifierError } from "@domain/errors/partOrderHistory/InvalidPartOrderHistoryPartIdentifierError";
 import { Value } from "../Value";
 
 export class PartOrderHistoryPartIdentifier implements Value<string> {
@@ -8,7 +8,7 @@ export class PartOrderHistoryPartIdentifier implements Value<string> {
     const normalizedValue = partIdentifier.trim().toLowerCase();
 
     if (normalizedValue === "") {
-      throw new InvalidPartOrderHistorypartIdentifierError();
+      throw new InvalidPartOrderHistoryPartIdentifierError();
     }
 
     return new PartOrderHistoryPartIdentifier(normalizedValue);
