@@ -13,6 +13,7 @@ import { extractCompanyId } from "./middlewares/headerHandler";
 import { RentalRouter } from "./routers/RentalRouter";
 
 import { MaintenanceRouter } from "./routers/MaintenanceRouter";
+import { BreakdownRouter } from "./routers/BreakdownRouter";
 import { PartOrderHistoryRouter } from "./routers/PartOrderHistoryRouter";
 import {
   PostgresDriverRepository,
@@ -40,6 +41,7 @@ app.use("/parts", PartRouter);
 app.use("/guarantees", GuaranteeRouter);
 app.use("/rentals", RentalRouter);
 app.use("/maintenances", MaintenanceRouter);
+app.use("/breakdowns", BreakdownRouter);
 app.use("/partOrderHistory", PartOrderHistoryRouter);
 
 // Error handling

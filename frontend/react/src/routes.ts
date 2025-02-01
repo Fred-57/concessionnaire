@@ -32,7 +32,10 @@ import {
   MaintenanceUpdate,
 } from "./pages/forms/Maintenance";
 import { MaintenanceParts } from "./pages/MaintenanceParts";
+import { BreakdownCreate, BreakdownUpdate } from "./pages/forms/Breakdown";
 import { PartOrderHistoryCreate } from "./pages/forms/PartOrderHistory";
+import path from "path";
+import { BreakdownParts } from "./pages/BreakdownParts";
 
 export const routes = [
   {
@@ -143,6 +146,18 @@ export const hiddenRoutes = [
   {
     path: "/rentals/:identifier",
     element: RentalUpdate,
+  },
+  {
+    path: "/breakdowns/create",
+    element: BreakdownCreate,
+  },
+  {
+    path: "/breakdowns/:identifier",
+    element: BreakdownUpdate,
+  },
+  {
+    path: "/breakdowns/:identifier/parts",
+    element: BreakdownParts,
   },
   {
     path: "/parts/create",

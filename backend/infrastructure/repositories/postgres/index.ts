@@ -6,4 +6,5 @@ export { PostgresPartRepository } from "./src/PostgresPartRepository";
 export { PostgresMotorcycleRepository } from "./src/PostgresMotorcycleRepository";
 export { PostgresRentalRepository } from "./src/PostgresRentalRepository";
 export { PostgresMaintenanceRepository } from "./src/PostgresMaintenanceRepository";
+export { PostgresBreakdownRepository } from "./src/PostgresBreakdownRepository";
 export { PostgresPartOrderHistoryRepository } from "./src/PostgresPartOrderHistoryRepository";
