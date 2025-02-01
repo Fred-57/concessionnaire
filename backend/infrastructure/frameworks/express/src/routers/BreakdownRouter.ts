@@ -4,7 +4,8 @@ import {
   PostgresBreakdownRepository,
   PostgresPartRepository,
 } from "@infrastructure/repositories/postgres";
-import { ListBreakdownsByRental } from "@application/usecases/breakdown/ListBreakdownsByRental";
+import { ListBreakdownsUseCase } from "@application/usecases/breakdown/ListBreakdownsUsecase";
+import { ListBreakdownsByRentalUseCase } from "@application/usecases/breakdown/ListBreakdownsByRentalUsecase";
 import { PostgresRentalRepository } from "@infrastructure/repositories/postgres";
 import { RentalNotFoundError } from "@domain/errors/rental/RentalNotFoundError";
 import { BreakdownNotFoundError } from "@domain/errors/breakdown/BreakdownNotFoundError";
@@ -18,11 +19,19 @@ import { DeleteBreakdownUsecase } from "@application/usecases/breakdown/DeleteBr
 
 export const BreakdownRouter = Router();
 
+BreakdownRouter.get("/", async (req, res) => {
+  const breakdowns = await new ListBreakdownsUseCase(
+    new PostgresBreakdownRepository()
+  ).execute();
+
+  res.status(StatusCodes.OK).json(breakdowns);
+});
+
 BreakdownRouter.get("/rental/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const breakdowns = await new ListBreakdownsByRental(
+    const breakdowns = await new ListBreakdownsByRentalUseCase(
       new PostgresBreakdownRepository(),
       new PostgresRentalRepository()
     ).execute(id);

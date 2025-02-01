@@ -2,7 +2,7 @@ import { BreakdownRepository } from "@application/repositories/BreakdownReposito
 import { RentalRepository } from "@application/repositories/RentalRepository";
 import { RentalNotFoundError } from "@domain/errors/rental/RentalNotFoundError";
 
-export class ListBreakdownsByRental {
+export class ListBreakdownsByRentalUseCase {
   public constructor(
     private readonly breakdownRepository: BreakdownRepository,
     private readonly rentalRepository: RentalRepository
