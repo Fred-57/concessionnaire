@@ -61,14 +61,6 @@ export const columns = ({
       accessorKey: "totalCost.value",
       header: "Coût total (€)",
     },
-    // {
-    //   accessorKey: "rentalIdentifier",
-    //   header: "Identifiant de la location",
-    // },
-    // {
-    //   accessorKey: "createdAt",
-    //   header: "Date de création",
-    // },
     {
       accessorKey: "updatedAt",
       header: "Date de dernière mise à jour",

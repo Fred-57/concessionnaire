@@ -35,12 +35,12 @@ export class Breakdown implements Entity {
       return breakdownDate;
     }
 
-    const totalCost2 = parts.reduce(
+    const totalCost = parts.reduce(
       (acc, part) => acc + part.part.cost.value * part.quantity,
       0
     );
 
-    const breakdownTotalCost = BreakdownTotalCost.from(totalCost2);
+    const breakdownTotalCost = BreakdownTotalCost.from(totalCost);
     if (breakdownTotalCost instanceof BreakdownTotalCostLessThanZeroError) {
       return breakdownTotalCost;
     }
