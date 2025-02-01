@@ -37,19 +37,6 @@ export function BreakdownForm({ mode }: { mode: "create" | "update" }) {
   const [quantity, setQuantity] = useState<number>(1);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const apiClient = createApiClientHeader();
-      const breakdown = (await apiClient
-        .get(`/express/breakdowns/${identifier}`)
-        .json()) as BreakdownType;
-      setDate(breakdown.date.value);
-      setDescription(breakdown.description);
-      setRentalIdentifier(breakdown.rentalIdentifier);
-      setSelectedParts(breakdown.parts);
-      setStatus(breakdown.status);
-      setTotalCost(breakdown.totalCost);
-    };
-
     // Fetch parts
     const fetchParts = async () => {
       const parts = await ky.get("/express/parts").json();
@@ -82,11 +69,33 @@ export function BreakdownForm({ mode }: { mode: "create" | "update" }) {
 
     fetchParts();
     fetchRentals();
+  }, [navigate]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const apiClient = createApiClientHeader();
+      const breakdown = (await apiClient
+        .get(`/express/breakdowns/${identifier}`)
+        .json()) as BreakdownType;
+
+      const formattedDate = new Date(breakdown.date.value)
+        .toISOString()
+        .split("T")[0];
+      setDate(formattedDate);
+      setDescription(breakdown.description);
+      setRentalIdentifier(breakdown.rentalIdentifier);
+      setSelectedParts(breakdown.parts);
+      setStatus(breakdown.status);
+      setTotalCost(breakdown.totalCost);
+    };
 
     if (mode === "update") {
-      fetchData();
+      // setTimeout to avoid Select for RentalSelected component not updating
+      setTimeout(() => {
+        fetchData();
+      }, 100);
     }
-  }, [mode, identifier, navigate]);
+  }, [mode, identifier]);
 
   const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -101,7 +110,13 @@ export function BreakdownForm({ mode }: { mode: "create" | "update" }) {
       const apiClient = createApiClientHeader();
 
       const response = await apiClient[method](endpoint, {
-        json: { date, description, rentalIdentifier, parts, status, totalCost },
+        json: {
+          date,
+          description,
+          rentalIdentifier,
+          parts: selectedParts,
+          status,
+        },
       });
 
       if (response.ok) {
@@ -182,8 +197,8 @@ export function BreakdownForm({ mode }: { mode: "create" | "update" }) {
   return (
     <Layout title="Pannes">
       <form className="flex flex-col gap-5 items-start" onSubmit={handleSubmit}>
+        {/* Date */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          {/* Date */}
           <Label htmlFor="date">Date</Label>
           <Input
             type="date"
@@ -207,7 +222,7 @@ export function BreakdownForm({ mode }: { mode: "create" | "update" }) {
           </Select>
         </div>
 
-        {/* Number of years of experience */}
+        {/* Description */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="description">Description</Label>
           <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
@@ -227,6 +242,8 @@ export function BreakdownForm({ mode }: { mode: "create" | "update" }) {
             </div>
           </div>
         </div>
+
+        {/* Location */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="rentalIdentifier">Location</Label>
           <Select
@@ -236,15 +253,10 @@ export function BreakdownForm({ mode }: { mode: "create" | "update" }) {
             }}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Sélectionner une location">
-                {rentalIdentifier
-                  ? rentals.find(
-                      (rental) => rental.identifier === rentalIdentifier
-                    )?.identifier || rentalIdentifier
-                  : "Sélectionner une location"}
-              </SelectValue>
+              <SelectValue placeholder="Sélectionner une location"></SelectValue>
             </SelectTrigger>
             <SelectContent>
+              {/* Rentals */}
               {rentals.map((rental) => (
                 <SelectItem key={rental.identifier} value={rental.identifier}>
                   {rental.createdAt} - {rental.motorcycleIdentifier}
@@ -253,6 +265,8 @@ export function BreakdownForm({ mode }: { mode: "create" | "update" }) {
             </SelectContent>
           </Select>
         </div>
+
+        {/* Parts */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label>Pièces</Label>
           <div className="flex gap-2">
@@ -290,7 +304,7 @@ export function BreakdownForm({ mode }: { mode: "create" | "update" }) {
                 className="flex items-center gap-2 mt-1"
               >
                 <span>
-                  {part.part.identifier} (x{part.quantity})
+                  {part.part.name.value} (x{part.quantity})
                 </span>
                 <Button
                   type="button"
@@ -308,7 +322,7 @@ export function BreakdownForm({ mode }: { mode: "create" | "update" }) {
           <Button
             type="button"
             variant="outline"
-            onClick={() => navigate("/maintenances")}
+            onClick={() => navigate("/breakdowns")}
           >
             Retour
           </Button>

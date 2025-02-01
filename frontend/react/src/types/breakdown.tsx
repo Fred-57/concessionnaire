@@ -52,8 +52,8 @@ export const columns = ({
       header: "Statut",
     },
     {
-      accessorKey: "totalCost",
-      header: "Coût total",
+      accessorKey: "totalCost.value",
+      header: "Coût total (€)",
     },
     // {
     //   accessorKey: "rentalIdentifier",
