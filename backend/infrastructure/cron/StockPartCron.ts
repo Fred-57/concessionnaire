@@ -15,8 +15,8 @@ export class StockPartCron {
   }
 
   public start(): void {
-    // Exécution toutes les minutes
-    new CronJob("* * * * *", async () => {
+    // Exécution toutes les heures
+    new CronJob("0 * * * *", async () => {
       await this.checkStockParts();
     }).start();
   }
