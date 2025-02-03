@@ -19,9 +19,11 @@ import {
   PostgresDriverRepository,
   PostgresModelRepository,
   PostgresMotorcycleRepository,
+  PostgresPartRepository,
   PostgresRentalRepository,
 } from "@infrastructure/repositories/postgres";
 import { MaintenanceCron } from "../../../cron/MaintenanceCron";
+import { StockPartCron } from "../../../cron/StockPartCron";
 dotenv.config({ path: "../.env" });
 
 const app: Express = express();
@@ -55,6 +57,9 @@ const maintenanceCron = new MaintenanceCron(
   new PostgresRentalRepository()
 );
 maintenanceCron.start();
+
+const stockPartCron = new StockPartCron(new PostgresPartRepository());
+stockPartCron.start();
 
 // MongoDB
 connect(process.env.MONGODB_URI!);
