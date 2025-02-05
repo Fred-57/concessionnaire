@@ -2,10 +2,12 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import {
   PostgresBreakdownRepository,
+  PostgresDriverRepository,
   PostgresPartRepository,
 } from "@infrastructure/repositories/postgres";
 import { ListBreakdownsUseCase } from "@application/usecases/breakdown/ListBreakdownsUsecase";
 import { ListBreakdownsByRentalUseCase } from "@application/usecases/breakdown/ListBreakdownsByRentalUsecase";
+import { ListBreakdownsByDriverUsecase } from "@application/usecases/breakdown/ListBreakdownsByDriverUsecase";
 import { PostgresRentalRepository } from "@infrastructure/repositories/postgres";
 import { RentalNotFoundError } from "@domain/errors/rental/RentalNotFoundError";
 import { BreakdownNotFoundError } from "@domain/errors/breakdown/BreakdownNotFoundError";
@@ -16,6 +18,7 @@ import { BreakdownTotalCostLessThanZeroError } from "@domain/errors/breakdown/Br
 import { CreateBreakdownUsecase } from "@application/usecases/breakdown/CreateBreakdownUsecase";
 import { UpdateBreakdownUsecase } from "@application/usecases/breakdown/UpdateBreakdownUsecase";
 import { DeleteBreakdownUsecase } from "@application/usecases/breakdown/DeleteBreakdownUsecase";
+import { DriverNotFoundError } from "@domain/errors/driver/DriverNotFoundError";
 
 export const BreakdownRouter = Router();
 
@@ -40,6 +43,28 @@ BreakdownRouter.get("/rental/:id", async (req, res) => {
   } catch (error) {
     if (error instanceof RentalNotFoundError) {
       res.sendStatus(StatusCodes.NOT_FOUND);
+      return;
+    }
+  }
+});
+
+BreakdownRouter.get("/driver/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const breakdowns = await new ListBreakdownsByDriverUsecase(
+      new PostgresBreakdownRepository(),
+      new PostgresDriverRepository()
+    ).execute(id);
+
+    res.status(StatusCodes.OK).json(breakdowns);
+  } catch (error) {
+    if (error instanceof DriverNotFoundError) {
+      res.sendStatus(StatusCodes.NOT_FOUND);
+      return;
+    }
+    if (error instanceof Error) {
+      res.status(StatusCodes.CONFLICT).send(error.name);
       return;
     }
   }

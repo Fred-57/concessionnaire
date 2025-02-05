@@ -207,6 +207,63 @@ export class PostgresBreakdownRepository implements BreakdownRepository {
     return breakdown;
   }
 
+  async findAllByDriverIdentifier(
+    driverIdentifier: string
+  ): Promise<Breakdown[]> {
+    const breakdownsDatabase = await prisma.breakdown.findMany({
+      where: {
+        rental: {
+          driverId: driverIdentifier,
+        },
+      },
+      include: {
+        parts: {
+          include: { part: true },
+        },
+      },
+    });
+
+    const breakdowns: Breakdown[] = [];
+
+    for (const breakdownDatabase of breakdownsDatabase) {
+      const breakdownParts: BreakdownPartType[] = [];
+
+      for (const breakdownPart of breakdownDatabase.parts) {
+        const linkedPart = await new PostgresPartRepository().findByIdentifier(
+          breakdownPart.part.id
+        );
+
+        if (!linkedPart) {
+          return [];
+        }
+
+        breakdownParts.push({
+          part: linkedPart,
+          quantity: breakdownPart.quantity,
+        });
+      }
+
+      const breakdown = Breakdown.from(
+        breakdownDatabase.id,
+        breakdownDatabase.date,
+        breakdownDatabase.description,
+        breakdownDatabase.rentalId,
+        breakdownParts,
+        breakdownDatabase.status,
+        breakdownDatabase.createdAt,
+        breakdownDatabase.updatedAt
+      );
+
+      if (breakdown instanceof Error) {
+        return [];
+      }
+
+      breakdowns.push(breakdown);
+    }
+
+    return breakdowns;
+  }
+
   async findAll(): Promise<Breakdown[]> {
     const breakdownsDatabase = await prisma.breakdown.findMany({
       include: {

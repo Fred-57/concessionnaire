@@ -34,8 +34,8 @@ import {
 import { MaintenanceParts } from "./pages/MaintenanceParts";
 import { BreakdownCreate, BreakdownUpdate } from "./pages/forms/Breakdown";
 import { PartOrderHistoryCreate } from "./pages/forms/PartOrderHistory";
-import path from "path";
 import { BreakdownParts } from "./pages/BreakdownParts";
+import { DriverProfile } from "./pages/DriverProfile";
 
 export const routes = [
   {
@@ -134,6 +134,10 @@ export const hiddenRoutes = [
   {
     path: "/drivers/create",
     element: DriverCreate,
+  },
+  {
+    path: "/drivers/:identifier/profile",
+    element: DriverProfile,
   },
   {
     path: "/drivers/:identifier",

@@ -9,6 +9,7 @@ export interface BreakdownRepository {
     rentalIdentifier: string,
     date: Date
   ): Promise<Breakdown | null>;
+  findAllByDriverIdentifier(driverIdentifier: string): Promise<Breakdown[]>;
   findAll(): Promise<Breakdown[]>;
   delete(breakdown: Breakdown): Promise<void>;
 }

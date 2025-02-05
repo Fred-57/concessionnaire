@@ -22,9 +22,11 @@ export type DriverType = {
 };
 
 export const columns = ({
+  goToProfile,
   goToUpdate,
   handleDelete,
 }: {
+  goToProfile: (driver: DriverType) => void;
   goToUpdate: (driver: DriverType) => void;
   handleDelete: (driver: DriverType) => Promise<void>;
 }): ColumnDef<DriverType>[] => {
@@ -65,6 +67,9 @@ export const columns = ({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => goToProfile(driver)}>
+                Voir
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => goToUpdate(driver)}>
                 Modifier
               </DropdownMenuItem>

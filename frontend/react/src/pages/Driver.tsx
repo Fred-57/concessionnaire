@@ -29,6 +29,10 @@ export function Driver() {
     fetchDrivers();
   }, [toast]);
 
+  const goToProfile = (driver: DriverType) => {
+    navigate(`/drivers/${driver.identifier}/profile`);
+  };
+
   const goToUpdate = (driver: DriverType) => {
     navigate(`/drivers/${driver.identifier}`);
   };
@@ -63,7 +67,7 @@ export function Driver() {
       }}
     >
       <DataTable
-        columns={columns({ goToUpdate, handleDelete })}
+        columns={columns({ goToProfile, goToUpdate, handleDelete })}
         data={drivers}
       />
     </Layout>
