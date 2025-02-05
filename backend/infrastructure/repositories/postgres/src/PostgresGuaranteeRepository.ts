@@ -1,9 +1,6 @@
 import { GuaranteeRepository } from "@application/repositories/GuaranteeRepository";
 import { PrismaClient } from "@prisma/client";
 import { Guarantee } from "@domain/entities/Guarantee";
-import { Part } from "@domain/entities/Part";
-import { randomUUID } from "crypto";
-import { Motorcycle } from "@domain/entities/Motorcycle";
 
 const prisma = new PrismaClient();
 
@@ -163,14 +160,14 @@ export class PostgresGuaranteeRepository implements GuaranteeRepository {
     const guarantees: Guarantee[] = [];
 
     for (const guarantee of guaranteesDatabase) {
-      const parts = await prisma.part.findMany({
+      const parts = await prisma.guaranteePart.findMany({
         where: {
-          id: guarantee.id,
+          guaranteeId: guarantee.id,
         },
       });
 
       const partsValue = parts
-        .map((part) => part.id)
+        .map((part) => part.partId)
         .filter((part): part is string => typeof part === "string");
 
       const motorcycles = await prisma.motorcycle.findMany({

@@ -46,6 +46,9 @@ export class PostgresBreakdownRepository implements BreakdownRepository {
         totalCost: breakdown.totalCost.value,
         updatedAt: breakdown.updatedAt,
         parts: {
+          deleteMany: {
+            breakdownId: breakdown.identifier,
+          },
           create: breakdown.parts.map((part) => ({
             partId: part.part.identifier,
             quantity: part.quantity,
