@@ -4,7 +4,6 @@ import { Part } from "./Part";
 import { GuaranteeName } from "@domain/values/guarantee/GuaranteeName";
 import { GuaranteeDurationInMonths } from "@domain/values/guarantee/GuaranteeDurationInMonths";
 import { GuaranteeCoveredAmount } from "@domain/values/guarantee/GuaranteeCoveredAmount";
-import { Motorcycle } from "./Motorcycle";
 
 export class Guarantee implements Entity {
   private constructor(
