@@ -40,11 +40,11 @@ export const columns = ({
     },
     {
       accessorKey: "durationInMonths.value",
-      header: "Durée",
+      header: "Durée (mois)",
     },
     {
       accessorKey: "coveredAmount.value",
-      header: "Montant couvert",
+      header: "Montant couvert (€)",
     },
     {
       accessorKey: "partsIdentifiers.length",

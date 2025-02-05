@@ -1,11 +1,16 @@
 import { CronJob } from "cron";
 import {
   PostgresDriverRepository,
+  PostgresMaintenanceRepository,
   PostgresModelRepository,
   PostgresMotorcycleRepository,
+  PostgresPartRepository,
   PostgresRentalRepository,
 } from "../repositories/postgres";
 import nodemailer from "nodemailer";
+import { CreateMaintenanceUsecase } from "@application/usecases/maintenance/CreateMaintenanceUsecase";
+import { Maintenance } from "@domain/entities/Maintenance";
+import { MaintenanceAlreadyExistsError } from "@domain/errors/maintenance/MaintenanceAlreadyExistsError";
 
 export class MaintenanceCron {
   private readonly transporter: nodemailer.Transporter;
@@ -72,6 +77,37 @@ export class MaintenanceCron {
                 subject: "Maintenance Requise",
                 text: `La moto ${motorcycle.identifier} nécessite une maintenance. Le client ${driver.name.value} a été notifié.`,
               });
+
+              //Création de la maintenance automatiquement
+              try {
+                const maintenance = Maintenance.create(
+                  new Date(new Date().getTime() + 1000 * 60),
+                  "Maintenance requise",
+                  motorcycle.identifier,
+                  []
+                );
+
+                if (maintenance instanceof Error) {
+                  throw maintenance;
+                }
+
+                await new CreateMaintenanceUsecase(
+                  new PostgresMaintenanceRepository(),
+                  new PostgresPartRepository()
+                ).execute(maintenance);
+              } catch (error) {
+                if (error instanceof MaintenanceAlreadyExistsError) {
+                  console.log("La maintenance déjà créée.");
+                  return;
+                }
+                if (error instanceof Error) {
+                  console.log(
+                    "Erreur lors de la création de la maintenance.",
+                    error.name
+                  );
+                  return;
+                }
+              }
             }
           }
         }

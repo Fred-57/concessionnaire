@@ -34,20 +34,6 @@ export function MaintenanceForm({ mode }: { mode: "create" | "update" }) {
   const [quantity, setQuantity] = useState<number>(1);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const maintenance = (await ky
-        .get(`/express/maintenances/${identifier}`)
-        .json()) as MaintenanceType;
-
-      const formattedDate = new Date(maintenance.date)
-        .toISOString()
-        .split("T")[0];
-      setDate(formattedDate);
-      setRecommendation(maintenance.recommendation);
-      setMotorcycleIdentifier(maintenance.motorcycleIdentifier);
-      setSelectedParts(maintenance.parts);
-    };
-
     const fetchParts = async () => {
       const parts = await ky.get("/express/parts").json();
       const formattedParts = (parts as PartType[]).map((part) => ({
@@ -84,8 +70,27 @@ export function MaintenanceForm({ mode }: { mode: "create" | "update" }) {
 
     fetchParts();
     fetchMotorcycles();
+  }, [navigate]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const maintenance = (await ky
+        .get(`/express/maintenances/${identifier}`)
+        .json()) as MaintenanceType;
+
+      const formattedDate = new Date(maintenance.date)
+        .toISOString()
+        .split("T")[0];
+      setDate(formattedDate);
+      setRecommendation(maintenance.recommendation);
+      setMotorcycleIdentifier(maintenance.motorcycleIdentifier);
+      setSelectedParts(maintenance.parts);
+    };
     if (mode === "update") {
-      fetchData();
+      // setTimeout to avoid Select for MotorcycleSelected component not updating
+      setTimeout(() => {
+        fetchData();
+      }, 1000);
     }
   }, [mode, identifier]);
 
@@ -183,6 +188,7 @@ export function MaintenanceForm({ mode }: { mode: "create" | "update" }) {
   return (
     <Layout title="Entretiens">
       <form className="flex flex-col gap-5 items-start" onSubmit={handleSubmit}>
+        {/* Date */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="date">Date</Label>
           <Input
@@ -191,6 +197,8 @@ export function MaintenanceForm({ mode }: { mode: "create" | "update" }) {
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
+
+        {/* Recommendation */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="recommendation">Recommandation</Label>
           <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
@@ -216,6 +224,8 @@ export function MaintenanceForm({ mode }: { mode: "create" | "update" }) {
             </div>
           </div>
         </div>
+
+        {/* Motorcycle */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label htmlFor="motorcycleIdentifier">Moto</Label>
           <Select
@@ -225,14 +235,7 @@ export function MaintenanceForm({ mode }: { mode: "create" | "update" }) {
             }}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Sélectionner une moto">
-                {motorcycleIdentifier
-                  ? motorcycles.find(
-                      (motorcycle) =>
-                        motorcycle.identifier === motorcycleIdentifier
-                    )?.identifier || motorcycleIdentifier
-                  : "Sélectionner une moto"}
-              </SelectValue>
+              <SelectValue placeholder="Sélectionner une moto"></SelectValue>
             </SelectTrigger>
             <SelectContent>
               {motorcycles.map((motorcycle) => (
@@ -246,6 +249,8 @@ export function MaintenanceForm({ mode }: { mode: "create" | "update" }) {
             </SelectContent>
           </Select>
         </div>
+
+        {/* Parts */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label>Pièces</Label>
           <div className="flex gap-2">

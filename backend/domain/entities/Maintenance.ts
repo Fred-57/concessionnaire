@@ -31,12 +31,6 @@ export class Maintenance implements Entity {
     createdAt: Date,
     updatedAt: Date
   ) {
-    const maintenanceDate = MaintenanceDate.from(date);
-
-    if (maintenanceDate instanceof DateBehindNowError) {
-      return maintenanceDate;
-    }
-
     const maintenanceTotalCost = MaintenanceTotalCost.from(
       totalCost.toString()
     );
@@ -47,7 +41,7 @@ export class Maintenance implements Entity {
 
     return new Maintenance(
       identifier,
-      maintenanceDate.value,
+      date,
       recommendation,
       status,
       maintenanceTotalCost.value,
@@ -68,6 +62,12 @@ export class Maintenance implements Entity {
     const createdAt = new Date();
     const updatedAt = new Date();
 
+    const maintenanceDate = MaintenanceDate.from(date);
+
+    if (maintenanceDate instanceof DateBehindNowError) {
+      return maintenanceDate;
+    }
+
     const totalCost = parts.reduce(
       (acc, part) => acc + part.part.cost.value * part.quantity,
       0
@@ -75,7 +75,7 @@ export class Maintenance implements Entity {
 
     return Maintenance.from(
       identifier,
-      date,
+      maintenanceDate.value,
       recommendation,
       StatusMaintenanceBreakdownEnum.PENDING,
       totalCost,

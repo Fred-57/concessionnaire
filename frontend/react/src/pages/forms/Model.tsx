@@ -84,9 +84,10 @@ export function ModelForm({ mode }: { mode: "create" | "update" }) {
 
         {/* Repair Mileage */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="repairMileage">Kilométrage de réparation</Label>
+          <Label htmlFor="repairMileage">Kilométrage de réparation (Km)</Label>
           <Input
             id="repairMileage"
+            type="number"
             placeholder="Kilométrage de réparation"
             value={repairMileage}
             onChange={(e) => setRepairMileage(Number(e.target.value))}
@@ -95,9 +96,10 @@ export function ModelForm({ mode }: { mode: "create" | "update" }) {
 
         {/* Repair Deadline */}
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="repairDeadline">Délai de réparation</Label>
+          <Label htmlFor="repairDeadline">Délai de réparation (mois)</Label>
           <Input
             id="repairDeadline"
+            type="number"
             placeholder="Délai de réparation"
             value={repairDeadline}
             onChange={(e) => setRepairDeadline(Number(e.target.value))}

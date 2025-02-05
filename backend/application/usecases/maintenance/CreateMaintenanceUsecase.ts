@@ -6,6 +6,7 @@ import { MaintenanceTotalCostLessThanZeroError } from "@domain/errors/maintenanc
 import { Usecase } from "../Usecase";
 import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
 import { PartRepository } from "@application/repositories/PartRepository";
+import { MaintenanceAlreadyExistsError } from "@domain/errors/maintenance/MaintenanceAlreadyExistsError";
 
 export class CreateMaintenanceUsecase implements Usecase<Maintenance> {
   public constructor(
@@ -20,6 +21,15 @@ export class CreateMaintenanceUsecase implements Usecase<Maintenance> {
 
     if (maintenance.motorcycleIdentifier === null) {
       throw new MotorcycleNotFoundError();
+    }
+
+    const existingMaintenance =
+      await this.maintenanceRepository.findByMotorcycleIdentifier(
+        maintenance.motorcycleIdentifier
+      );
+
+    if (existingMaintenance.length > 0) {
+      throw new MaintenanceAlreadyExistsError();
     }
 
     for (const part of maintenance.parts) {

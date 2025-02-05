@@ -6,8 +6,9 @@ export class MaintenanceDate implements Value<Date> {
 
   public static from(date: Date): MaintenanceDate {
     const currentDate = new Date();
+    const dateFormatted = new Date(date);
 
-    if (date < currentDate) {
+    if (dateFormatted < currentDate) {
       throw new DateBehindNowError();
     }
 
