@@ -7,6 +7,7 @@ import { RentalsModule } from "./rental/rentals.module";
 import { MotorcyclesModule } from "./motorcycles/motorcycle.module";
 import { ModelsModule } from "./model/models.module";
 import { MaintenancesModule } from "./maintenances/maintenances.module";
+import { GuaranteesModule } from "./guarantee/guarantees.module";
 @Module({
   imports: [
     DriversModule,
@@ -17,6 +18,7 @@ import { MaintenancesModule } from "./maintenances/maintenances.module";
     MotorcyclesModule,
     ModelsModule,
     MaintenancesModule,
+    GuaranteesModule,
   ],
   controllers: [],
   providers: [],
