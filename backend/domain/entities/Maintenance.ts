@@ -96,6 +96,12 @@ export class Maintenance implements Entity {
     motorcycleIdentifier: string,
     parts: MaintenancePartType[]
   ) {
+    const maintenanceDate = MaintenanceDate.from(date);
+
+    if (maintenanceDate instanceof DateBehindNowError) {
+      return maintenanceDate;
+    }
+
     const totalCost = parts.reduce(
       (acc, part) => acc + part.part.cost.value * part.quantity,
       0
@@ -103,7 +109,7 @@ export class Maintenance implements Entity {
 
     return Maintenance.from(
       maintenance.identifier,
-      date,
+      maintenanceDate.value,
       recommendation,
       maintenance.status,
       totalCost,
