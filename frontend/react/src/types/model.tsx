@@ -36,11 +36,11 @@ export const columns = ({
     },
     {
       accessorKey: "repairMileage",
-      header: "Kilométrage de réparation",
+      header: "Kilométrage de réparation (Km)",
     },
     {
       accessorKey: "repairDeadline.value",
-      header: "Délai de réparation",
+      header: "Délai de réparation (mois)",
     },
     {
       accessorKey: "createdAt",
