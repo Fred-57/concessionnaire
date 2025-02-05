@@ -7,16 +7,18 @@ import { CreateBreakdownUsecase } from "@application/usecases/breakdown/CreateBr
 import { UpdateBreakdownUsecase } from "@application/usecases/breakdown/UpdateBreakdownUsecase";
 import { DeleteBreakdownUsecase } from "@application/usecases/breakdown/DeleteBreakdownUsecase";
 import { PostgresPartRepository } from "@infrastructure/repositories/postgres";
+import { CreateBreakdownDto, UpdateBreakdownDto } from "./breakdowns.dto";
 
 @Injectable()
 export class BreakdownService {
   private readonly breakdownRepository: PostgresBreakdownRepository;
+  private readonly partRepository: PostgresPartRepository;
   private readonly listBreakdownsUsecase: ListBreakdownsUseCase;
   private readonly getBreakdownUsecase: GetBreakdownUsecase;
   private readonly createBreakdownUsecase: CreateBreakdownUsecase;
   private readonly updateBreakdownUsecase: UpdateBreakdownUsecase;
   private readonly deleteBreakdownUsecase: DeleteBreakdownUsecase;
-  private readonly partRepository: PostgresPartRepository;
+
   constructor() {
     this.breakdownRepository = new PostgresBreakdownRepository();
     this.partRepository = new PostgresPartRepository();
@@ -47,16 +49,13 @@ export class BreakdownService {
     return this.getBreakdownUsecase.execute(identifier);
   }
 
-  async create(breakdown: Breakdown) {
-    const breakdownToCreate = Breakdown.from(
-      breakdown.identifier,
-      breakdown.date.value,
+  async create(breakdown: CreateBreakdownDto) {
+    const breakdownToCreate = Breakdown.create(
+      breakdown.date,
       breakdown.description,
       breakdown.rentalIdentifier,
       breakdown.parts,
       breakdown.status,
-      breakdown.createdAt,
-      breakdown.updatedAt,
     );
     if (breakdownToCreate instanceof Error) {
       throw breakdownToCreate;
@@ -64,19 +63,19 @@ export class BreakdownService {
     return this.createBreakdownUsecase.execute(breakdownToCreate);
   }
 
-  async update(identifier: string, breakdown: Breakdown) {
+  async update(identifier: string, breakdown: UpdateBreakdownDto) {
     const breakdownToUpdate =
       await this.breakdownRepository.findByIdentifier(identifier);
 
     const updatedBreakdown = Breakdown.from(
       breakdownToUpdate.identifier,
-      breakdown.date.value,
+      breakdown.date,
       breakdown.description,
       breakdown.rentalIdentifier,
       breakdown.parts,
       breakdown.status,
       breakdownToUpdate.createdAt,
-      breakdown.updatedAt,
+      new Date(),
     );
     if (updatedBreakdown instanceof Error) {
       throw updatedBreakdown;
