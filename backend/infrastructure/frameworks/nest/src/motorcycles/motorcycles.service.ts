@@ -7,10 +7,15 @@ import { UpdateMotorcycleUsecase } from "@application/usecases/motorcycle/Update
 import { DeleteMotorcycleUsecase } from "@application/usecases/motorcycle/DeleteMotorcycleUsecase";
 import { CreateMotorcycleDto, UpdateMotorcycleDto } from "./motorcycles.dto";
 import { Motorcycle } from "@domain/entities/Motorcycle";
-
+import {
+  PostgresGuaranteeRepository,
+  PostgresModelRepository,
+} from "@infrastructure/repositories/postgres";
 @Injectable()
 export class MotorcyclesService {
   private readonly motorcyclesRepository: PostgresMotorcycleRepository;
+  private readonly guaranteeRepository: PostgresGuaranteeRepository;
+  private readonly modelRepository: PostgresModelRepository;
   private readonly listMotorcyclesUsecase: ListMotorcyclesUsecase;
   private readonly getMotorcycleUsecase: GetMotorcycleUsecase;
   private readonly createMotorcycleUsecase: CreateMotorcycleUsecase;
@@ -48,7 +53,7 @@ export class MotorcyclesService {
     const motorcycle = Motorcycle.create(
       createMotorcycleDto.identifier,
       createMotorcycleDto.mileage,
-      createMotorcycleDto.dateOfCommissioning,
+      new Date(createMotorcycleDto.dateOfCommissioning),
       createMotorcycleDto.status,
       createMotorcycleDto.companyIdentifier,
       createMotorcycleDto.modelIdentifier,
@@ -74,7 +79,7 @@ export class MotorcyclesService {
     const updatedMotorcycle = Motorcycle.from(
       motorcycle.identifier,
       updateMotorcycleDto.mileage,
-      updateMotorcycleDto.dateOfCommissioning,
+      new Date(updateMotorcycleDto.dateOfCommissioning),
       updateMotorcycleDto.status,
       motorcycle.companyIdentifier,
       updateMotorcycleDto.modelIdentifier,

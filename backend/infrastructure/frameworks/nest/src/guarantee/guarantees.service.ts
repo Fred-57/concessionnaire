@@ -8,10 +8,12 @@ import { DeleteGuaranteeUsecase } from "@application/usecases/guarantee/DeleteGu
 import { PostgresPartRepository } from "@infrastructure/repositories/postgres/src/PostgresPartRepository";
 import { Guarantee } from "@domain/entities/Guarantee";
 import { CreateGuaranteeDto, UpdateGuaranteeDto } from "./guarentees.dto";
+import { PostgresMotorcycleRepository } from "@infrastructure/repositories/postgres/src/PostgresMotorcycleRepository";
 @Injectable()
 export class GuaranteesService {
   private readonly guaranteesRepository: PostgresGuaranteeRepository;
   private readonly partsRepository: PostgresPartRepository;
+  private readonly motorcyclesRepository: PostgresMotorcycleRepository;
   private readonly listGuaranteesUsecase: ListGuaranteesUsecase;
   private readonly getGuaranteeUsecase: GetGuaranteeUsecase;
   private readonly createGuaranteeUsecase: CreateGuaranteeUsecase;
@@ -80,7 +82,6 @@ export class GuaranteesService {
     if (updatedGuarantee instanceof Error) {
       throw updatedGuarantee;
     }
-    console.log(updatedGuarantee);
     return this.updateGuaranteeUsecase.execute(updatedGuarantee);
   }
 

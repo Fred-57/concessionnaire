@@ -35,7 +35,7 @@ export class RentalsService {
   async create(createRentalDto: CreateRentalDto) {
     const rental = Rental.create(
       createRentalDto.startDate,
-      createRentalDto.durationInMonths.value,
+      createRentalDto.durationInMonths,
       createRentalDto.type,
       createRentalDto.driverIdentifier,
       createRentalDto.motorcycleIdentifier,
@@ -54,12 +54,12 @@ export class RentalsService {
 
     const updatedRental = Rental.from(
       rental.identifier,
-      updateRentalDto.startDate,
-      updateRentalDto.durationInMonths.value,
+      new Date(updateRentalDto.startDate),
+      updateRentalDto.durationInMonths,
       updateRentalDto.type,
       updateRentalDto.driverIdentifier,
       updateRentalDto.motorcycleIdentifier,
-      updateRentalDto.breakdownIdentifiers,
+      rental.breakdownIdentifiers,
       rental.createdAt,
       new Date(),
     );

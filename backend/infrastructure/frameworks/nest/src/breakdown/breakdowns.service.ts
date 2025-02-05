@@ -77,7 +77,6 @@ export class BreakdownService {
       breakdownToUpdate.createdAt,
       new Date(),
     );
-    console.log(updatedBreakdown);
     if (updatedBreakdown instanceof Error) {
       throw updatedBreakdown;
     }

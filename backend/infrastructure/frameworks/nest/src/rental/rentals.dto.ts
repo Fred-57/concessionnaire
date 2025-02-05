@@ -1,9 +1,8 @@
 import { RentalTypeEnum } from "@domain/types/RentalTypeEnum";
-import { IntervalInMonths } from "@domain/values/IntervalInMonths";
 export class CreateRentalDto {
   identifier: string;
   startDate: Date;
-  durationInMonths: IntervalInMonths;
+  durationInMonths: number;
   type: RentalTypeEnum;
   driverIdentifier: string;
   motorcycleIdentifier: string;
