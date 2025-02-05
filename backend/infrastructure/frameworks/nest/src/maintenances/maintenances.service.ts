@@ -37,6 +37,9 @@ export class MaintenancesService {
       this.maintenancesRepository,
       this.partsRepository,
     );
+    this.deleteMaintenanceUsecase = new DeleteMaintenanceUsecase(
+      this.maintenancesRepository,
+    );
   }
 
   async findAll() {
