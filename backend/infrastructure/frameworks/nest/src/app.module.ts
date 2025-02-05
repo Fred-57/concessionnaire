@@ -4,6 +4,8 @@ import { CompaniesModule } from "./company/companies.module";
 import { PartsModule } from "./part/parts.module";
 import { BreakdownModule } from "./breakdown/breakdowns.module";
 import { RentalsModule } from "./rental/rentals.module";
+import { MotorcyclesModule } from "./motorcycles/motorcycle.module";
+import { ModelsModule } from "./model/models.module";
 @Module({
   imports: [
     DriversModule,
@@ -11,6 +13,8 @@ import { RentalsModule } from "./rental/rentals.module";
     PartsModule,
     BreakdownModule,
     RentalsModule,
+    MotorcyclesModule,
+    ModelsModule,
   ],
   controllers: [],
   providers: [],
