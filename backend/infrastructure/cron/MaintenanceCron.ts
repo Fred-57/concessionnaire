@@ -81,7 +81,7 @@ export class MaintenanceCron {
               //Création de la maintenance automatiquement
               try {
                 const maintenance = Maintenance.create(
-                  new Date(new Date().getTime() + 1000 * 60),
+                  new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000), // Pour dans 2 jours
                   "Maintenance requise",
                   motorcycle.identifier,
                   []
