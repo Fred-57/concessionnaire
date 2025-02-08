@@ -3,7 +3,7 @@ import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
 import { PartOrderHistory } from "../../../domain/entities/PartOrderHistory";
 import { PartOrderHistoryRepository } from "../../repositories/PartOrderHistoryRepository";
 import { Usecase } from "../Usecase";
-
+import { Part } from "@domain/entities/Part";
 export class UpdatePartOrderHistoryUsecase
   implements Usecase<PartOrderHistory>
 {
@@ -38,6 +38,13 @@ export class UpdatePartOrderHistoryUsecase
       throw partOrderHistoryWithCost;
     }
 
+    const updatedPart = Part.update(part, partOrderHistory.quantity.value);
+
+    if (updatedPart instanceof Error) {
+      throw updatedPart;
+    }
+
     await this.partOrderHistoryRepository.update(partOrderHistoryWithCost);
+    await this.partRepository.update(updatedPart);
   }
 }

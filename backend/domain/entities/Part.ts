@@ -95,4 +95,23 @@ export class Part implements Entity {
       updatedAt
     );
   }
+
+  public static update(part: Part, quantity: number) {
+    const newStock = part.stock.value + quantity;
+    console.log(newStock);
+    const stock = PartStock.from(newStock.toString());
+    if (stock instanceof Error) {
+      return stock;
+    }
+
+    return new Part(
+      part.identifier,
+      part.reference,
+      part.name,
+      part.cost,
+      stock,
+      part.createdAt,
+      new Date()
+    );
+  }
 }
