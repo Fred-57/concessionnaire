@@ -12,4 +12,8 @@ export interface BreakdownRepository {
   findAllByDriverIdentifier(driverIdentifier: string): Promise<Breakdown[]>;
   findAll(): Promise<Breakdown[]>;
   delete(breakdown: Breakdown): Promise<void>;
+  findPartQuantityByBreakdownIdentifierAndPartIdentifier(
+    breakdownIdentifier: string,
+    partIdentifier: string
+  ): Promise<number | null>;
 }

@@ -380,4 +380,27 @@ export class MongoMaintenanceRepository implements MaintenanceRepository {
 
     return maintenances;
   }
+
+  async findPartQuantityByMaintenanceIdentifierAndPartIdentifier(
+    maintenanceIdentifier: string,
+    partIdentifier: string
+  ): Promise<number> {
+    const maintenanceDatabase = await MaintenanceModel.findOne({
+      identifier: maintenanceIdentifier,
+    });
+
+    if (!maintenanceDatabase) {
+      return 0;
+    }
+
+    const maintenancePart = maintenanceDatabase.parts.find(
+      (p) => p.part.identifier === partIdentifier
+    );
+
+    if (!maintenancePart) {
+      return 0;
+    }
+
+    return maintenancePart.quantity;
+  }
 }

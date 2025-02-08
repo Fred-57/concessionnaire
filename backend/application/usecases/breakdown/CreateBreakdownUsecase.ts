@@ -4,6 +4,7 @@ import { BreakdownAlreadyExistsError } from "@domain/errors/breakdown/BreakdownA
 import { Usecase } from "../Usecase";
 import { PartRepository } from "@application/repositories/PartRepository";
 import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
+import { Part } from "@domain/entities/Part";
 
 export class CreateBreakdownUsecase implements Usecase<Breakdown> {
   public constructor(
@@ -30,6 +31,20 @@ export class CreateBreakdownUsecase implements Usecase<Breakdown> {
       if (!partExists) {
         throw new PartNotFoundError();
       }
+
+      const quantity = partExists.stock.value - part.quantity;
+      const updatedPart = Part.update(
+        partExists,
+        quantity,
+        part.part.reference.value,
+        part.part.name.value,
+        part.part.cost.value
+      );
+
+      if (updatedPart instanceof Error) {
+        throw updatedPart;
+      }
+      await this.partsRepository.update(updatedPart);
     }
 
     await this.breakdownRepository.save(breakdown);

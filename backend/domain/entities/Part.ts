@@ -95,4 +95,42 @@ export class Part implements Entity {
       updatedAt
     );
   }
+
+  public static update(
+    part: Part,
+    stock: number,
+    reference: string,
+    name: string,
+    cost: number
+  ) {
+    const newStock = PartStock.from(stock.toString());
+    if (newStock instanceof Error) {
+      return newStock;
+    }
+
+    const newReference = PartReference.from(reference);
+    if (newReference instanceof Error) {
+      return newReference;
+    }
+
+    const newName = PartName.from(name);
+    if (newName instanceof Error) {
+      return newName;
+    }
+
+    const newCost = PartCost.from(cost.toString());
+    if (newCost instanceof Error) {
+      return newCost;
+    }
+
+    return new Part(
+      part.identifier,
+      newReference,
+      newName,
+      newCost,
+      newStock,
+      part.createdAt,
+      new Date()
+    );
+  }
 }

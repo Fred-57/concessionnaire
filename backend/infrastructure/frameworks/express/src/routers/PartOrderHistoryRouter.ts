@@ -21,7 +21,6 @@ PartOrderHistoryRouter.get("/", async (req, res) => {
     ).execute();
     res.status(StatusCodes.OK).json(partOrderHistory);
   } catch (error) {
-    console.error(error);
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
   }
 });
@@ -109,7 +108,6 @@ PartOrderHistoryRouter.patch("/:id/status", async (req, res) => {
     );
     res.sendStatus(StatusCodes.OK);
   } catch (error) {
-    console.error(error);
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
   }
 });

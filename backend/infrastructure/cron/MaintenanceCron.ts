@@ -97,14 +97,9 @@ export class MaintenanceCron {
                 ).execute(maintenance);
               } catch (error) {
                 if (error instanceof MaintenanceAlreadyExistsError) {
-                  console.log("La maintenance déjà créée.");
                   return;
                 }
                 if (error instanceof Error) {
-                  console.log(
-                    "Erreur lors de la création de la maintenance.",
-                    error.name
-                  );
                   return;
                 }
               }

@@ -326,4 +326,19 @@ export class PostgresBreakdownRepository implements BreakdownRepository {
       where: { id: breakdown.identifier },
     });
   }
+
+  async findPartQuantityByBreakdownIdentifierAndPartIdentifier(
+    breakdownIdentifier: string,
+    partIdentifier: string
+  ): Promise<number | null> {
+    const breakdownPart = await prisma.breakdownPart.findFirst({
+      where: { breakdownId: breakdownIdentifier, partId: partIdentifier },
+    });
+
+    if (!breakdownPart) {
+      return null;
+    }
+
+    return breakdownPart.quantity;
+  }
 }
