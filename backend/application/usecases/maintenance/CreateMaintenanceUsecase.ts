@@ -24,11 +24,12 @@ export class CreateMaintenanceUsecase implements Usecase<Maintenance> {
     }
 
     const existingMaintenance =
-      await this.maintenanceRepository.findByMotorcycleIdentifier(
-        maintenance.motorcycleIdentifier
+      await this.maintenanceRepository.findByMotorcycleAndDate(
+        maintenance.motorcycleIdentifier,
+        maintenance.date
       );
 
-    if (existingMaintenance.length > 0) {
+    if (existingMaintenance) {
       throw new MaintenanceAlreadyExistsError();
     }
 

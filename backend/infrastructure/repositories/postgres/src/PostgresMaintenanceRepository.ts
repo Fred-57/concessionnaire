@@ -153,4 +153,53 @@ export class PostgresMaintenanceRepository implements MaintenanceRepository {
 
     return maintenanceEntities;
   }
+
+  public async findByMotorcycleAndDate(
+    identifier: string,
+    date: Date
+  ): Promise<Maintenance | null> {
+    const maintenanceDatabase = await prisma.maintenance.findFirst({
+      where: { motorcycleId: identifier, date: date },
+    });
+
+    if (!maintenanceDatabase) {
+      return null;
+    }
+
+    const maintenancePartsDatabase = await prisma.maintenancePart.findMany({
+      where: { maintenanceId: maintenanceDatabase.id },
+    });
+
+    const maintenanceParts: MaintenancePartType[] = [];
+
+    for (const maintenancePart of maintenancePartsDatabase) {
+      const part = await new PostgresPartRepository().findByIdentifier(
+        maintenancePart.partId
+      );
+
+      if (part === null) {
+        continue;
+      }
+
+      maintenanceParts.push({ part, quantity: maintenancePart.quantity });
+    }
+
+    const maintenanceResult = Maintenance.from(
+      maintenanceDatabase.id,
+      maintenanceDatabase.date,
+      maintenanceDatabase.recommendation,
+      maintenanceDatabase.status as StatusMaintenanceBreakdownEnum,
+      maintenanceDatabase.totalCost ?? 0,
+      maintenanceDatabase.motorcycleId,
+      maintenanceParts,
+      maintenanceDatabase.createdAt,
+      maintenanceDatabase.updatedAt
+    );
+
+    if (maintenanceResult instanceof Error) {
+      return null;
+    }
+
+    return maintenanceResult;
+  }
 }

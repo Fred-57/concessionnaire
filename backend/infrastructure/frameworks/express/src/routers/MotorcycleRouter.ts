@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { PostgresMotorcycleRepository } from "@infrastructure/repositories/postgres";
+import {
+  PostgresMaintenanceRepository,
+  PostgresMotorcycleRepository,
+} from "@infrastructure/repositories/postgres";
 import { ListMotorcyclesUsecase } from "@application/usecases/motorcycle/ListMotorcyclesUsecase";
 import { StatusCodes } from "http-status-codes";
 import { Motorcycle } from "@domain/entities/Motorcycle";
@@ -8,6 +11,7 @@ import { UpdateMotorcycleUsecase } from "@application/usecases/motorcycle/Update
 import { GetMotorcycleUsecase } from "@application/usecases/motorcycle/GetMotorcycleUsecase";
 import { DeleteMotorcycleUsecase } from "@application/usecases/motorcycle/DeleteMotorcycleUsecase";
 import { extractCompanyId } from "src/middlewares/headerHandler";
+import { ListMaintenancesByMotorcycleUsecase } from "@application/usecases/maintenance/ListMaintenancesByMotorcycleUsecase";
 
 export const MotorcycleRouter = Router();
 
@@ -56,6 +60,23 @@ MotorcycleRouter.post("/", extractCompanyId, async (req, res) => {
   }
 
   res.sendStatus(StatusCodes.CREATED);
+});
+
+MotorcycleRouter.get("/:identifier/maintenances", async (req, res) => {
+  const { identifier } = req.params;
+
+  try {
+    const maintenances = await new ListMaintenancesByMotorcycleUsecase(
+      new PostgresMaintenanceRepository(),
+      new PostgresMotorcycleRepository()
+    ).execute(identifier);
+    res.status(StatusCodes.OK).json(maintenances);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(StatusCodes.NOT_FOUND).json(error.name);
+      return;
+    }
+  }
 });
 
 MotorcycleRouter.get("/:identifier", async (req, res) => {

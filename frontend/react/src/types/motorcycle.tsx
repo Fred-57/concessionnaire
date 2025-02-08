@@ -34,9 +34,11 @@ export type MotorcycleType = {
 };
 
 export const columns = ({
+  goToProfile,
   goToUpdate,
   handleDelete,
 }: {
+  goToProfile: (motorcycle: MotorcycleType) => void;
   goToUpdate: (motorcycle: MotorcycleType) => void;
   handleDelete: (motorcycle: MotorcycleType) => Promise<void>;
 }): ColumnDef<MotorcycleType>[] => {
@@ -77,6 +79,9 @@ export const columns = ({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => goToProfile(motorcycle)}>
+                Voir
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => goToUpdate(motorcycle)}>
                 Modifier
               </DropdownMenuItem>
