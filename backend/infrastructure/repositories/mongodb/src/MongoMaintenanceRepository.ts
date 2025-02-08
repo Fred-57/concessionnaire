@@ -227,6 +227,84 @@ export class MongoMaintenanceRepository implements MaintenanceRepository {
     return maintenances;
   }
 
+  async findByMotorcycleAndDate(
+    motorcycleIdentifier: string,
+    date: Date
+  ): Promise<Maintenance | null> {
+    const maintenanceDatabase = await MaintenanceModel.findOne({
+      motorcycle: motorcycleIdentifier,
+      date: date,
+    });
+
+    if (!maintenanceDatabase) return null;
+
+    const maintenancePart: MaintenancePartType[] = [];
+
+    for (const part of maintenanceDatabase.parts) {
+      const partDatabase = await PartModel.findOne({
+        identifier: part.part.identifier,
+      });
+
+      if (!partDatabase) {
+        continue;
+      }
+
+      const partReference = PartReference.from(partDatabase.reference);
+      const partCost = PartCost.from(partDatabase.cost.toString());
+      const partStock = PartStock.from(partDatabase.stock.toString());
+      const partName = PartName.from(partDatabase.name);
+
+      if (
+        partName instanceof PartNameTooShortError ||
+        partReference instanceof PartReferenceTooShortError ||
+        partCost instanceof CostLessThanZeroError ||
+        partStock instanceof InvalidQuantityError
+      ) {
+        continue;
+      }
+
+      const partValue = Part.from(
+        partDatabase.identifier,
+        partReference.value,
+        partName.value,
+        partCost.value,
+        partStock.value,
+        partDatabase.createdAt,
+        partDatabase.updatedAt
+      );
+
+      if (
+        partValue instanceof PartNotFoundError ||
+        partValue instanceof PartReferenceTooShortError ||
+        partValue instanceof PartNameTooShortError ||
+        partValue instanceof CostLessThanZeroError ||
+        partValue instanceof InvalidQuantityError
+      ) {
+        continue;
+      }
+
+      maintenancePart.push({ part: partValue, quantity: part.quantity });
+    }
+
+    const maintenance = Maintenance.from(
+      maintenanceDatabase.identifier,
+      maintenanceDatabase.date,
+      maintenanceDatabase.recommendation,
+      maintenanceDatabase.status,
+      maintenanceDatabase.totalCost,
+      maintenanceDatabase.motorcycleIdentifier,
+      maintenancePart,
+      maintenanceDatabase.createdAt,
+      maintenanceDatabase.updatedAt
+    );
+
+    if (maintenance instanceof Error) {
+      return null;
+    }
+
+    return maintenance;
+  }
+
   async findAll(): Promise<Maintenance[]> {
     const maintenanceDatabase = await MaintenanceModel.find();
 
