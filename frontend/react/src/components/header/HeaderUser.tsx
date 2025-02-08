@@ -20,12 +20,12 @@ interface RoleInterface {
 
 const ROLES: Record<string, RoleInterface> = {
   gestionnaire: {
-    name: "Gestionnaire",
+    name: "gestionnaire",
     initials: "GN",
     icon: <Building2 />,
   },
   client: {
-    name: "Client",
+    name: "client",
     initials: "CL",
     icon: <UserCircle />,
   },
@@ -44,6 +44,10 @@ export function HeaderUser() {
     const newRole = role === "client" ? "gestionnaire" : "client";
     setRole(newRole);
     localStorage.setItem("role", newRole);
+  };
+
+  const capitalizeFirstLetter = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
   return (
@@ -67,10 +71,16 @@ export function HeaderUser() {
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Changer de rôle</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {Object.values(ROLES).map((role) => (
-          <DropdownMenuItem key={role.name} onClick={handleClick}>
-            {role.icon}
-            <DropdownMenuItem key={role.name}>{role.name}</DropdownMenuItem>
+        {Object.values(ROLES).map((roleMap) => (
+          <DropdownMenuItem key={roleMap.name} onClick={handleClick}>
+            {roleMap.icon}
+            <DropdownMenuItem
+              key={roleMap.name}
+              className={role === roleMap.name ? "bg-slate-200" : ""}
+              style={{ cursor: "pointer" }}
+            >
+              {capitalizeFirstLetter(roleMap.name)}
+            </DropdownMenuItem>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
