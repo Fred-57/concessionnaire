@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   PostgresMaintenanceRepository,
   PostgresMotorcycleRepository,
+  PostgresRentalRepository,
 } from "@infrastructure/repositories/postgres";
 import { ListMotorcyclesUsecase } from "@application/usecases/motorcycle/ListMotorcyclesUsecase";
 import { StatusCodes } from "http-status-codes";
@@ -12,6 +13,7 @@ import { GetMotorcycleUsecase } from "@application/usecases/motorcycle/GetMotorc
 import { DeleteMotorcycleUsecase } from "@application/usecases/motorcycle/DeleteMotorcycleUsecase";
 import { extractCompanyId } from "src/middlewares/headerHandler";
 import { ListMaintenancesByMotorcycleUsecase } from "@application/usecases/maintenance/ListMaintenancesByMotorcycleUsecase";
+import { ListRentalsByMotorcycleUsecase } from "@application/usecases/rental/ListRentalsByMotorcycleUsecase";
 
 export const MotorcycleRouter = Router();
 
@@ -71,6 +73,23 @@ MotorcycleRouter.get("/:identifier/maintenances", async (req, res) => {
       new PostgresMotorcycleRepository()
     ).execute(identifier);
     res.status(StatusCodes.OK).json(maintenances);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(StatusCodes.NOT_FOUND).json(error.name);
+      return;
+    }
+  }
+});
+
+MotorcycleRouter.get("/:identifier/rentals", async (req, res) => {
+  const { identifier } = req.params;
+
+  try {
+    const rentals = await new ListRentalsByMotorcycleUsecase(
+      new PostgresRentalRepository(),
+      new PostgresMotorcycleRepository()
+    ).execute(identifier);
+    res.status(StatusCodes.OK).json(rentals);
   } catch (error) {
     if (error instanceof Error) {
       res.status(StatusCodes.NOT_FOUND).json(error.name);
