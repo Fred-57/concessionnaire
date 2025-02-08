@@ -57,6 +57,10 @@ export function Motorcycle() {
     fetchMotorcycles();
   }, []);
 
+  const goToProfile = (motorcycle: MotorcycleType) => {
+    navigate(`/motorcycles/${motorcycle.identifier}/profile`);
+  };
+
   const goToUpdate = (motorcycle: MotorcycleType) => {
     navigate(`/motorcycles/${motorcycle.identifier}`);
   };
@@ -91,7 +95,7 @@ export function Motorcycle() {
       }}
     >
       <DataTable
-        columns={columns({ goToUpdate, handleDelete })}
+        columns={columns({ goToProfile, goToUpdate, handleDelete })}
         data={motorcycles}
       />
     </Layout>

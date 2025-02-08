@@ -36,6 +36,7 @@ import { BreakdownCreate, BreakdownUpdate } from "./pages/forms/Breakdown";
 import { PartOrderHistoryCreate } from "./pages/forms/PartOrderHistory";
 import { BreakdownParts } from "./pages/BreakdownParts";
 import { DriverProfile } from "./pages/DriverProfile";
+import { MotorcycleProfile } from "./pages/MotorcycleProfile";
 
 export const routes = [
   {
@@ -130,6 +131,10 @@ export const hiddenRoutes = [
   {
     path: "/motorcycles/:identifier",
     element: MotorcycleUpdate,
+  },
+  {
+    path: "/motorcycles/:identifier/profile",
+    element: MotorcycleProfile,
   },
   {
     path: "/drivers/create",
