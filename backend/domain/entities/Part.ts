@@ -96,20 +96,39 @@ export class Part implements Entity {
     );
   }
 
-  public static update(part: Part, quantity: number) {
-    const newStock = part.stock.value + quantity;
-    console.log(newStock);
-    const stock = PartStock.from(newStock.toString());
-    if (stock instanceof Error) {
-      return stock;
+  public static update(
+    part: Part,
+    stock: number,
+    reference: string,
+    name: string,
+    cost: number
+  ) {
+    const newStock = PartStock.from(stock.toString());
+    if (newStock instanceof Error) {
+      return newStock;
+    }
+
+    const newReference = PartReference.from(reference);
+    if (newReference instanceof Error) {
+      return newReference;
+    }
+
+    const newName = PartName.from(name);
+    if (newName instanceof Error) {
+      return newName;
+    }
+
+    const newCost = PartCost.from(cost.toString());
+    if (newCost instanceof Error) {
+      return newCost;
     }
 
     return new Part(
       part.identifier,
-      part.reference,
-      part.name,
-      part.cost,
-      stock,
+      newReference,
+      newName,
+      newCost,
+      newStock,
       part.createdAt,
       new Date()
     );

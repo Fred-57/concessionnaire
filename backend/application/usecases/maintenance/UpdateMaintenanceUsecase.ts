@@ -4,9 +4,8 @@ import { MaintenanceRepository } from "@application/repositories/MaintenanceRepo
 import { MaintenanceNotFoundError } from "@domain/errors/maintenance/MaintenanceNotFoundError";
 import { PartRepository } from "@application/repositories/PartRepository";
 import { PartNotFoundError } from "@domain/errors/part/PartNotFoundError";
-import { DateBehindNowError } from "@domain/errors/DateBehindNowError";
-import { MaintenanceTotalCostLessThanZeroError } from "@domain/errors/maintenance/MaintenanceTotalCostLessThanZeroError";
 import { MotorcycleNotFoundError } from "@domain/errors/MotorcycleNotFoundError";
+import { Part } from "@domain/entities/Part";
 
 export class UpdateMaintenanceUsecase implements Usecase<Maintenance> {
   public constructor(
@@ -33,6 +32,40 @@ export class UpdateMaintenanceUsecase implements Usecase<Maintenance> {
       );
       if (!partExists) {
         throw new PartNotFoundError();
+      }
+
+      const maintenancePart =
+        await this.maintenanceRepository.findPartQuantityByMaintenanceIdentifierAndPartIdentifier(
+          maintenance.identifier,
+          part.part.identifier
+        );
+      if (maintenancePart) {
+        const quantityDifference = part.quantity - maintenancePart;
+        const newStock = partExists.stock.value - quantityDifference;
+        const updatedPart = Part.update(
+          partExists,
+          newStock,
+          part.part.reference.value,
+          part.part.name.value,
+          part.part.cost.value
+        );
+        if (updatedPart instanceof Error) {
+          throw updatedPart;
+        }
+        await this.partRepository.update(updatedPart);
+      } else {
+        const newStock = partExists.stock.value - part.quantity;
+        const updatedPart = Part.update(
+          partExists,
+          newStock,
+          part.part.reference.value,
+          part.part.name.value,
+          part.part.cost.value
+        );
+        if (updatedPart instanceof Error) {
+          throw updatedPart;
+        }
+        await this.partRepository.update(updatedPart);
       }
     }
 

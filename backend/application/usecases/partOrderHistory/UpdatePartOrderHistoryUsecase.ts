@@ -38,7 +38,13 @@ export class UpdatePartOrderHistoryUsecase
       throw partOrderHistoryWithCost;
     }
 
-    const updatedPart = Part.update(part, partOrderHistory.quantity.value);
+    const updatedPart = Part.update(
+      part,
+      partOrderHistory.quantity.value,
+      part.reference.value,
+      part.name.value,
+      part.cost.value
+    );
 
     if (updatedPart instanceof Error) {
       throw updatedPart;
