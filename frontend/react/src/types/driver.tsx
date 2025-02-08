@@ -6,6 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon } from "lucide-react";
 
@@ -30,6 +31,16 @@ export const columns = ({
   goToUpdate: (driver: DriverType) => void;
   handleDelete: (driver: DriverType) => Promise<void>;
 }): ColumnDef<DriverType>[] => {
+  const { toast } = useToast();
+
+  const impersonate = (driver: DriverType) => {
+    localStorage.setItem("driver", JSON.stringify(driver));
+    toast({
+      title:
+        "Vous êtes maintenant dans le profil du conducteur " +
+        driver.name.value,
+    });
+  };
   return [
     {
       accessorKey: "name.value",
@@ -75,6 +86,9 @@ export const columns = ({
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDelete(driver)}>
                 Supprimer
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => impersonate(driver)}>
+                Usurper
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
