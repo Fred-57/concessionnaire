@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 import { columns, MotorcycleType } from "@/types/motorcycle";
 import { DataTable } from "@/components/ui/data-table";
 import { createApiClientHeader } from "@/tools/apiClientHeader";
+import { RentalType } from "@/types/rental";
 
 export function Motorcycle() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const [motorcycles, setMotorcycles] = useState<MotorcycleType[]>([]);
+  const [rentals, setRentals] = useState<RentalType[]>([]);
 
   useEffect(() => {
     const fetchMotorcycles = async () => {
@@ -23,12 +25,41 @@ export function Motorcycle() {
 
       const apiClient = createApiClientHeader();
 
-      const motorcyclesApi = await apiClient.get("/express/motorcycles").json();
-      setMotorcycles(motorcyclesApi as MotorcycleType[]);
+      const motorcyclesApi = (await apiClient
+        .get("/express/motorcycles")
+        .json()) as MotorcycleType[];
+      const role = localStorage.getItem("role");
+      if (role === "client") {
+        const driver = JSON.parse(localStorage.getItem("driver") || "{}");
+        const rentalsApi = (await apiClient
+          .get("/express/rentals")
+          .json()) as RentalType[];
+
+        setRentals(rentalsApi as RentalType[]);
+        const rentalFiltered = rentalsApi.filter(
+          (rental: RentalType) => rental.driverIdentifier === driver.identifier
+        );
+
+        const motorcyclesFiltered = motorcyclesApi.filter(
+          (moto: MotorcycleType) =>
+            rentalFiltered.some(
+              (rental: RentalType) =>
+                rental.motorcycleIdentifier === moto.identifier
+            )
+        );
+
+        setMotorcycles(motorcyclesFiltered as MotorcycleType[]);
+      } else {
+        setMotorcycles(motorcyclesApi as MotorcycleType[]);
+      }
     };
 
     fetchMotorcycles();
   }, []);
+
+  const goToProfile = (motorcycle: MotorcycleType) => {
+    navigate(`/motorcycles/${motorcycle.identifier}/profile`);
+  };
 
   const goToUpdate = (motorcycle: MotorcycleType) => {
     navigate(`/motorcycles/${motorcycle.identifier}`);
@@ -64,7 +95,7 @@ export function Motorcycle() {
       }}
     >
       <DataTable
-        columns={columns({ goToUpdate, handleDelete })}
+        columns={columns({ goToProfile, goToUpdate, handleDelete })}
         data={motorcycles}
       />
     </Layout>
