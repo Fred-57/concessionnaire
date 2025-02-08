@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { createApiClientHeader } from "@/tools/apiClientHeader";
 import { MaintenanceType } from "@/types/maintenance";
-import { columns } from "@/types/maintenance";
-import { Bike, UserRound } from "lucide-react";
+import { columns as maintenanceColumns } from "@/types/maintenance";
+import { columns as rentalColumns } from "@/types/rental";
+import { Bike } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import ky from "ky";
@@ -12,6 +13,7 @@ import { toast } from "@/hooks/use-toast";
 import { MotorcycleType } from "@/types/motorcycle";
 import { ModelType } from "@/types/model";
 import { GuaranteeType } from "@/types/guarantee";
+import { RentalType } from "@/types/rental";
 
 export function MotorcycleProfile() {
   const { identifier } = useParams();
@@ -31,7 +33,9 @@ export function MotorcycleProfile() {
     string[]
   >([]);
   const [maintenances, setMaintenances] = useState<MaintenanceType[]>([]);
+  const [rentals, setRentals] = useState<RentalType[]>([]);
 
+  // Fetch Motorcycle
   useEffect(() => {
     const fetchData = async () => {
       const apiClient = createApiClientHeader();
@@ -56,8 +60,18 @@ export function MotorcycleProfile() {
       setMaintenances(maintenances as MaintenanceType[]);
     };
 
+    // Fetch all Rentals for the Motorcycle
+    const fetchRentals = async () => {
+      const apiClient = createApiClientHeader();
+      const rentals = await apiClient
+        .get(`/express/motorcycles/${identifier}/rentals`)
+        .json();
+      setRentals(rentals as RentalType[]);
+    };
+
     fetchData();
     fetchMaintenances();
+    fetchRentals();
   }, [identifier]);
 
   // Fetch Model
@@ -90,7 +104,7 @@ export function MotorcycleProfile() {
     }
   }, [guaranteeIdentifier]);
 
-  const goToUpdate = (maintenance: MaintenanceType) => {
+  const goToUpdateMaintenance = (maintenance: MaintenanceType) => {
     navigate(`/maintenances/${maintenance.identifier}`);
   };
 
@@ -98,7 +112,7 @@ export function MotorcycleProfile() {
     navigate(`/maintenances/${maintenance.identifier}/parts`);
   };
 
-  const handleDelete = async (maintenance: MaintenanceType) => {
+  const handleDeleteMaintenance = async (maintenance: MaintenanceType) => {
     try {
       const response = await ky.delete(
         `/express/maintenances/${maintenance.identifier}`
@@ -112,6 +126,28 @@ export function MotorcycleProfile() {
       setMaintenances(
         maintenances.filter((b) => b.identifier !== maintenance.identifier)
       );
+    } catch {
+      toast({
+        title: "Erreur lors de la suppression",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const goToUpdateRental = (rental: RentalType) => {
+    navigate(`/rentals/${rental.identifier}`);
+  };
+
+  const handleDeleteRental = async (rental: RentalType) => {
+    try {
+      const response = await ky.delete(`/express/rentals/${rental.identifier}`);
+
+      if (response.ok) {
+        toast({
+          title: "Location supprimée",
+        });
+      }
+      setRentals(rentals.filter((b) => b.identifier !== rental.identifier));
     } catch {
       toast({
         title: "Erreur lors de la suppression",
@@ -173,8 +209,22 @@ export function MotorcycleProfile() {
         <div>
           <h2 className="text-lg font-medium">Ses entretiens:</h2>
           <DataTable
-            columns={columns({ goToUpdate, handleDelete, goToParts })}
+            columns={maintenanceColumns({
+              goToUpdate: goToUpdateMaintenance,
+              handleDelete: handleDeleteMaintenance,
+              goToParts,
+            })}
             data={maintenances}
+          />
+        </div>
+        <div>
+          <h2 className="text-lg font-medium">Ses locations:</h2>
+          <DataTable
+            columns={rentalColumns({
+              goToUpdate: goToUpdateRental,
+              handleDelete: handleDeleteRental,
+            })}
+            data={rentals}
           />
         </div>
       </div>

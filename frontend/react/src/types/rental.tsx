@@ -9,6 +9,12 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon } from "lucide-react";
 
+const isAdmin =
+  localStorage.getItem("role") === "gestionnaire" ||
+  localStorage.getItem("is_admin") === "true"
+    ? true
+    : false;
+
 export enum RentalTypeEnum {
   RENTAL = "RENTAL",
   TRIAL = "TRIAL",
@@ -76,12 +82,16 @@ export const columns = ({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => goToUpdate(rental)}>
-                Modifier
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(rental)}>
-                Supprimer
-              </DropdownMenuItem>
+              {isAdmin && (
+                <>
+                  <DropdownMenuItem onClick={() => goToUpdate(rental)}>
+                    Modifier
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleDelete(rental)}>
+                    Supprimer
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         );

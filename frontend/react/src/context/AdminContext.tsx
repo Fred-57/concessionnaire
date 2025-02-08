@@ -17,6 +17,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({
   const toggleAdmin = (value: boolean) => {
     setIsAdmin(value);
     localStorage.setItem("is_admin", value.toString());
+    if (value === true) {
+      localStorage.setItem("role", "gestionnaire");
+    }
   };
 
   useEffect(() => {

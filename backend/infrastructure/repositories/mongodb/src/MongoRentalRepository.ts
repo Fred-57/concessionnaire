@@ -127,4 +127,36 @@ export class MongoRentalRepository implements RentalRepository {
   async delete(rental: Rental): Promise<void> {
     await RentalModel.deleteOne({ identifier: rental.identifier });
   }
+
+  async findManyByMotorcycleIdentifier(
+    motorcycleIdentifier: string
+  ): Promise<Rental[]> {
+    const rentalsDatabase = await RentalModel.find({
+      motorcycleIdentifier,
+    });
+
+    const rentals: Rental[] = [];
+
+    for (const rentalDatabase of rentalsDatabase) {
+      const rental = Rental.from(
+        rentalDatabase.identifier,
+        rentalDatabase.startDate,
+        rentalDatabase.durationInMonths,
+        rentalDatabase.type,
+        rentalDatabase.driverIdentifier,
+        rentalDatabase.motorcycleIdentifier,
+        rentalDatabase.breakdownIdentifiers,
+        rentalDatabase.createdAt,
+        rentalDatabase.updatedAt
+      );
+
+      if (rental instanceof Error) {
+        throw rental;
+      }
+
+      rentals.push(rental);
+    }
+
+    return rentals;
+  }
 }
