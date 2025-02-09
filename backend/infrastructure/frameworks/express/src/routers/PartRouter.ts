@@ -1,7 +1,7 @@
-import { CreatePartUsecase } from "@application/usecases/part/CreatePartUseCase";
+import { CreatePartUsecase } from "@application/usecases/part/CreatePartUsecase";
 import { GetPartUsecase } from "@application/usecases/part/GetPartUsecase";
 import { ListPartsUsecase } from "@application/usecases/part/ListPartsUsecase";
-import { UpdatePartUsecase } from "@application/usecases/part/UpdatePartUseCase";
+import { UpdatePartUsecase } from "@application/usecases/part/UpdatePartUsecase";
 import { DeletePartUsecase } from "@application/usecases/part/DeletePartUsecase";
 import { Part } from "@domain/entities/Part";
 import { PartReferenceAlreadyExistsError } from "@domain/errors/part/PartReferenceAlreadyExistsError";
