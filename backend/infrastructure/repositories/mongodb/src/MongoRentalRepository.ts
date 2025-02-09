@@ -159,4 +159,36 @@ export class MongoRentalRepository implements RentalRepository {
 
     return rentals;
   }
+
+  async findManyByDriverIdentifier(
+    driverIdentifier: string
+  ): Promise<Rental[]> {
+    const rentalsDatabase = await RentalModel.find({
+      driverIdentifier,
+    });
+
+    const rentals: Rental[] = [];
+
+    for (const rentalDatabase of rentalsDatabase) {
+      const rental = Rental.from(
+        rentalDatabase.identifier,
+        rentalDatabase.startDate,
+        rentalDatabase.durationInMonths,
+        rentalDatabase.type,
+        rentalDatabase.driverIdentifier,
+        rentalDatabase.motorcycleIdentifier,
+        rentalDatabase.breakdownIdentifiers,
+        rentalDatabase.createdAt,
+        rentalDatabase.updatedAt
+      );
+
+      if (rental instanceof Error) {
+        throw rental;
+      }
+
+      rentals.push(rental);
+    }
+
+    return rentals;
+  }
 }

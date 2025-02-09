@@ -9,5 +9,6 @@ export interface RentalRepository {
   findManyByMotorcycleIdentifier(
     motorcycleIdentifier: string
   ): Promise<Rental[]>;
+  findManyByDriverIdentifier(driverIdentifier: string): Promise<Rental[]>;
   delete(rental: Rental): Promise<void>;
 }

@@ -8,9 +8,11 @@ import { DriverNameTooShortError } from "@domain/errors/driver/DriverNameTooShor
 import {
   PostgresCompanyRepository,
   PostgresDriverRepository,
+  PostgresRentalRepository,
 } from "@infrastructure/repositories/postgres";
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
+import { ListRentalsByDriverUsecase } from "@application/usecases/rental/ListRentalsByDriverUsecase";
 
 export const DriverRouter = Router();
 
@@ -21,6 +23,23 @@ DriverRouter.get("/", async (req, res) => {
       new PostgresCompanyRepository()
     ).execute(req.companyIdentifier);
     res.status(StatusCodes.OK).json(drivers);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(StatusCodes.NOT_FOUND).send(error.name);
+      return;
+    }
+  }
+});
+
+DriverRouter.get("/:id/rentals", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const rentals = await new ListRentalsByDriverUsecase(
+      new PostgresRentalRepository(),
+      new PostgresDriverRepository()
+    ).execute(id);
+    res.status(StatusCodes.OK).json(rentals);
   } catch (error) {
     if (error instanceof Error) {
       res.status(StatusCodes.NOT_FOUND).send(error.name);

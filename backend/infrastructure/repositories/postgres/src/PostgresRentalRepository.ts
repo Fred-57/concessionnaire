@@ -143,4 +143,30 @@ export class PostgresRentalRepository implements RentalRepository {
 
     return rentals;
   }
+
+  async findManyByDriverIdentifier(
+    driverIdentifier: string
+  ): Promise<Rental[]> {
+    const rentalsDatabase = await prisma.rental.findMany({
+      where: { driverId: driverIdentifier },
+    });
+
+    const rentals: Rental[] = [];
+
+    for (const rentalDatabase of rentalsDatabase) {
+      const rental = await this.findByIdentifier(rentalDatabase.id);
+
+      if (!rental) {
+        continue;
+      }
+
+      if (rental instanceof Error) {
+        throw rental;
+      }
+
+      rentals.push(rental);
+    }
+
+    return rentals;
+  }
 }
