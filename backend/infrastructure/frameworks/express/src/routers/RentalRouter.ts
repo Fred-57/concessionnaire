@@ -43,7 +43,7 @@ RentalRouter.post("/", async (req, res) => {
   );
 
   if (rental instanceof Error) {
-    res.sendStatus(StatusCodes.BAD_REQUEST);
+    res.status(StatusCodes.BAD_REQUEST).send(rental.name);
     return;
   }
 
@@ -51,8 +51,9 @@ RentalRouter.post("/", async (req, res) => {
     await new CreateRentalUsecase(new PostgresRentalRepository()).execute(
       rental
     );
-  } catch {
-    res.sendStatus(StatusCodes.BAD_REQUEST);
+  } catch (error) {
+    if (error instanceof Error)
+      res.status(StatusCodes.BAD_REQUEST).send(error.name);
     return;
   }
 
