@@ -57,7 +57,8 @@ MotorcycleRouter.post("/", extractCompanyId, async (req, res) => {
       new PostgresMotorcycleRepository()
     ).execute(motorcycle);
   } catch (error) {
-    res.sendStatus(StatusCodes.BAD_REQUEST);
+    if (error instanceof Error)
+      res.status(StatusCodes.BAD_REQUEST).send(error.name);
     return;
   }
 

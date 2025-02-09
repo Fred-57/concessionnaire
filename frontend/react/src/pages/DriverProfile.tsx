@@ -39,7 +39,7 @@ export function DriverProfile() {
     const fetchRentals = async () => {
       const apiClient = createApiClientHeader();
       const rentals = await apiClient
-        .get(`/express/driver/${identifier}/rentals`)
+        .get(`/express/drivers/${identifier}/rentals`)
         .json();
       setRentals(rentals as RentalType[]);
     };
@@ -136,8 +136,19 @@ export function DriverProfile() {
             </div>
           </CardContent>
         </Card>
+
         <div>
           <h2 className="text-lg font-medium">Ses locations:</h2>
+          <DataTable
+            columns={rentalColumns({
+              goToUpdate: goToUpdateRental,
+              handleDelete: handleDeleteRental,
+            })}
+            data={rentals}
+          />
+        </div>
+        <div>
+          <h2 className="text-lg font-medium">Ses accidents:</h2>
           <DataTable
             columns={breakdownColumns({
               goToUpdate: goToUpdateBreakdown,
@@ -145,16 +156,6 @@ export function DriverProfile() {
               goToParts,
             })}
             data={breakdowns}
-          />
-        </div>
-        <div>
-          <h2 className="text-lg font-medium">Ses accidents:</h2>
-          <DataTable
-            columns={rentalColumns({
-              goToUpdate: goToUpdateRental,
-              handleDelete: handleDeleteRental,
-            })}
-            data={rentals}
           />
         </div>
       </div>
