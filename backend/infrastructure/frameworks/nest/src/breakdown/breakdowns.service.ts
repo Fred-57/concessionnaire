@@ -1,7 +1,7 @@
 import { Breakdown } from "@domain/entities/Breakdown";
 import { PostgresBreakdownRepository } from "@infrastructure/repositories/postgres";
 import { Injectable } from "@nestjs/common";
-import { ListBreakdownsUseCase } from "@application/usecases/breakdown/ListBreakdownsUseCase";
+import { ListBreakdownsUseCase } from "@application/usecases/breakdown/ListBreakdownsUsecase";
 import { GetBreakdownUsecase } from "@application/usecases/breakdown/GetBreakdownUsecase";
 import { CreateBreakdownUsecase } from "@application/usecases/breakdown/CreateBreakdownUsecase";
 import { UpdateBreakdownUsecase } from "@application/usecases/breakdown/UpdateBreakdownUsecase";
