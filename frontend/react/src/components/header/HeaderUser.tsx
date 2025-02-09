@@ -34,7 +34,9 @@ const ROLES: Record<string, RoleInterface> = {
 export function HeaderUser() {
   const { isAdmin, toggleAdmin } = useAdmin();
 
-  const [role, setRole] = useState("gestionnaire");
+  const [role, setRole] = useState(
+    localStorage.getItem("role") || "gestionnaire"
+  );
 
   const handleAdminToggle = (checked: boolean) => {
     toggleAdmin(checked);
@@ -76,7 +78,7 @@ export function HeaderUser() {
             {roleMap.icon}
             <DropdownMenuItem
               key={roleMap.name}
-              className={role === roleMap.name ? "bg-slate-200" : ""}
+              className={role === roleMap.name ? "bg-slate-100" : ""}
               style={{ cursor: "pointer" }}
             >
               {capitalizeFirstLetter(roleMap.name)}
