@@ -4,12 +4,14 @@ import { DataTable } from "@/components/ui/data-table";
 import { createApiClientHeader } from "@/tools/apiClientHeader";
 import { BreakdownType } from "@/types/breakdown";
 import { DriverType } from "@/types/driver";
-import { columns } from "@/types/breakdown";
+import { columns as rentalColumns } from "@/types/rental";
+import { columns as breakdownColumns } from "@/types/breakdown";
 import { UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import ky from "ky";
 import { toast } from "@/hooks/use-toast";
+import { RentalType } from "@/types/rental";
 
 export function DriverProfile() {
   const { identifier } = useParams();
@@ -19,6 +21,7 @@ export function DriverProfile() {
   const [license, setLicense] = useState<string>("");
   const [numberOfYearsOfExperience, setNumberOfYearsOfExperience] =
     useState<number>(0);
+  const [rentals, setRentals] = useState<RentalType[]>([]);
   const [breakdowns, setBreakdowns] = useState<BreakdownType[]>([]);
 
   useEffect(() => {
@@ -32,6 +35,15 @@ export function DriverProfile() {
       setNumberOfYearsOfExperience(driver.numberOfYearsOfExperience);
     };
 
+    // Fetch all Rentals for the Driver
+    const fetchRentals = async () => {
+      const apiClient = createApiClientHeader();
+      const rentals = await apiClient
+        .get(`/express/driver/${identifier}/rentals`)
+        .json();
+      setRentals(rentals as RentalType[]);
+    };
+
     // Fetch all Breakdowns for the Driver
     const fetchBreakdowns = async () => {
       const apiClient = createApiClientHeader();
@@ -42,10 +54,33 @@ export function DriverProfile() {
     };
 
     fetchData();
+    fetchRentals();
     fetchBreakdowns();
   }, [identifier]);
 
-  const goToUpdate = (breakdown: BreakdownType) => {
+  const goToUpdateRental = (rental: RentalType) => {
+    navigate(`/rentals/${rental.identifier}`);
+  };
+
+  const handleDeleteRental = async (rental: RentalType) => {
+    try {
+      const response = await ky.delete(`/express/rentals/${rental.identifier}`);
+
+      if (response.ok) {
+        toast({
+          title: "Location supprimée",
+        });
+      }
+      setRentals(rentals.filter((r) => r.identifier !== rental.identifier));
+    } catch {
+      toast({
+        title: "Erreur lors de la suppression",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const goToUpdateBreakdown = (breakdown: BreakdownType) => {
     navigate(`/breakdowns/${breakdown.identifier}`);
   };
 
@@ -53,7 +88,7 @@ export function DriverProfile() {
     navigate(`/breakdowns/${breakdown.identifier}/parts`);
   };
 
-  const handleDelete = async (breakdown: BreakdownType) => {
+  const handleDeleteBreakdown = async (breakdown: BreakdownType) => {
     try {
       const response = await ky.delete(
         `/express/breakdowns/${breakdown.identifier}`
@@ -102,10 +137,24 @@ export function DriverProfile() {
           </CardContent>
         </Card>
         <div>
+          <h2 className="text-lg font-medium">Ses locations:</h2>
+          <DataTable
+            columns={breakdownColumns({
+              goToUpdate: goToUpdateBreakdown,
+              handleDelete: handleDeleteBreakdown,
+              goToParts,
+            })}
+            data={breakdowns}
+          />
+        </div>
+        <div>
           <h2 className="text-lg font-medium">Ses accidents:</h2>
           <DataTable
-            columns={columns({ goToUpdate, handleDelete, goToParts })}
-            data={breakdowns}
+            columns={rentalColumns({
+              goToUpdate: goToUpdateRental,
+              handleDelete: handleDeleteRental,
+            })}
+            data={rentals}
           />
         </div>
       </div>
